@@ -1,0 +1,40 @@
+# Sensitive credentials
+.env
+.env.*
+!.env.example
+
+# Private memory (contains personal context)
+memory/*.md
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store
+
+# Node modules (if any)
+node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*~
+*.personal.bak
+
+# Data files
+*.csv
+*.xlsx
+
+# Analysis scripts (local)
+pivot_sales*.py
+
+# Nested repos
+zuma-business-skills/
