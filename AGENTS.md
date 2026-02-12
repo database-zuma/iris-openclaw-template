@@ -209,6 +209,34 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 ## Task Delegation — EXPANDED STRATEGY 🎯
 
+### Level 0: OpenCode (Primary Tool for Complex Tasks) 🧠
+
+**DEFAULT TOOL for most tasks.** Before using Claude Code or Kimi directly, delegate to OpenCode first.
+
+**OpenCode Model Strategy:**
+- **Planning & Reasoning:** Claude Opus 4.6 — architecture decisions, debugging, data analysis, complex logic
+- **Coding Tasks:** Kimi K2 Coding 2.5 — implementation, refactoring, script writing, code generation
+
+**When to use OpenCode (DEFAULT):**
+- Database schema changes, view fixes, SQL optimization
+- Python script development and debugging
+- Multi-step analysis tasks requiring reasoning
+- Architecture decisions and trade-off analysis
+- Any task requiring tool use (file read/write, grep, git)
+
+**When to use Claude Code / Kimi directly (EXCEPTION):**
+- Ultra-quick one-liner fixes where OpenCode overhead isn't worth it
+- Tasks that specifically need Claude Code's MCP servers
+- When OpenCode is unavailable or rate-limited
+
+**How to delegate:**
+```bash
+# Start OpenCode session for a task (from Mac mini terminal)
+opencode  # Interactive mode, will use configured models
+
+# Or via coding-agent skill for background execution
+```
+
 ### Level 1: Local Sub-Agents (sessions_spawn)
 **Delegasi task terminal ke sub-agent** untuk install, build, atau task panjang yang bukan core conversation. Iris cukup monitor dan laporkan hasilnya. Ini menghindari polling berulang yang burn tokens.
 
@@ -254,14 +282,17 @@ Contoh task yang harus di-delegasi:
 
 ### Delegation Decision Tree
 
+**🔴 CRITICAL RULE (dari Wayan 2026-02-12):**
+**ALWAYS USE ATLAS FOR DATABASE QUERIES** — jangan coba local psql di Mac mini!
+
 **Keep on Mac mini (me) when:**
-- PostgreSQL database queries (I have direct connection)
-- Quick analysis & ad-hoc requests (<10 sec)
 - Browser automation (Chrome relay setup here)
 - File operations in my workspace
+- Quick analysis NON-DATABASE (<10 sec)
 - Immediate user-facing responses
 
 **Delegate to VPS team when:**
+- **ALL DATABASE QUERIES** → Atlas (stock, sales, any PostgreSQL query)
 - Long-running data operations (stock pulls, sales pulls)
 - Background monitoring & reporting
 - Notion task management
