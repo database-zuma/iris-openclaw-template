@@ -77,6 +77,104 @@ openclaw tui            # Launch the text UI
 
 ---
 
+## 🔄 Gateway Monitor (Auto-Restart)
+
+Keep your OpenClaw gateway running 24/7 with automatic health checks and recovery.
+
+### What It Monitors
+
+| Check | Trigger Restart |
+|-------|-----------------|
+| **Gateway HTTP** | If `localhost:18789` unreachable |
+| **WhatsApp channel** | If stopped or disconnected |
+| **Agent health** | If bootstrapping >5min or stale >10min |
+
+### Setup
+
+1. **Create the monitor script** at `~/.openclaw/monitor-gateway.py`:
+
+```python
+#!/usr/bin/env python3
+"""
+OpenClaw Gateway + WhatsApp Health Monitor
+Restarts gateway when WhatsApp disconnects or agent is stuck.
+"""
+
+import subprocess
+import logging
+import time
+import re
+from pathlib import Path
+
+GATEWAY_URL = "http://127.0.0.1:18789"
+OPENCLAW_BIN = "/Users/database-zuma/homebrew/bin/openclaw"
+CHECK_INTERVAL = 120
+AGENT_STALE_THRESHOLD = 600
+BOOTSTRAPPING_GRACE = 300
+RESTART_COOLDOWN = 600
+LOG_FILE = Path.home() / ".openclaw" / "monitor-gateway.log"
+
+# ... full script at: https://github.com/database-zuma/iris-openclaw-template
+```
+
+2. **Create LaunchAgent** (macOS) at `~/Library/LaunchAgents/com.openclaw.gateway-monitor.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.openclaw.gateway-monitor</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/database-zuma/.openclaw/monitor-gateway.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/database-zuma/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/database-zuma/.openclaw/monitor-gateway-stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/database-zuma/.openclaw/monitor-gateway-stderr.log</string>
+</dict>
+</plist>
+```
+
+3. **Load the service**:
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.openclaw.gateway-monitor.plist
+```
+
+> **Note:** Update paths (`database-zuma`, `homebrew/bin`) to match your system.
+
+### Check Logs
+
+```bash
+tail -f ~/.openclaw/monitor-gateway.log
+```
+
+Example output:
+```
+[INFO] OK | WA connected | agent active 2m ago | maxed sessions: 0
+[WARNING] WhatsApp channel check FAILED: WhatsApp disconnected
+[WARNING] Triggering restart: WhatsApp disconnected
+[INFO] Gateway restart command succeeded
+```
+
+---
+
 ## 📂 Workspace Structure
 
 ```
@@ -235,6 +333,8 @@ MIT License — Free to use, modify, and distribute.
 ## 🌸 About Iris
 
 Iris (Dewi Yunani — messenger of the gods) is a lead AI personal assistant originally built for **Zuma Indonesia**, a footwear retail company. This template is the sanitized, production-ready version of that workspace.
+
+**Maintainer:** database@zuma.id
 
 **Personality traits:**
 - Clear, concise, no-nonsense communication
