@@ -5,6 +5,25 @@
 - Setup date: 2026-02-11
 - Primary language: Bahasa Indonesia
 - Tone: chill, clear, no jargon
+- **Heartbeat interval:** Every 10 minutes — check HEARTBEAT.md for pending tasks
+
+## Critical Lessons Learned
+
+### HEARTBEAT.md Task Tracker (2026-02-13)
+**Problem:** Delegated tasks with promise to follow up ("nanti kabarin") but no tracking system → broken promises, 2-3+ hour delays
+
+**Incident:** Mbak Dewi (R&D Manager) request penjualan Merci 16:55, Iris promise "nanti kabarin", but no follow-up until Wayan reminded 19:16 (2h+ delay)
+
+**Root cause:** Delegate without tracking = broken promises. Good intentions ≠ reliable execution.
+
+**Solution (Wayan's idea):** HEARTBEAT.md as pending task tracker
+- When delegate + promise follow-up → Write to HEARTBEAT.md immediately
+- Every heartbeat (10 min) → Check HEARTBEAT.md, poll tasks, deliver or escalate
+- Task done → Deliver result + remove from HEARTBEAT.md
+
+**Files:** `HEARTBEAT.md` (template), `AGENTS.md` (mandatory workflow section)
+
+**Workflow enforced:** Never promise "nanti kabarin" without tracking in HEARTBEAT.md
 
 ## Zuma Indonesia Business Context
 - **Industry:** Footwear (sandal & flip-flops), manufacturing + retail + e-commerce + wholesale + consignment
