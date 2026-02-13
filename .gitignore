@@ -6,6 +6,11 @@
 # Private memory (contains personal context)
 memory/*.md
 
+# Inbox (temporary notes, unpublished)
+inbox/*.md
+!inbox/README.md
+!inbox/.template.md
+
 # Temporary files
 *.log
 *.tmp

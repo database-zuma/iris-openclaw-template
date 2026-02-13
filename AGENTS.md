@@ -23,6 +23,7 @@ You wake up fresh each session. These files are your continuity:
 
 - **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
 - **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+- **Inbox:** `inbox/` — temporary notes belum dipilah. Workflow: capture → process (waktu luang) → pilah ke memory/docs/contexts
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 
@@ -51,6 +52,7 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - Don't run destructive commands without asking.
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
+- **Notion API:** ALWAYS use Notion API (never web scraping). **READ-ONLY** until Wayan explicitly grants edit permission.
 
 ## External vs Internal
 
@@ -209,33 +211,74 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 ## Task Delegation — EXPANDED STRATEGY 🎯
 
-### Level 0: OpenCode (Primary Tool for Complex Tasks) 🧠
+### Level 0: OpenCode (MANDATORY for ALL Technical Tasks) 🧠
 
-**DEFAULT TOOL for most tasks.** Before using Claude Code or Kimi directly, delegate to OpenCode first.
+**🔴 CRITICAL RULE (dari Wayan 2026-02-13):**
+**ALWAYS delegate technical tasks to opencode** — untuk keep Iris responsive!
 
-**OpenCode Model Strategy:**
-- **Planning & Reasoning:** Claude Opus 4.6 — architecture decisions, debugging, data analysis, complex logic
-- **Coding Tasks:** Kimi K2 Coding 2.5 — implementation, refactoring, script writing, code generation
+**Binary:** `~/.opencode/bin/opencode` (v1.1.64)
 
-**When to use OpenCode (DEFAULT):**
-- Database schema changes, view fixes, SQL optimization
-- Python script development and debugging
-- Multi-step analysis tasks requiring reasoning
-- Architecture decisions and trade-off analysis
-- Any task requiring tool use (file read/write, grep, git)
+**Model Strategy:**
+- **Default (Sonnet 4.5):** `anthropic/claude-sonnet-4-5` — general tasks, planning, debugging
+- **Coding (Kimi K2.5):** `opencode/kimi-k2.5-free` — pure implementation, faster/cheaper
+- **Oracle Consult (Opus 4.6):** `anthropic/claude-opus-4-6` — architectural decisions via Sisyphus plugin
 
-**When to use Claude Code / Kimi directly (EXCEPTION):**
-- Ultra-quick one-liner fixes where OpenCode overhead isn't worth it
-- Tasks that specifically need Claude Code's MCP servers
-- When OpenCode is unavailable or rate-limited
+**MANDATORY delegation for:**
+- ✅ Database operations (CSV upload, schema changes, queries)
+- ✅ Script development/debugging (Python, bash, etc.)
+- ✅ Multi-step file operations
+- ✅ Complex git operations
+- ✅ Data analysis (non-trivial)
+- ✅ VPS operations via SSH (beyond simple status checks)
+
+**I can still do directly (keep responsive):**
+- ❌ Simple file reads (1-2 files, <2 sec)
+- ❌ Quick status checks (1 command)
+- ❌ Chat responses, memory updates
+- ❌ Responding to user while opencode runs
 
 **How to delegate:**
 ```bash
-# Start OpenCode session for a task (from Mac mini terminal)
-opencode  # Interactive mode, will use configured models
+# Default (Sonnet 4.5)
+opencode run -m anthropic/claude-sonnet-4-5 --session iris_task_name "prompt"
 
-# Or via coding-agent skill for background execution
+# Coding (Kimi K2.5, faster/cheaper)
+opencode run -m opencode/kimi-k2.5-free --session iris_kimi_coding "prompt"
+
+# Background mode (via exec tool, monitor via process tool)
+# I continue chatting while opencode works
 ```
+
+**Session naming:** MUST use `iris_` prefix (e.g., `iris_upload_csv`, `iris_fix_schema`)
+
+**Why mandatory:**
+- **Responsiveness:** I delegate, then continue chatting with user immediately
+- **Clear audit trail:** opencode session logs
+- **Consistent model usage:** Sonnet/Kimi, not my default
+- **Parallelization:** opencode works, I monitor + respond to user
+
+**⚠️ CRITICAL: Delegation Workflow (2026-02-13)**
+
+**WRONG (blocking, not responsive):**
+```
+Delegate → poll → poll → poll → wait → poll → blocking sampai selesai
+[I'm NOT responsive during wait]
+```
+
+**RIGHT (non-blocking, responsive):**
+```
+1. Delegate task (opencode/Atlas/etc)
+2. Acknowledge "Task delegated, monitoring..."
+3. STOP — continue chatting, don't poll repeatedly
+4. User asks result → THEN check process/poll
+5. Or periodic passive check (don't block conversation)
+```
+
+**Key rules:**
+- Don't poll immediately after delegation
+- Don't block conversation waiting for background tasks
+- Check when user asks, or periodic (but non-blocking)
+- Acknowledge delegation, then FREE to chat other topics
 
 ### Level 1: Local Sub-Agents (sessions_spawn)
 **Delegasi task terminal ke sub-agent** untuk install, build, atau task panjang yang bukan core conversation. Iris cukup monitor dan laporkan hasilnya. Ini menghindari polling berulang yang burn tokens.
@@ -282,28 +325,40 @@ Contoh task yang harus di-delegasi:
 
 ### Delegation Decision Tree
 
-**🔴 CRITICAL RULE (dari Wayan 2026-02-12):**
-**ALWAYS USE ATLAS FOR DATABASE QUERIES** — jangan coba local psql di Mac mini!
+**🔴 CRITICAL RULES:**
 
-**Keep on Mac mini (me) when:**
+1. **ALWAYS use opencode for technical tasks** (2026-02-13) — keep Iris responsive
+2. **ALWAYS use Atlas for database queries** (2026-02-12) — jangan coba local psql!
+
+**Execution priority:**
+
+**Level 0 — opencode (Mac mini, background):**
+- Database operations (create table, COPY, complex queries)
+- Script development/debugging
+- Multi-step file operations
+- Data analysis requiring logic
+- Complex git operations
+- **I delegate → continue chatting → monitor → report when done**
+
+**Level 1 — Keep on Mac mini (me, immediate):**
 - Browser automation (Chrome relay setup here)
-- File operations in my workspace
-- Quick analysis NON-DATABASE (<10 sec)
-- Immediate user-facing responses
+- Simple file reads (<2 files, <2 sec)
+- Quick status checks (1 command)
+- Chat responses, memory updates
+- User-facing responses while opencode/Atlas work
 
-**Delegate to VPS team when:**
-- **ALL DATABASE QUERIES** → Atlas (stock, sales, any PostgreSQL query)
-- Long-running data operations (stock pulls, sales pulls)
+**Level 2 — VPS team (Atlas/Iris Junior/Apollo):**
+- **ALL PostgreSQL queries** → Atlas (stock, sales, any DB query)
+- Long-running data operations (Accurate API, GSheets)
 - Background monitoring & reporting
 - Notion task management
-- Google Sheets operations
-- Accurate API calls
-- Tasks that can run independently
+- Cron job coordination
+- Tasks that can run independently on VPS
 
-**Delegate to local sub-agents when:**
-- Long terminal operations (brew, git clone, builds)
-- One-off intensive computations
-- Tasks that need Mac mini environment but take time
+**Level 3 — Local sub-agents (sessions_spawn):**
+- Long terminal operations (brew install, git clone large repos)
+- Build/compile tasks (>1 min)
+- Tasks needing Mac mini environment but taking time
 
 ### Resource Awareness
 - **Mac mini:** My primary workspace, full tool access
