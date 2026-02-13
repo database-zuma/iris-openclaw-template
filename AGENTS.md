@@ -46,6 +46,27 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
 
+### 💬 Chat History vs Memory — Keyword Trigger Rule
+
+**User asks WITH "chat" keyword:**
+- "km chat [person] apa"
+- "chat history dengan..."
+- "apa yang km chat sama..."
+
+→ **Directly grep session logs:**
+```bash
+grep -h "person_name\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl | tail -50
+```
+
+**User asks WITHOUT "chat" keyword:**
+- "apa km udah [task]?"
+- "kapan aku bilang..."
+- "siapa itu [person]?"
+
+→ **Search memory first** (memory_search tool or grep memory/*.md), then session logs if needed
+
+**Why:** "Chat" keyword = explicit request for conversation history (raw logs). Without "chat" = asking about context/facts (curated memory).
+
 ## Safety
 
 - Don't exfiltrate private data. Ever.

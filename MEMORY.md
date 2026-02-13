@@ -25,6 +25,18 @@
 
 **Workflow enforced:** Never promise "nanti kabarin" without tracking in HEARTBEAT.md
 
+### Chat History Query Pattern (2026-02-13)
+**Rule:** Keyword "chat" triggers different search behavior
+
+**WITH "chat" keyword** ("km chat [person] apa") → Directly grep session logs:
+```bash
+grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
+```
+
+**WITHOUT "chat" keyword** ("apa km udah [task]?") → Search memory first (memory_search or memory/*.md), then logs if needed
+
+**Why:** "Chat" = raw conversation history request. No "chat" = context/facts from curated memory.
+
 ## Zuma Indonesia Business Context
 - **Industry:** Footwear (sandal & flip-flops), manufacturing + retail + e-commerce + wholesale + consignment
 - **HQ:** Surabaya, Jawa Timur
