@@ -258,6 +258,23 @@ matched_store_name LIKE '%konsinyasi%' → EXCLUDE
 
 **Rule verified by:** User +6285101726716 (2026-02-12 08:41-08:44)
 
+### Intercompany Filter — When to Use
+
+**Intercompany transactions:** Antar entitas (DDD→MBB, UBB→DDD, LJBB→DDD), bukan within single store.
+
+**When to apply `is_intercompany = FALSE` filter:**
+- ✅ **Aggregated queries** — Multi-store, nasional, branch-level, area totals
+- ✅ **Sales comparison** — Cross-store performance, ranking
+- ✅ **Revenue reports** — Total sales nasional, regional summaries
+
+**When NOT needed:**
+- ❌ **Single store queries** — Query 1 toko saja (e.g., "Sales Mega Mall Manado")
+- ❌ **Store-specific reports** — RO Request, planogram, single store performance
+
+**Reason:** Intercompany filter excludes transactions between entities (e.g., MBB buying from DDD warehouse), not transactions within a single store location.
+
+**Rule clarified by:** Wayan (2026-02-13 14:20)
+
 ## 🔊 BluOS Speaker Control (Polytron)
 
 ### blu CLI

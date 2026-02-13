@@ -154,6 +154,23 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 
 **Eskalasi:** 1-2x fail → Atlas fix | 3x fail → `escalation_needed: true` → Iris Junior → Wayan (Telegram)
 
+### Query Pattern: R&D/Product Development (Apollo Territory)
+**Delegation Rule (2026-02-13):**
+- **R&D/Product Development requests** (Mbak Dewi, Mbak Desyta, Yuda) → **Apollo**
+- **National product performance queries** (anyone) → **Apollo**
+
+**Format Standard:**
+- Article level: Gender + Series + Color (e.g., LADIES MERCI MOCCA)
+- NO size breakdown unless explicitly requested
+- Output: Product Name | Total Pairs | Total Revenue
+
+**Mandatory Filters:**
+1. `is_intercompany = FALSE` (exclude inter-entity transactions)
+2. Exclude non-SKU items (bags, hangers, accessories) unless requested
+3. National aggregate (all stores)
+
+**Example:** Merci sales query → Group by color only → Brief output
+
 ### VPS Credentials (Shared)
 **Location:** `/root/.openclaw/.env` (GH_TOKEN, NOTION_API_KEY, GOG_KEYRING_PASSWORD)
 
