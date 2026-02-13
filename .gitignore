@@ -38,3 +38,4 @@ pivot_sales*.py
 
 # Nested repos
 zuma-business-skills/
+google-oauth-credentials.json
