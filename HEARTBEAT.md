@@ -1,5 +1,19 @@
-# HEARTBEAT.md
+# HEARTBEAT.md — Task Tracker & Periodic Checks
 
-# Keep this file empty (or with only comments) to skip heartbeat API calls.
+## 📋 Pending Tasks
 
-# Add tasks below when you want the agent to check something periodically.
+*(Currently none — all cleared)*
+
+## 🔄 Routine Checks (rotate 2-4x daily)
+
+- **Email:** Last check —
+- **Calendar:** Next 24-48h —
+- **Weather:** —
+
+---
+
+**Instructions:**
+- When delegating with promise to follow up → add to Pending Tasks
+- Every heartbeat → check pending, poll status, deliver or escalate
+- Task done → deliver result → remove from list
+- Keep this file clean & current

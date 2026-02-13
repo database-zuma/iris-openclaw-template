@@ -209,6 +209,49 @@ Think of it like a human reviewing their journal and updating their mental model
 
 The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
 
+### 📋 HEARTBEAT.md as Task Tracker — MANDATORY WORKFLOW ⚠️
+
+**CRITICAL RULE (2026-02-13):** When you delegate a task and promise follow-up ("nanti kabarin", "aku kabarin kalau selesai", etc.):
+
+**1. Immediately write to HEARTBEAT.md:**
+```md
+- [ ] PENDING: [Task description] - delegated to [Agent/Tool] at [Time]
+- [ ] User: [Name/Number] - Waiting for: [What they asked]
+```
+
+**2. Every heartbeat → Check HEARTBEAT.md:**
+- Poll pending tasks (via `process poll` or SSH to agents)
+- If done → deliver result → remove from HEARTBEAT.md
+- If stuck/error → escalate or re-run
+- If >2 hours no update → investigate & report
+
+**3. Task completed → Clean up:**
+- Deliver result to user
+- Mark as done or remove line from HEARTBEAT.md
+- Update memory if significant
+
+**Why this matters:**
+- **Keeps promises** — "nanti kabarin" actually means you'll kabarin
+- **No more 3+ hour delays** — systematic follow-up
+- **User doesn't have to remind you** — you track it yourself
+- **Trust & reliability** — do what you say you'll do
+
+**Example HEARTBEAT.md:**
+```md
+# Pending Tasks
+
+- [ ] Query Merci sales (Mbak Dewi +6285733484928) - delegated to Atlas 16:55 ⏰
+- [ ] RO Request benchmark (Wayan) - opencode session iris_benchmark, check status
+
+# Routine Checks (rotate 2-4x daily)
+
+- Email check (last: 08:00)
+- Calendar (next 24h)
+- Weather (if going out)
+```
+
+**Root cause of failure:** Delegating without tracking = broken promises. HEARTBEAT.md fixes this.
+
 ## Task Delegation — EXPANDED STRATEGY 🎯
 
 ### Level 0: OpenCode (MANDATORY for ALL Technical Tasks) 🧠
