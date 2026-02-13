@@ -146,11 +146,23 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 
 ### VPS Daily Workflow
 ```
+02:00 WIB → Backup DB (pg_dump daily, pg_dumpall weekly on Sunday)
 03:00 WIB → Stock Pull (cron VPS DB)
 05:00 WIB → Sales Pull (cron VPS DB)
-05:30 WIB → Atlas compile JSON report → Write to logs-report-for-iris/
-08:00 WIB → Iris Junior read reports → Generate Morning Report MD → Telegram ke Wayan
+05:30 WIB → Atlas health check → JSON report (Stock/Sales/Backup status)
+06:00 WIB → Iris morning report → Format & deliver via WhatsApp
 ```
+
+**Health Check Coverage (updated 2026-02-14):**
+1. Stock Pull monitoring (status, errors, timing)
+2. Sales Pull monitoring (status, errors, timing)
+3. **Backup verification** (daily file exists, size reasonable)
+
+**Backup System (VPS DB):**
+- Location: `/root/backups/` on 76.13.194.120
+- Daily: 02:00 WIB, retain 7 days
+- Weekly: Sunday 02:00 WIB (pg_dumpall), retain 4 weeks
+- Typical size: ~50-55MB daily
 
 **Eskalasi:** 1-2x fail → Atlas fix | 3x fail → `escalation_needed: true` → Iris Junior → Wayan (Telegram)
 
