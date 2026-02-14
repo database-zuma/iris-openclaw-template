@@ -52,6 +52,34 @@ Load dengan `source .env` atau `python-dotenv`.
 **Always use Notion API** — jangan web scraping/browser automation untuk Notion
 **API Docs:** https://developers.notion.com/
 
+### Google Drive (gog CLI)
+
+**Binary:** `~/homebrew/Cellar/gogcli/0.9.0/bin/gog`
+**Account:** harveywayan@gmail.com
+
+**Auto-share rule (MANDATORY):**
+When uploading files to Google Drive, ALWAYS grant edit access to:
+- `wayan@zuma.id` (role: writer)
+- `database@zuma.id` (role: writer)
+
+```bash
+# Upload file
+gog drive upload <file> --name "..." --json
+
+# Share with edit access
+gog drive share <file_id> --email wayan@zuma.id --role writer
+gog drive share <file_id> --email database@zuma.id --role writer
+
+# Public link (optional)
+gog drive share <file_id> --anyone --role reader
+```
+
+**Standard workflow:**
+1. Upload file → get file_id
+2. Share edit access to wayan@zuma.id & database@zuma.id
+3. Share public link (reader) if needed
+4. Reply with shareable link
+
 ### OpenCode (Primary Coding Tool) 🧠
 
 **Binary:** `opencode` (installed on Mac mini)
@@ -78,6 +106,11 @@ ALL sessions spawned by Iris MUST use the prefix `iris_` followed by a descripti
 
 - iris-junior → 76.13.194.103, user: root (Iris Junior agent VPS)
 - vps-db → 76.13.194.120, user: root (Database VPS)
+
+**File transfer VPS ↔ Mac Mini:**
+- Use `rsync` instead of `scp` — more robust, handles timeouts better
+- `scp` commands often SIGKILL/timeout (network instability)
+- Example: `rsync -avz --timeout=30 root@76.13.194.103:/path/to/file /local/path`
 
 ## Agent Communication — MY TEAM 👥
 
