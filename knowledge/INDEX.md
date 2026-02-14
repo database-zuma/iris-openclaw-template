@@ -4,6 +4,7 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-14** | [FF/FA/FS Daily Fill Rate Metrics](business-ops/2026-02-14_ff-fa-fs-daily-metrics.md) | #inventory #fill-rate #metrics #automation | Internal briefing
 - **2026-02-14** | [OpenClaw Agent "Larry" - TikTok Viral Marketing](ai-agents/2026-02-14_twitter_openclaw-larry-tiktok.md) | #ai-agents #openclaw #tiktok-marketing #automation | Twitter @oliverhenry
 
 ---
@@ -14,7 +15,7 @@ Auto-generated index of saved links, articles, and threads.
 - [OpenClaw Agent "Larry" - TikTok Viral Marketing](ai-agents/2026-02-14_twitter_openclaw-larry-tiktok.md) — AI agent automation for TikTok slideshows, 500K+ views in 5 days
 
 ### Business Operations
-<!-- business-ops/ entries -->
+- [FF/FA/FS Daily Fill Rate Metrics](business-ops/2026-02-14_ff-fa-fs-daily-metrics.md) — Automated daily pipeline for store fill rate metrics (Fill Factor, Fill Article, Fill Stock)
 
 ### Dev Tools
 <!-- dev-tools/ entries -->
