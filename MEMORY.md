@@ -155,6 +155,15 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 06:00 WIB → Iris morning report → Format & deliver via WhatsApp
 ```
 
+**Pending expansion (noted 2026-02-14):**
+- [ ] SO Level 2 Report automation (daily cron + Atlas monitor)
+- [ ] Control Stock Report automation
+- [ ] Planogram Report automation
+- [ ] RO Report (Box & Protol) automation
+- [ ] Surplus Store Report automation
+- Pattern: API pull → SQL script → Atlas logs → Iris daily summary
+- Details: `inbox/pending-tasks-automation-reports.md`
+
 **Health Check Coverage (updated 2026-02-14):**
 1. Stock Pull monitoring (status, errors, timing)
 2. Sales Pull monitoring (status, errors, timing)
