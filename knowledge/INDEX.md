@@ -4,14 +4,14 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
-<!-- AUTO-APPEND: Latest entries appear here -->
+- **2026-02-14** | [OpenClaw Agent "Larry" - TikTok Viral Marketing](ai-agents/2026-02-14_twitter_openclaw-larry-tiktok.md) | #ai-agents #openclaw #tiktok-marketing #automation | Twitter @oliverhenry
 
 ---
 
 ## By Topic
 
 ### AI Agents
-<!-- ai-agents/ entries -->
+- [OpenClaw Agent "Larry" - TikTok Viral Marketing](ai-agents/2026-02-14_twitter_openclaw-larry-tiktok.md) — AI agent automation for TikTok slideshows, 500K+ views in 5 days
 
 ### Business Operations
 <!-- business-ops/ entries -->
