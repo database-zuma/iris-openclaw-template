@@ -434,3 +434,123 @@ Contoh task yang harus di-delegasi:
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+
+## 📚 Knowledge Dump System (Auto-Mode)
+
+**Purpose:** Capture external knowledge (Twitter threads, Reddit posts, articles) into searchable, structured summaries.
+
+### How It Works
+
+When Wayan sends a link (Twitter/Reddit/article):
+1. **Auto-detect** URL pattern
+2. **Scrape** content (Nitter for Twitter, Reddit JSON API, web_fetch for articles)
+3. **Summarize** in structured format (Style B)
+4. **Auto-categorize** into topic folder
+5. **Save** to `knowledge/{topic}/YYYY-MM-DD_{source}_{slug}.md`
+6. **Update** `knowledge/INDEX.md` with new entry
+7. **Reply** with save location
+
+### Folder Structure
+
+```
+knowledge/
+├── ai-agents/          # AI, ML, LLM, automation
+├── business-ops/       # Ops, retail, logistics
+├── dev-tools/          # Code, infra, frameworks
+├── misc/               # Uncategorized
+├── INDEX.md            # Master searchable index
+└── README.md           # System documentation
+```
+
+### Summary Format (Style B - Structured)
+
+```markdown
+# [Title/Topic]
+
+**Source:** Twitter/Reddit/Article
+**Author:** @username / r/subreddit
+**Date:** YYYY-MM-DD
+**Link:** https://...
+
+**Key Points:**
+- Main insight 1
+- Main insight 2
+- Main insight 3
+
+**Technical Details:**
+- Implementation specifics
+- Architecture/approach
+
+**Takeaways:**
+- What matters for Zuma/Wayan
+- Action items (if any)
+
+**Tags:** #tag1 #tag2 #tag3
+```
+
+### Scraping Methods (Priority Order)
+
+1. **Twitter:**
+   - Try Nitter instance first: `nitter.privacydev.net/{user}/status/{id}` (no login)
+   - Fallback: Browser automation (Chrome relay)
+   
+2. **Reddit:**
+   - Append `.json` to URL → parse native API
+   - Fast, no auth needed
+   
+3. **Articles:**
+   - `web_fetch` (Readability extractor)
+   - Works for most public sites
+
+4. **Fallback:**
+   - Browser automation for paywalled/complex sites
+
+### Auto-Categorization Logic
+
+| Content Contains | Category |
+|-----------------|----------|
+| AI, LLM, agents, prompts, ML | `ai-agents/` |
+| Operations, retail, business, logistics, inventory | `business-ops/` |
+| Code, frameworks, devtools, infrastructure | `dev-tools/` |
+| Unclear or multiple topics | `misc/` (may ask user) |
+
+### URL Detection Patterns
+
+```javascript
+// Twitter/X
+/https?:\/\/(twitter\.com|x\.com)\/\w+\/status\/\d+/
+
+// Reddit
+/https?:\/\/(www\.)?reddit\.com\/r\/\w+\/comments/
+
+// Generic article
+/^https?:\/\//  // Any HTTP(S) URL
+```
+
+### INDEX.md Auto-Update
+
+Each new save appends to INDEX.md:
+
+```markdown
+## Recent Additions
+
+- **2026-02-14** | [Title](ai-agents/2026-02-14_twitter_summary.md) | #ai-agents #scaling | Twitter @username
+```
+
+### Error Handling
+
+| Error | Action |
+|-------|--------|
+| Scraper fails (404, rate limit) | Try fallback method, then report error |
+| Can't categorize | Save to `misc/`, ask user for category |
+| Duplicate content | Check if similar file exists, ask before overwriting |
+
+### Manual Override
+
+If Wayan specifies category:
+- "save this as business-ops" → override auto-categorization
+- "detailed summary" → expand summary depth
+- "brief only" → minimal 3-bullet summary
+
+**Setup date:** 2026-02-14  
+**Location:** `/Users/database-zuma/.openclaw/workspace/knowledge/`
