@@ -150,13 +150,15 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 03:00 WIB → Stock Pull (cron VPS DB) + FF/FA/FS calculation
             ├─ pull_accurate_stock.py (4 entities)
             └─ calculate_ff_fa_fs.py → mart.ff_fa_fs_daily
-05:00 WIB → Sales Pull (cron VPS DB)
-05:30 WIB → Atlas health check → JSON report (Stock/Sales/Backup/FF-FA-FS status)
+05:00 WIB → Sales Pull (cron VPS DB) + SO L2 calculation
+            ├─ pull_accurate_sales.py (3 entities: DDD, MBB, UBB)
+            └─ calculate_so_l2.py → mart.stock_opname_l2_daily (NEW as of 2026-02-14)
+05:30 WIB → Atlas health check → JSON report (Stock/Sales/Backup/FF-FA-FS/SO-L2 status)
 06:00 WIB → Iris morning report → Format & deliver via WhatsApp
 ```
 
 **Pending expansion (noted 2026-02-14):**
-- [ ] SO Level 2 Report automation (daily cron + Atlas monitor)
+- [x] ~~SO Level 2 Report automation~~ ✅ DEPLOYED 2026-02-14 23:04 (mart.stock_opname_l2_daily live!)
 - [ ] Control Stock Report automation
 - [ ] Planogram Report automation
 - [ ] RO Report (Box & Protol) automation
@@ -164,7 +166,7 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 - Pattern: API pull → SQL script → Atlas logs → Iris daily summary
 - Details: `inbox/pending-tasks-automation-reports.md`
 
-**Health Check Coverage (updated 2026-02-14):**
+**Health Check Coverage (updated 2026-02-14 23:04):**
 1. Stock Pull monitoring (status, errors, timing)
 2. Sales Pull monitoring (status, errors, timing)
 3. **Backup verification** (daily file exists, size reasonable)
@@ -172,6 +174,11 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
    - avg_ff, avg_fa, avg_fs across all stores
    - stores_below_ff_70 count
    - Alert if avg_ff < 50% or stores_calculated = 0
+5. **SO L2 metrics** (Stock Opname Level 2 — daily stock vs sales reconciliation)
+   - snapshot_date, stores calculated, rows_inserted
+   - selisih_nonzero_count (anomaly detection)
+   - total_stock, total_sales
+   - Alert if overall ≠ success or selisih_nonzero_count > 30
 
 **Backup System (VPS DB):**
 - Location: `/root/backups/` on 76.13.194.120
