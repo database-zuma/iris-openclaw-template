@@ -205,6 +205,42 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 
 **Example:** Merci sales query → Group by color only → Brief output
 
+### Product Analysis Template (2026-02-15) — UNIFIED
+**Template:** `templates/product-analysis-unified.md` (merged SQL query framework + WhatsApp formatting)
+**Combines:** zuma-data-analyst-skill query patterns + output formatting best practices
+
+**Data Source Priority:**
+1. **mart.sku_portfolio** (primary) — 101 columns, national aggregate, YoY comparison, monthly breakdown
+2. **core.sales_with_product** (fallback) — when need store/area breakdown or custom date ranges
+3. **core.stock_with_product** — stock breakdown by warehouse/store
+
+**Query Framework (WHAT/WHERE/WHEN):**
+```
+"Berapa [METRIC] dari [WHAT] di [WHERE] selama [WHEN]?"
+→ Identify metric, product level, geography, time period
+→ Pick data source based on requirements
+→ Apply mandatory filters (intercompany, non-product)
+→ Format output (detailed blocks vs compact list)
+```
+
+**Use cases:**
+- Top N analysis (best sellers, worst performers, fast/slow movers)
+- Specific SKU performance (by kodemix, series, gender, tier)
+- Stock alerts (stockout risk, overstock, negative WH)
+- YoY comparisons, monthly trends, sales mix %, turnover analysis
+
+**Output Format:**
+- **Detailed blocks** (1-5 articles): Sales + Stock + Insights per article
+- **Compact list** (6+ articles): One-liner per article + summary
+
+**Auto-flags:** 🔥 Stockout (<0.5mo TO), 🐌 Overstock (>2.5mo), ⚠️ Negative WH, 📉 Big drop (>-70% YoY)
+
+**Key metrics from mart.sku_portfolio:**
+- Sales: current_year_qty/rp, last_year_qty/rp, var_year_qty (YoY %), now_jan_qty...now_dec_qty (monthly)
+- Stock: stok_global, wh_pusat, wh_bali, wh_jkt, stok_toko, stok_online, stok_unlabel
+- Turnover: to_wh, to_total (months of coverage)
+- Other: sales_mix %, avg_last_3_months, current_year_label, last_year_label
+
 ### VPS Credentials (Shared)
 **Location:** `/root/.openclaw/.env` (GH_TOKEN, NOTION_API_KEY, GOG_KEYRING_PASSWORD)
 

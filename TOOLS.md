@@ -52,6 +52,30 @@ Load dengan `source .env` atau `python-dotenv`.
 **Always use Notion API** — jangan web scraping/browser automation untuk Notion
 **API Docs:** https://developers.notion.com/
 
+### Product Analysis (SKU Performance)
+
+**Template:** `templates/product-analysis-unified.md` (merged SQL framework + WhatsApp formatting)
+**Source Priority:** 
+1. `mart.sku_portfolio` (primary — 101 columns, pre-computed)
+2. `core.sales_with_product` (fallback — need store/custom dates)
+3. `core.stock_with_product` (stock breakdown only)
+
+**When to use:**
+- User asks "top 10 products", "best sellers", "show me SKU analysis"
+- R&D requests (Mbak Dewi, Mbak Desyta, Yuda)
+- Merchandiser queries (Mas Bagus, Mbak Virra)
+
+**Decision tree:**
+- National aggregate + comprehensive metrics → `mart.sku_portfolio`
+- Need store/area breakdown → `core.sales_with_product`
+- Need custom date range (last 7 days, Q1 only) → `core.sales_with_product`
+
+**Format:** WhatsApp-friendly
+- 1-5 articles: Detailed blocks (sales + stock + insights per article)
+- 6+ articles: Compact list (one-liner per article + summary)
+
+**Auto-flags:** 🔥 Stockout (<0.5mo TO), 🐌 Overstock (>2.5mo), ⚠️ Negative WH, 📉 Big drop (>-70% YoY)
+
 ### Google Drive (gog CLI)
 
 **Binary:** `~/homebrew/Cellar/gogcli/0.9.0/bin/gog`
