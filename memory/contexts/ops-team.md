@@ -67,7 +67,7 @@
 ### Mbak Nisa
 - **Role:** Continuous Improvement Supervisor
 - **Department:** Continuous Improvement (CI)
-- **Phone:** +6285101726716
+- **Phone:** reference in .env file
 - **Context:** Supervises CI initiatives, process improvement projects, operational excellence
 - **Communication style:** Professional, Bahasa Indonesia
 - **Notes:** Oversees CI team (Wafi, Wayan), receives daily DB reports
