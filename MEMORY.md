@@ -6,6 +6,8 @@
 - Primary language: Bahasa Indonesia
 - Tone: chill, clear, no jargon
 - **Heartbeat interval:** Every 1 minute — check HEARTBEAT.md for pending tasks
+- **⚠️ OpenCode IS INSTALLED:** Binary at `~/.opencode/bin/opencode` (v1.1.64) — ALWAYS use full path!
+- **⚠️ DB Credentials:** ALWAYS hardcode in terminal when delegating to OpenCode/Claude Code/Kimi (.env auto-rejected). Safe karena gak masuk git.
 
 ## Critical Lessons Learned
 
@@ -53,6 +55,37 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 - **Schemas:** raw (Accurate API daily), portal (Google Sheets master), core (transformed views), mart (ad-hoc analysis), public (Looker Studio mirrors)
 - **psql client:** installed via brew (libpq 18.1)
 
+### Sales Detail Per Artikel (Learned 2026-02-16)
+**When user requests:** "sales data per artikel/article mix" dengan breakdown Type/Gender/Series/Tier
+
+**Query from:** `public.sales_summary_plano` (bukan raw/mart!)
+
+**Key columns:**
+- transaction_month (timestamp) → format jadi Month
+- kode_mix → Article Mix
+- tipe → Type
+- gender → Gender
+- series → Series
+- product_name → Article
+- tier → Tier
+- total_quantity → Sales Qty
+
+**Store names:** LOWERCASE! ('zuma nagoya hills', 'zuma ska mall', dll)
+
+**Example query:**
+```sql
+SELECT 
+  TO_CHAR(transaction_month, 'Mon YYYY') AS month,
+  kode_mix, tipe, gender, series, product_name, tier,
+  total_quantity
+FROM public.sales_summary_plano
+WHERE store_name_raw = 'zuma nagoya hills'
+  AND transaction_month >= '2025-02-01'
+ORDER BY transaction_month, kode_mix;
+```
+
+**Output format:** Month | Article Mix | Type | Gender | Series | Article | Tier | Sales Qty
+
 ## People
 
 ### Core Team
@@ -96,11 +129,24 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
 - Always skip YouTube ads
 - OpenClaw browser (profile "openclaw") works without relay but has no login
 
+### YouTube Music Policy (2026-02-16)
+**User requests lagu → langsung puter, no relay needed**
+- Don't ask about relay setup
+- Switch existing YouTube tab OR open new browser
+- Use openclaw browser profile (standalone, works immediately)
+- Quick execution > relay configuration
+
 ## Wayan's Preferences
 - Music: Denny Caknan, Sabrina Carpenter, Bad Bunny
 
 ## VPS Team — MY EMPLOYEES 👥
 **CRITICAL:** Iris Junior, Atlas, Apollo adalah **karyawan aku**. Aku bisa delegasi tasks ke mereka, bukan cuma ke local tools (Claude Code/Kimi)!
+
+**⚠️ VPS DELEGATION SCOPE (2026-02-16): CRON JOB ONLY!**
+- VPS agents = automated scheduled tasks (cron monitoring, ETL health checks, daily reports)
+- **NOT for:** Ad-hoc queries, exploratory analysis, experimental work
+- **Why:** VPS = 8GB RAM, 2 CPU cores (limited vs Mac mini M4 with stronger computing power)
+- **Ad-hoc work** (Mbak Dewi queries, product analysis, etc) → **opencode on Mac mini** with zuma-business-skills
 
 ### VPS Infrastructure (76.13.194.103 - Hostinger KVM 2)
 - **Specs:** 8GB RAM, 100GB NVMe SSD, 2 CPU cores
