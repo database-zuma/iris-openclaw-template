@@ -45,6 +45,35 @@ Semua credentials tersimpan di `/Users/database-zuma/.openclaw/workspace/.env` â
 Isi: GitHub token, Vercel token, PostgreSQL connection string, Notion API key.
 Load dengan `source .env` atau `python-dotenv`.
 
+### Database Backup (Mac Mini Mirror)
+
+**Setup:** PostgreSQL client (libpq 18.1) installed via homebrew
+
+**Backup Script:** `~/backups/db/backup-vps-db.sh`
+- Daily cron: 02:30 WIB (30 min after VPS backup at 02:00)
+- Retention: 14 days on Mac mini (vs 7 days on VPS)
+- Location: `~/backups/db/openclaw_ops_YYYYMMDD.sql.gz`
+- Typical size: ~55MB compressed
+- Log: `~/backups/db/backup.log`
+
+**Cron Schedule:**
+```
+30 2 * * * /Users/database-zuma/backups/db/backup-vps-db.sh >> /Users/database-zuma/backups/db/backup.log 2>&1
+```
+
+**Manual Backup:**
+```bash
+cd ~/backups/db && ./backup-vps-db.sh
+```
+
+**Restore (if needed):**
+```bash
+gunzip -c ~/backups/db/openclaw_ops_YYYYMMDD.sql.gz | \
+  ~/homebrew/Cellar/libpq/18.1_1/bin/psql -h 76.13.194.120 -U openclaw_app openclaw_ops
+```
+
+**Purpose:** Offline redundancy â€” VPS backup + local Mac mini mirror for disaster recovery
+
 ### Notion API
 
 **Key:** `NOTION_API_KEY` di `.env`
