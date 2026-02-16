@@ -315,3 +315,27 @@ ORDER BY transaction_month, kode_mix;
 **Communication modes:**
 - **TUI (persistent):** Best for ongoing conversation, less token burn
 - **CLI one-shot:** Quick commands when TUI not needed
+
+### Presentation Workflow — MANDATORY 🚨
+**CRITICAL POLICY (2026-02-16):** **ALL PPT requests = HTML + Vercel deployment**
+
+**When ANY user requests PPT/presentation:**
+1. Generate HTML deck (single file with Tailwind CSS)
+2. Deploy to Vercel (`vercel --prod --yes`)
+3. Share permanent URL — NOT static file download
+
+**Why HTML + Vercel is mandatory:**
+- Web-shareable (permanent URL, accessible anywhere)
+- Better print quality (user prints to PDF themselves: Cmd+P, background graphics ON)
+- Fast iteration (re-deploy in 10 seconds)
+- No python-pptx layout struggles
+- Scrollable, responsive, modern UX
+
+**ONLY use python-pptx if:**
+- User explicitly requests .pptx file format
+- Or HTML approach fails multiple times
+
+**Proven success:** RO Benchmark deck (11 slides, 7 deployments, ~10 sec each, user satisfied)
+
+**Reference example:** https://ro-benchmark-vercel.vercel.app
+**Skill location:** `zuma-business-skills/general/zuma-ppt-design/SKILL.md`

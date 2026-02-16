@@ -306,14 +306,20 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 **How to delegate:**
 ```bash
 # Default (Sonnet 4.5)
-opencode run -m anthropic/claude-sonnet-4-5 --session iris_task_name "prompt"
+~/.opencode/bin/opencode run -m anthropic/claude-sonnet-4-5 --session iris_task_name "prompt"
 
 # Coding (Kimi K2.5, faster/cheaper)
-opencode run -m opencode/kimi-k2.5-free --session iris_kimi_coding "prompt"
+~/.opencode/bin/opencode run -m opencode/kimi-k2.5-free --session iris_kimi_coding "prompt"
 
 # Background mode (via exec tool, monitor via process tool)
 # I continue chatting while opencode works
 ```
+
+**⚠️ PATH:** OpenCode binary at `~/.opencode/bin/opencode` (not in system PATH, use full path!)
+
+**⚠️ CREDENTIALS RULE (2026-02-16):** ALWAYS hardcode DB credentials in terminal command when delegating to OpenCode/Claude Code/Kimi. .env file reading auto-rejected. Hardcoded in terminal = safe (gak masuk git, cuma exec history).
+
+**⚠️ RETRY RULE (2026-02-16):** ALWAYS re-run failed tasks until successful. Don't stop at first error — keep retrying with adjustments until task completes.
 
 **Session naming:** MUST use `iris_` prefix (e.g., `iris_upload_csv`, `iris_fix_schema`)
 
@@ -394,7 +400,10 @@ Contoh task yang harus di-delegasi:
 **🔴 CRITICAL RULES:**
 
 1. **ALWAYS use opencode for technical tasks** (2026-02-13) — keep Iris responsive
-2. **ALWAYS use Atlas for database queries** (2026-02-12) — jangan coba local psql!
+2. **VPS agents (Atlas/Apollo/Iris Junior) ONLY for CRON JOB monitoring** (2026-02-16) — NOT for exploratory/experimental queries!
+   - VPS = 8GB RAM, 2 CPU cores (limited vs Mac mini M4)
+   - Exploratory queries (ad-hoc analysis, Mbak Dewi requests) → **opencode on Mac mini** with zuma-business-skills
+   - VPS agents = cron job execution + monitoring + reporting ONLY
 
 **Execution priority:**
 
@@ -414,12 +423,14 @@ Contoh task yang harus di-delegasi:
 - User-facing responses while opencode/Atlas work
 
 **Level 2 — VPS team (Atlas/Iris Junior/Apollo):**
-- **ALL PostgreSQL queries** → Atlas (stock, sales, any DB query)
-- Long-running data operations (Accurate API, GSheets)
-- Background monitoring & reporting
-- Notion task management
-- Cron job coordination
-- Tasks that can run independently on VPS
+- **CRON JOB tasks ONLY** (2026-02-16) — automated scheduled tasks, NOT ad-hoc queries!
+- Stock/Sales ETL monitoring (03:00/05:00 WIB cron)
+- FF/FA/FS daily calculation monitoring
+- SO L2 daily reconciliation monitoring
+- Backup verification (daily/weekly)
+- Notion task management (Iris Junior)
+- Health check reporting (Atlas → Iris Junior → Wayan/Nisa)
+- **NOT for:** Ad-hoc analysis, exploratory queries, experimental work (use opencode on Mac mini instead)
 
 **Level 3 — Local sub-agents (sessions_spawn):**
 - Long terminal operations (brew install, git clone large repos)

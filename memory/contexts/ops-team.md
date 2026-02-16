@@ -10,6 +10,7 @@
 
 ### Mbak Dini (Bu Dini Tri Mart)
 - **Role:** OPS Manager
+- **Phone:** +62 853-2602-6525
 - **Department:** Operations
 - **Context:** Head of OPS team, oversees all operational functions (purchasing, merchandising, allocation, inventory control, branch support)
 - **Communication style:** Formal-friendly, Bahasa Indonesia
@@ -17,6 +18,7 @@
 
 ### Mbak Citra
 - **Role:** Purchasing Supervisor
+- **Phone:** +62 857-3642-7220
 - **Department:** Purchasing
 - **Context:** Supervises purchasing operations, vendor management, PO coordination
 - **Communication style:** Professional, Bahasa Indonesia
@@ -24,6 +26,7 @@
 
 ### Mbak Sari
 - **Role:** Purchasing Admin
+- **Phone:** +62 895-6322-20663
 - **Department:** Purchasing
 - **Context:** Admin support untuk purchasing — PO processing, documentation, vendor communication
 - **Communication style:** Professional, Bahasa Indonesia
@@ -31,6 +34,7 @@
 
 ### Mas Bagus (Mas Bagus Kiswoyo)
 - **Role:** Merchandiser
+- **Phone:** +62 812-3449-7772
 - **Department:** Merchandising
 - **Context:** Product assortment planning, merchandise strategy, stock optimization
 - **Communication style:** Professional, Bahasa Indonesia
@@ -45,6 +49,7 @@
 
 ### Mbak Galuh
 - **Role:** Staff Inventory Control (IC)
+- **Phone:** +62 857-0806-4809
 - **Department:** Inventory Control
 - **Context:** Stock monitoring, inventory accuracy, cycle counts, discrepancy resolution
 - **Communication style:** Professional, Bahasa Indonesia
@@ -52,6 +57,7 @@
 
 ### Nabila
 - **Role:** Staff Inventory Control (IC)
+- **Phone:** +62 857-0708-3943
 - **Department:** Inventory Control
 - **Context:** Stock monitoring, inventory accuracy, cycle counts, discrepancy resolution
 - **Communication style:** Professional, Bahasa Indonesia
@@ -59,6 +65,7 @@
 
 ### Mbak Fifi
 - **Role:** Branch Support Specialist
+- **Phone:** +62 815-1539-3046
 - **Department:** Branch Support
 - **Context:** Supports branch operations, handles store operational issues, coordination antara HQ & stores
 - **Communication style:** Professional, Bahasa Indonesia
@@ -74,6 +81,7 @@
 
 ### Wafi
 - **Role:** Continuous Improvement - Implementation Specialist
+- **Phone:** +62 858-5900-0117
 - **Department:** Continuous Improvement (CI)
 - **Context:** Implements CI projects, process optimization, operational workflows
 - **Communication style:** Professional, Bahasa Indonesia

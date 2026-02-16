@@ -106,6 +106,10 @@ Every Zuma data question follows:
 
 **Basic Query:**
 ```sql
+-- ⚠️ CRITICAL: ALWAYS include full stock breakdown columns
+-- User needs to verify: stok_global = wh_total + stok_toko + stok_online + stok_unlabel
+-- Missing columns causes confusion (e.g., negative WH not visible → looks impossible)
+
 SELECT 
   kodemix,
   gender,
@@ -130,14 +134,19 @@ SELECT
   -- Recent Performance
   avg_last_3_months AS avg_3mo_qty,
   
-  -- Stock
+  -- Stock (ALWAYS show full breakdown for verification)
   stok_global AS total_stock,
-  wh_total AS wh_stock,
+  wh_pusat AS wh_surabaya,
+  wh_bali AS wh_bali,
+  wh_jkt AS wh_jakarta,
+  wh_total AS wh_total,
   stok_toko AS store_stock,
   stok_online AS online_stock,
+  stok_unlabel AS unlabel_stock,
   
   -- Turnover
-  ROUND(to_total::numeric, 2) AS turnover_months
+  ROUND(to_total::numeric, 2) AS turnover_months,
+  ROUND(to_wh::numeric, 2) AS turnover_wh_months
   
 FROM mart.sku_portfolio
 WHERE 1=1

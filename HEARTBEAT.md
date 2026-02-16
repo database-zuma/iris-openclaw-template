@@ -2,7 +2,7 @@
 
 ## 📋 Pending Tasks
 
-*(Currently none — all cleared)*
+(No pending tasks)
 
 ## 🔄 Routine Checks (rotate 2-4x daily)
 
