@@ -340,6 +340,14 @@ ORDER BY transaction_month, kode_mix;
 **Reference example:** https://ro-benchmark-vercel.vercel.app
 **Skill location:** `zuma-business-skills/general/zuma-ppt-design/SKILL.md`
 
+**Skill coverage (2026-02-16):** Complete presentation workflow
+- **Visual Design:** Colors, typography, layouts (KBI-inspired)
+- **Technical Implementation:** HTML + Vercel, python-pptx fallback
+- **Narrative Structure:** Data storytelling frameworks (SCQA, Pyramid Principle, Insight Hierarchy, Narrative Arc)
+- **Quality Bar:** Descriptive → Diagnostic → Predictive → Prescriptive insights
+
+**Storytelling integration:** Data storytelling consolidated into PPT skill (not separate skill) — one-stop resource for design + tech + narrative
+
 ## Critical Lessons: Branch/Store Mapping (2026-02-16)
 
 **NEVER ASSUME store locations based on store names!**
@@ -378,3 +386,71 @@ WHERE ps.branch IS NOT NULL
 - If unsure → Ask user, don't guess
 
 **Lesson:** Master data > assumptions. ALWAYS check source of truth before making claims about locations/branches.
+
+## DN-to-PO Workflow (2026-02-16)
+
+**Purpose:** Convert Delivery Note (DN) documents to Invoice (DDD) + Purchase Order (MBB/UBB) formats for Accurate Online import
+
+**CRITICAL:** 1 DN = 2 outputs (Invoice + PO) — both files MANDATORY
+
+### Standard Scripts (MUST USE):
+1. `~/.openclaw/workspace/dn-to-po/convert-dn-to-invoice.js` — Generate Invoice for DDD (seller)
+2. `~/.openclaw/workspace/dn-to-po/convert-dn-to-po.js` — Generate PO for MBB/UBB (buyer)
+
+### Supported Input Formats:
+- ✅ Excel (.xlsx) — Sheet "Pengiriman Pesanan"
+- ✅ PDF (.pdf) — Text extraction with pdf-parse library (added 2026-02-16)
+
+### Workflow:
+```bash
+# Step 1: Generate Invoice for DDD
+node convert-dn-to-invoice.js <file_DN>
+
+# Step 2: Generate PO for entity (ask user: MBB atau UBB?)
+node convert-dn-to-po.js <file_DN> <MBB|UBB>
+```
+
+### Features:
+- **Pricing automation:** Auto-load from `template/Master Harga.xlsx` (sheet MBB/UBB, column "Harga After Diskon")
+- **PDF support:** Parse DN metadata + items from PDF text (DN number, date, customer, SKU list)
+- **Field normalization:** Excel and PDF outputs use same structure (dnNumber, dnDate, customerName, items)
+
+### Output Files:
+- **Invoice:** `INV-DDD-dari-{NO_DN}-{TANGGAL}-{JAM}.xlsx`
+- **PO:** `PO-{ENTITY}-dari-{NO_DN}.xlsx`
+- **Location:** `~/Desktop/DN PO ENTITAS/`
+
+### Delivery Format:
+Send BOTH files (Invoice + PO) with captions:
+```
+📄 **{FILENAME}**
+
+{DN_NUMBER}
+{X} SKU, {Y} pairs
+Tanggal: {TANGGAL}
+
+🔗 **Google Sheets:**
+{LINK}
+```
+
+### Critical Rules:
+1. **ALWAYS use standard scripts** — NEVER ad-hoc Python/manual conversions
+2. **ALWAYS deliver Excel + Google Sheets link TOGETHER** — never link-only first
+3. **ALWAYS generate BOTH files** — Invoice + PO (missing either = incomplete)
+4. **PDF or Excel auto-detected** — script handles both formats automatically
+
+### Common Mistakes:
+- ❌ Using ad-hoc Python scripts instead of standard scripts
+- ❌ Sending link-only without Excel file
+- ❌ Generating only PO without Invoice
+- ❌ Wrong filename format
+- ❌ Forgetting to move files to `~/Desktop/DN PO ENTITAS/`
+
+### Historical Incident (Bu Aulia, 2026-02-16):
+- User received Python ad-hoc output (wrong format) + link-only (missing file)
+- Reported as "tidak sesuai"
+- Resolution: Re-processed with standard script, sent file + link + apology
+- Permanent reminder: Consistency = trust
+
+**Skill location:** `zuma-business-skills/general/dn-to-po/SKILL.md`
+**Repo:** https://github.com/database-zuma/dn-to-po
