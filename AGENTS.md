@@ -232,7 +232,7 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 ### 📋 HEARTBEAT.md as Task Tracker — MANDATORY WORKFLOW ⚠️
 
-**Heartbeat Interval:** Every **10 minutes** — check HEARTBEAT.md each time
+**Heartbeat Interval:** Every **1 minute** — check HEARTBEAT.md each time
 
 **CRITICAL RULE (2026-02-13):** When you delegate a task and promise follow-up ("nanti kabarin", "aku kabarin kalau selesai", etc.):
 

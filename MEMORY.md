@@ -5,7 +5,7 @@
 - Setup date: 2026-02-11
 - Primary language: Bahasa Indonesia
 - Tone: chill, clear, no jargon
-- **Heartbeat interval:** Every 10 minutes — check HEARTBEAT.md for pending tasks
+- **Heartbeat interval:** Every 1 minute — check HEARTBEAT.md for pending tasks
 
 ## Critical Lessons Learned
 
@@ -18,7 +18,7 @@
 
 **Solution (Wayan's idea):** HEARTBEAT.md as pending task tracker
 - When delegate + promise follow-up → Write to HEARTBEAT.md immediately
-- Every heartbeat (10 min) → Check HEARTBEAT.md, poll tasks, deliver or escalate
+- Every heartbeat (1 min) → Check HEARTBEAT.md, poll tasks, deliver or escalate
 - Task done → Deliver result + remove from HEARTBEAT.md
 
 **Files:** `HEARTBEAT.md` (template), `AGENTS.md` (mandatory workflow section)
