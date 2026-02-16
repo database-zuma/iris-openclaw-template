@@ -263,7 +263,7 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 ```md
 # Pending Tasks
 
-- [ ] Query Merci sales (Mbak Dewi +6285733484928) - delegated to Atlas 16:55 ⏰
+- [ ] Query Merci sales (Mbak Dewi) - delegated to Atlas 16:55 ⏰
 - [ ] RO Request benchmark (Wayan) - opencode session iris_benchmark, check status
 
 # Routine Checks (rotate 2-4x daily)

@@ -305,7 +305,7 @@ message action=send channel=whatsapp target=120363421058001851@g.us message="tex
 **Proper Tagging/Mentions:**
 - **DON'T:** Just write "cc: Wayan, Wafi, Nisa" in text (gak akan notify mereka)
 - **DO:** Use proper WhatsApp mentions — check message tool docs for mention format
-- **Note:** Need phone numbers to mention properly (e.g., +628983539659 for Wayan)
+- **Note:** Need phone numbers to mention properly (stored in .env)
 - Manual tag alternative: Ask user to tag manually setelah message terkirim
 
 **TODO:** Implement proper mention syntax when message tool supports it
@@ -342,7 +342,7 @@ matched_store_name LIKE '%konsinyasi%' → EXCLUDE
 - ✅ Sulawesi
 - ✅ Sumatra
 
-**Rule verified by:** User +6285101726716 (2026-02-12 08:41-08:44)
+**Rule verified by:** User (OPS team member, 2026-02-12 08:41-08:44)
 
 ### Intercompany Filter — When to Use
 
