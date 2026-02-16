@@ -339,3 +339,42 @@ ORDER BY transaction_month, kode_mix;
 
 **Reference example:** https://ro-benchmark-vercel.vercel.app
 **Skill location:** `zuma-business-skills/general/zuma-ppt-design/SKILL.md`
+
+## Critical Lessons: Branch/Store Mapping (2026-02-16)
+
+**NEVER ASSUME store locations based on store names!**
+
+**Incident:** Performance analysis PPT — salah mapping branch 3x revisions:
+- Epicentrum assumed Jakarta → **ACTUAL: Lombok**
+- Level 21 assumed Jakarta → **ACTUAL: Bali**  
+- City of Tomorrow assumed Jakarta → **ACTUAL: Surabaya (Jatim)**
+
+**Root cause:** Pattern matching `ILIKE '%epicentrum%'` based on feeling ≠ actual data
+
+**MANDATORY workflow for branch/area queries:**
+
+```sql
+-- ❌ WRONG: CASE WHEN mapping based on store name
+CASE WHEN store_name ILIKE '%epicentrum%' THEN 'Jakarta' ...
+
+-- ✅ CORRECT: JOIN with portal.store (source of truth)
+SELECT 
+  s.store_name_raw,
+  ps.branch,
+  ps.area,
+  ps.category
+FROM core.sales_with_product s
+LEFT JOIN portal.store ps ON s.store_name_raw = ps.nama_accurate OR s.store_name_raw = ps.nama_iseller
+WHERE ps.branch IS NOT NULL
+```
+
+**Source of truth hierarchy:**
+1. `portal.store` table (branch, area, category columns) — **ALWAYS use this**
+2. Store name patterns — **NEVER trust assumptions**
+
+**Validation rules:**
+- Branch/area analysis → Query `portal.store` first
+- Cross-reference with master data before presenting
+- If unsure → Ask user, don't guess
+
+**Lesson:** Master data > assumptions. ALWAYS check source of truth before making claims about locations/branches.
