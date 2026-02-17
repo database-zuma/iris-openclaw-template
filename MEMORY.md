@@ -452,5 +452,5 @@ Tanggal: {TANGGAL}
 - Resolution: Re-processed with standard script, sent file + link + apology
 - Permanent reminder: Consistency = trust
 
-**Skill location:** `zuma-business-skills/general/dn-to-po/SKILL.md`
+**Skill location:** `zuma-business-skills/ops/dn-to-po/SKILL.md`
 **Repo:** https://github.com/database-zuma/dn-to-po
