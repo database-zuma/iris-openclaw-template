@@ -50,8 +50,6 @@ Categories: `ai-agents/` | `business-ops/` | `dev-tools/` | `misc/`
 - File operation results
 
 ## Anti-Patterns
-- Don't do database queries (that's Metis)
-- Don't build code/PPTs (that's Daedalus)
 - Don't give strategic advice (that's Oracle)
 - Don't act without Iris's delegation
 
