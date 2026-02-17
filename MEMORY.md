@@ -251,6 +251,26 @@ ORDER BY transaction_month, kode_mix;
 
 **Example:** Merci sales query → Group by color only → Brief output
 
+### ⚠️ YoY Analysis Rule (2026-02-17) — CRITICAL
+
+**NEVER use `var_year_qty` or `current_year_qty / last_year_qty` mid-year!**
+- `current_year_qty` = YTD (e.g., Jan-Feb 2026 = 2 months)
+- `last_year_qty` = full 12 months 2025
+- Comparing these = **misleading** (76K/683K = -88.8% WRONG → actual same-period: -16.7%)
+
+**✅ Correct formula:**
+```sql
+-- Same-period YoY (for Feb 2026):
+SUM(now_jan_qty + now_feb_qty) AS ytd_now,
+SUM(last_jan_qty + last_feb_qty) AS ytd_last,
+ROUND((ytd_now / NULLIF(ytd_last,0) - 1) * 100, 1) AS yoy_pct,
+-- Annual forecast:
+ROUND(SUM(last_year_qty) * ytd_now / NULLIF(ytd_last,0), 0) AS annual_forecast
+```
+
+**Wayan's preference:** Same-period as default. Annualized when needed for projection.
+**Portfolio Jan-Feb 2026 correct numbers:** 76,208 vs 91,445 = **-16.7%** | Forecast **569K pairs**
+
 ### Product Analysis Template (2026-02-17) — UPDATED PRIMARY SOURCE
 
 **Template:** `templates/product-analysis-unified.md` (merged SQL query framework + WhatsApp formatting)
