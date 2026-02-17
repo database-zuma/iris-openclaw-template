@@ -2,7 +2,7 @@
 
 ## 📋 Pending Tasks
 
-(No pending tasks)
+- [ ] **Upload iSeller data (2024, 2025, 2026)** — Database upload task, waiting for Wayan's download to complete
 
 ## 🔄 Routine Checks (rotate 2-4x daily)
 
@@ -17,3 +17,4 @@
 - Every heartbeat → check pending, poll status, deliver or escalate
 - Task done → deliver result → remove from list
 - Keep this file clean & current
+
