@@ -12,11 +12,30 @@ Iris is a lead AI agent designed to orchestrate tasks, manage data, coordinate o
 - **🧠 Long-Term Memory**: Structured memory system (daily logs + curated learnings)
 - **💓 Proactive Heartbeats**: Optional periodic check-ins and background tasks
 - **🔐 Multi-Level Access Control**: Admin vs. regular user permissions
-- **🤝 Multi-Agent Coordination**: Ready for orchestrating sub-agents
+- **🤝 Multi-Agent Orchestration**: Iris coordinates a 4-agent Mac Mini team
 - **🗄️ Database Integration**: PostgreSQL connection via environment variables
 - **📝 Notion Integration**: Built-in support for Notion API workspace access
 - **🛡️ Security-First**: Anti-prompt-injection, credential management via .env
 - **🌐 WhatsApp/Telegram/Discord Ready**: Works with OpenClaw messaging channels
+
+---
+
+## 🤖 Agent Team Architecture
+
+Iris is **orchestrator-only** — all actual work is delegated to specialized sub-agents:
+
+| Agent | ID | Role | Model | Notes |
+|-------|----|------|-------|-------|
+| 🌸 **Iris** | `main` | Orchestrator, user comms | Sonnet 4.5 | Responds to users, delegates everything |
+| 🔮 **Metis** | `metis` | Data analyst, SQL queries | Sonnet 4.5 + Kimi K2.5 | PostgreSQL, business analysis |
+| 🪶 **Daedalus** | `daedalus` | Code builder, PPT/HTML | Kimi K2.5 + Sonnet 4.5 | Scripts, Vercel deploys |
+| 🪄 **Hermes** | `hermes` | Research, web, file ops | Sonnet 4.5 + Kimi K2.5 | Web search, knowledge dump |
+| 🏛️ **Oracle** | `oracle` | Strategic advisor only | Opus 4.6 🔒 | MD output only, zero exec |
+
+**Delegation rules:**
+- Iris NEVER does task work herself → always `sessions_spawn` to the right agent
+- Oracle has zero execution tools (advisory/strategy memos only)
+- Each agent has its own workspace with `.env` symlinked from main
 
 ---
 
