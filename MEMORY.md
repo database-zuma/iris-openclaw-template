@@ -394,6 +394,46 @@ WHERE kode_besar = 'M1SPV201Z42';
 **Reference:** https://ro-benchmark-vercel.vercel.app | **Skill:** `zuma-business-skills/general/zuma-ppt-design/SKILL.md`
 **Covers:** Visual design (KBI-inspired) + HTML/Vercel tech + Data storytelling (SCQA, Pyramid Principle, Narrative Arc)
 
+**⚠️ VERCEL DEPLOY RULE (2026-02-17):** ALWAYS deploy from the SAME folder as the original project. If you deploy from a NEW folder → Vercel creates NEW project → old alias stays on old project → URL shows old deck. Fix: copy index.html to original folder, deploy from there.
+
+**⚠️ MANDATORY: @media print CSS (2026-02-17):** Every HTML deck MUST include print block from TEMPLATE.html. Without it, slides kepotong when PDF. Already in TEMPLATE.html v2.0 — auto-included if using template. Key: `@page { size: A4 landscape }` + `page-break-after: always` per slide + `print-color-adjust: exact`. User: Cmd+P → Save as PDF → Margins: None → ✅ Background graphics.
+
+### Active Decks (Feb 2026)
+| Deck | URL | Framework |
+|------|-----|-----------|
+| Portfolio Analysis | https://zuma-product-analysis.vercel.app | BCG + PLC (product lens) |
+| Performance Analysis | https://zuma-performance-analysis.vercel.app | Revenue Bridge + ABC + Growth×Revenue (business lens) |
+| RO Benchmark | https://ro-benchmark-vercel.vercel.app | Swiss Style |
+| **BM Jatim** | **https://zuma-bm-jatim.vercel.app** | 11 slides: Scorecard + ABC + FF/FA/FS + BCG + STO link |
+
+### STO Analysis Tool (2026-02-17)
+- **URL:** https://zuma-sto.vercel.app (national, not branch-specific)
+- **Layout:** Summary bars (aggregate) + Butterfly chart per ukuran
+- **Butterfly:** kiri = avg sales/bln (merah), kanan = stok (warna TO), batang sama panjang = TO 1x
+- **Script:** `/tmp/gen_sto_v5.py` (query dari mart.sto_analysis, Jatim stores)
+- **Data:** mart.sto_analysis (60,602 rows, 155 stores, 699 articles, 3 bulan: Nov+Dec+Jan)
+- **Daily update:** 06:10 WIB via OpenClaw cron (isolated agentTurn)
+
+### BM Deck Private Repo (2026-02-17)
+- **Repo:** https://github.com/database-zuma/zuma-bm-decks (PRIVATE)
+- **Local:** `~/.openclaw/workspace/zuma-bm-decks/`
+- **Logos:** `assets/logo-08.png` = white version (for dark covers); logo-01/04 = dark version (for light covers)
+- **GitHub ≠ Vercel:** versioning dan deployment TERPISAH (push GitHub ≠ auto-deploy)
+- **Branch naming:** `zuma-bm-{branch}.vercel.app` (1 branch = 1 URL permanent)
+- **Daily update trigger:** cron ID `4113ba33` fires systemEvent ke Iris 06:00 WIB
+
+### mart.sto_analysis (2026-02-17)
+- **Schema:** store_name, kode, size, qty_m3/m2/m1, qty_3m, avg_monthly, current_stock, turnover
+- **Rebuild:** `SELECT mart.rebuild_sto_analysis()` (function exists, runs daily before gen script)
+- **Exclude:** wholesale, konsinyasi, pusat, wilbex, imbex, merchandise, HO, bazar, event, pameran
+- ⚠️ **TODO:** Dynamic month calculation (saat ini hardcoded Nov/Dec/Jan)
+
+### Performance Analysis Deck — Key Data (Jan–Feb 2026)
+- **Revenue Bridge:** Volume -16.7% (91K→76K pairs) = -1.87B | ASP +9.8% (Rp122K→Rp134K) = +0.91B | **Net: -8.7%**
+- **Top store:** Zuma Mataram (Lombok) — 5,901 pairs, +56% YoY, Rp 395M (#1 nationally)
+- **Concern:** Zuma Dalung — 1,859 pairs, **-55.6%** YoY
+- **Insight:** ASP increase is the revenue buffer — mix shift to premium (BLACKSERIES, Metalic)
+
 ## Critical Lessons: Branch/Store Mapping (2026-02-16)
 
 **NEVER ASSUME store locations from names!** Epicentrum=Lombok (not Jakarta), Level 21=Bali, City of Tomorrow=Surabaya.
@@ -443,3 +483,23 @@ node convert-dn-to-po.js <file_DN> <MBB|UBB>
 
 **Skill location:** `zuma-business-skills/ops/dn-to-po/SKILL.md`
 **Repo:** https://github.com/database-zuma/dn-to-po
+
+## Role → Framework Mapping (2026-02-17)
+
+**Confirmed by Wayan. Use this as starting point for deck requests per user role.**
+
+| Role | Primary Framework | Data Source | Status |
+|------|------------------|-------------|--------|
+| CEO / GM | Revenue Bridge + BCG Portfolio + Forecast | mart.sku_portfolio_size | ✅ Ready |
+| Dept Ops | ABC Store + Growth×Revenue Matrix + Stock Coverage | core.sales_with_product + mart | ✅ Ready |
+| R&D / Product | BCG Matrix + PLC per series | mart.sku_portfolio_size | ✅ Ready |
+| Branch Manager | Same as Ops, filtered per cabang | core.sales_with_product + portal.store | ⚠️ Branch JOIN needs fix |
+| Finance | Revenue Bridge + Contribution Margin | Needs COGS/margin from Accurate | ❌ Data belum ada |
+| BusDev | Market Opportunity + White Space | Needs external + channel data | ❌ Data belum ada |
+| Channel (Online/Retail/WS) | Channel split analysis | MBB=online, DDD=retail, UBB=wholesale | ⚠️ Query needs optimization |
+
+**Known gaps (2026-02-17):**
+1. Finance → COGS/gross margin belum ada di DB — hold sampai data masuk
+2. BusDev → market size, competitor landscape belum ada — hold
+3. Branch JOIN timeout → `portal.store` ILIKE join terlalu lambat; perlu index atau materialized lookup
+4. Channel breakdown → logika ada (entity-based), query pattern belum dioptimize
