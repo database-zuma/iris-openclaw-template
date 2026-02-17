@@ -16,19 +16,7 @@
 - **Function:** `mart.rebuild_sto_analysis()` created (for weekly cron)
 - **Deployed:** Powering zuma-sto-jatim.vercel.app v2
 
-### 1. Upload iSeller data (2024, 2025, 2026)
-- **Status:** Waiting for Wayan's download to complete
-- **Action:** Upload ke PostgreSQL (raw schema or new table)
-- **Who:** Iris (Mac mini or delegate to opencode)
-- **Timeline:** As soon as files ready
-
-### 2. Monitor Atlas report generation (2026-02-17)
-- **Status:** Monitoring now (every 1-min heartbeat)
-- **Expected:** `/root/.openclaw/workspace-ops/logs-report-for-iris/2026-02-17_atlas-report.json`
-- **Timeline:** Within 5-10 min from HEARTBEAT.md setup (07:11)
-- **Action:** Report to Wayan when confirmed
-
-### 3. Create SO L2 SKILL.md (retroactive documentation)
+### 1. Create SO L2 SKILL.md (retroactive documentation)
 - **Status:** Script LIVE ✅, skill doc MISSING ⚠️
 - **Location:** `zuma-business-skills/ops/zuma-inventory-control/zuma-so-l2-skills/SKILL.md`
 - **Why:** Dual-component pattern (automation + documentation for on-the-fly generation)

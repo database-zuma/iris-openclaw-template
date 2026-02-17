@@ -22,8 +22,7 @@
 
 ## 📋 Pending Tasks (Urgent - This Week)
 
-- [ ] **PENDING: Item Transfer 6-month backfill** — VPS PID 265877, started 17:39 WIB | pull_accurate_item_transfer.py --days 180 | estimated 2-3 jam | log: /opt/openclaw/logs/item_transfer_backfill.log | Wayan: mau lihat raw data setelah selesai
-- [ ] **Upload iSeller data (2024, 2025, 2026)** — Database upload task, waiting for Wayan's download to complete
+*(kosong)*
 
 ---
 

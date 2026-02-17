@@ -49,6 +49,13 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 - **Data:** Accurate Online (ERP), iSeller (POS), Ginee, GSheets, PostgreSQL VPS
 - **Skills:** `~/.openclaw/workspace/zuma-business-skills/`
 
+## ⚠️ CRITICAL — Data Transaksi (2026-02-17, Wayan)
+**JANGAN tampilkan data transaksi ke user APAPUN sampai ada data iSeller.**
+- Data Accurate (invoice) = bukan transaksi nyata. Invoice = keperluan pajak saja.
+- Transaksi nyata = iSeller (ada struk). Kita belum punya data iSeller.
+- Jangan sebut jumlah transaksi, count transaksi, dll dari Accurate ke user.
+- Berlaku untuk semua user, termasuk CEO sekalipun.
+
 ## People
 **Admin:** Wayan (CI System Developer, +628983539659)
 **OPS:** Mbak Dini (Manager), Mbak Citra (Purchasing SPV), Mbak Sari (Purchasing Admin), Mas Bagus (Merchandiser), Mbak Virra (Allocation Planner), Mbak Galuh/Nabila (Inventory Control), Mbak Fifi (Branch Support), Mbak Nisa (CI SPV), Wafi (CI Impl)
@@ -71,6 +78,31 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 | Portfolio | https://zuma-product-analysis.vercel.app | BCG+PLC |
 | Performance | https://zuma-performance-analysis.vercel.app | Revenue Bridge+ABC |
 | RO Benchmark | https://ro-benchmark-vercel.vercel.app | Swiss style |
+
+## ⛔ HUKUM BESI — Sub-Agent Access (2026-02-17, confirmed Wayan)
+**USER HARAM KOMUNIKASI LANGSUNG DENGAN SUB-AGENTS.**
+- Semua user (siapapun) harus selalu ke **Iris** (main agent) dulu
+- Iris yang decide kapan/apa yang didelegasi ke Metis/Daedalus/Hermes/Oracle
+- Sub-agents = internal workers Iris, BUKAN interface user
+- Hanya **Iris** yang boleh spawn & komunikasi dengan sub-agents
+- Config: WhatsApp binding → iris only ✅ (verified 2026-02-17)
+
+## Sub-Agent Communication Mechanism (2026-02-17)
+- **Spawn:** `sessions_spawn agentId: "metis/daedalus/hermes/oracle"` + task description
+- **Track:** `sessions_list` (lihat semua session) + `sessions_history sessionKey` (baca full history)
+- **2-way:** `sessions_send` untuk komunikasi ke session yang sedang berjalan
+- **Result:** Output sub-agent di-announce balik ke Iris (main session) setelah selesai
+- **Flow:** Iris delegate → sub-agent kerja (isolated, background) → hasil announce ke Iris → Iris lapor ke Wayan
+
+## ⚠️ DB Queries → Metis (2026-02-17)
+Cek DB, query, data check apapun → delegasi ke **Metis**. JANGAN Iris langsung.
+
+## Delegation Flow (confirmed Wayan 2026-02-17)
+**Wayan → Iris → sub-agent (kerja) → Iris (lapor) → Wayan**
+- Wayan SELALU ngobrol ke Iris
+- Iris yang delegate ke Metis/Daedalus/Hermes/Oracle
+- Notes taking & knowledge dump → delegasi ke **Hermes**
+- Sub-agents TIDAK boleh diakses langsung oleh user
 
 ## Mac Mini Sub-Agents (2026-02-17)
 | Agent | ID | Role | Model | Fallback |
