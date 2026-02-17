@@ -2,11 +2,21 @@
 
 **Purpose:** Single source of truth untuk semua pending tasks (urgent → long-term)
 
-**Last updated:** 2026-02-17 07:25 WIB
+**Last updated:** 2026-02-17 13:57 WIB
 
 ---
 
 ## 🔥 Urgent (This Week)
+
+### 0. BUILD mart.sto_analysis table ⚠️ FAILED — NEEDS RETRY
+- **Status:** Opencode session failed (wild-comet exited without completing)
+- **What:** mart schema table: store_name, kode, size, qty_m1/m2/m3, qty_3m, avg_monthly, current_stock, turnover
+- **Purpose:** Power STO tools for ALL branches (replaces per-branch embedded JSON)
+- **Function needed:** mart.rebuild_sto_analysis() for weekly cron
+- **Exclude:** wholesale, pusat, konsinyasi, online, bazar, event, pameran, wilbex, imbex, HO
+- **SQL template:** `/tmp/create_mart_sto.sql` (needs to be re-written)
+- **Who:** Iris via opencode
+- **Timeline:** ASAP — blocks all-branch STO tool
 
 ### 1. Upload iSeller data (2024, 2025, 2026)
 - **Status:** Waiting for Wayan's download to complete
@@ -30,6 +40,27 @@
 ---
 
 ## 📊 Medium-Term (This Month)
+
+### Branch Manager Deck System — ALL BRANCHES ✅ JATIM DONE
+- **Status Jatim:** COMPLETE (11 slides + STO tool)
+- **URL:** https://zuma-bm-jatim.vercel.app + https://zuma-sto-jatim.vercel.app
+- **Next:** Build Bali, Jakarta, Sumatra, Sulawesi, Batam
+- **Prereq:** mart.sto_analysis table (see urgent #0 above)
+- **Workflow:** Add branch to config.py → build HTML → push zuma-bm-decks → deploy Vercel
+- **OLD STATUS WAS:** Discussion done, blocked on 2 data gaps
+- **Structure agreed (7 slides):**
+  1. Branch Scorecard (revenue, YoY, # stores, avg FF/FA/FS)
+  2. Store ABC (ranking + YoY per store)
+  3. Product Mix Jatim (top articles, vs nasional)
+  4. Stock & Planogram Health (FF/FA/FS per store, color-coded)
+  5. MoM Trend (Jan vs Feb trajectory)
+  6. Jatim vs Nasional benchmark
+  7. 3 Action Items
+- **Blocked on:**
+  - [ ] **Monthly target per store dari Finance** — Wayan cariin (needed for achievement % vs target)
+  - [ ] **Branch mapping fix** — portal.store JOIN timeout, needs index/materialized view
+- **When unblocked:** build Jatim dulu, lalu replicate ke semua cabang
+- **Note:** Tanpa target data, sementara pakai YoY sebagai proxy
 
 ### 4. Five Automation Reports — Script + SKILL.md each
 
@@ -76,6 +107,27 @@
 ---
 
 ## 🔧 Operational Improvements (This Quarter)
+
+### 7. Fix Branch-level Filtered Deck (portal.store JOIN timeout)
+- **Problem:** `portal.store` JOIN dengan ILIKE selalu timeout — blocks branch-specific analysis
+- **Solution:** Create indexed materialized view or use exact match instead of ILIKE
+- **Impact:** Enables Branch Manager deck (per-cabang filtered analysis)
+- **Who:** Iris (opencode)
+- **Timeline:** Before next branch manager request
+
+### 8. Channel Split Analysis Query Pattern
+- **Goal:** Clean separation: DDD=retail, MBB=online/marketplace, UBB=wholesale
+- **Use case:** Channel overview deck for CEO/GM, BusDev
+- **Action:** Test entity-based channel split query, document pattern in SKILL.md
+- **Who:** Iris
+- **Timeline:** TBD (lower priority until Finance data available)
+
+### 9. Finance Role Data — COGS / Gross Margin from Accurate
+- **Blocker:** No COGS/margin data in DB — Finance deck (Contribution Margin) can't be built yet
+- **Action:** Coordinate with Wayan when Accurate margin data becomes available
+- **Impact:** Unlocks Finance role deck + proper profitability analysis
+- **Who:** Wayan (data source) + Iris (implementation)
+- **Timeline:** TBD (data dependency)
 
 ### 5. Tim SI Coordination — SO Level 1 Manual Input
 - **Task:** Coordinate dengan Tim SI soal kolom "fisik" di SO Level 1 AppSheet
