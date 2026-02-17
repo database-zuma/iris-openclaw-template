@@ -98,7 +98,7 @@ Every Zuma data question follows:
 |-----------|-------------------------------|---------------------|
 | "penjualan / sales 2026" | `SUM(current_year_qty)` | `SUM(quantity) WHERE EXTRACT(YEAR FROM transaction_date) = 2026` |
 | "penjualan / sales 2025" | `SUM(last_year_qty)` | `SUM(quantity) WHERE EXTRACT(YEAR FROM transaction_date) = 2025` |
-| "YoY growth" | Calc from `SUM(current_year_qty)` vs `SUM(last_year_qty)` | Manual calc: `(cy - ly) / ly * 100` |
+| "YoY growth" | ⚠️ **See Section 2.5** — use same-period `now_jan+now_feb` vs `last_jan+last_feb` (NOT `current_year_qty` vs `last_year_qty` mid-year!) | Manual calc: `(cy - ly) / ly * 100` (only valid if both periods complete) |
 | "sales mix / kontribusi %" | Calc from `SUM(current_year_rp)` | `(article_sales / total_sales) * 100` |
 | "rata-rata 3 bulan" | `SUM(avg_last_3_months)` | Custom CTE with tier-aware logic |
 | "stock sekarang" | `SUM(stok_global)` | `SUM(quantity) FROM core.stock_with_product` |
@@ -146,6 +146,110 @@ Every Zuma data question follows:
 | "Specific date range" | ❌ **Cannot do** — use `core` | `transaction_date BETWEEN '2025-01-01' AND '2025-03-31'` |
 
 **Rule:** If user asks for **custom date range or recent period** → use core views.
+
+---
+
+## 2.5. ⚠️ YoY Analysis Framework — MANDATORY RULE
+
+### The Problem (2026-02-17 Incident)
+
+`current_year_qty` = cumulative Jan-Dec 2026 (**YTD only, e.g., 2 months in February**)
+`last_year_qty` = cumulative Jan-Dec 2025 (**12 months full**)
+
+→ `var_year_qty` compares 2 months vs 12 months = **MISLEADING!**
+→ Example: 76,208 / 682,985 = -88.8% (WRONG) → real same-period: -16.7%
+
+**❌ NEVER use `var_year_qty` or `current_year_qty / last_year_qty` before year-end.**
+
+### ✅ Same-Period YoY Formula
+
+```sql
+-- For Feb 2026 (months 1+2 elapsed):
+WITH ytd AS (
+    SELECT
+        kodemix, gender, series, color, tier,
+        -- YTD current year (Jan + Feb 2026)
+        SUM(now_jan_qty + now_feb_qty)                    AS ytd_now,
+        -- Same period last year (Jan + Feb 2025)
+        SUM(last_jan_qty + last_feb_qty)                  AS ytd_last,
+        -- Full year 2025 (for forecast denominator)
+        SUM(last_year_qty)                                AS full_last_year
+    FROM mart.sku_portfolio_size
+    WHERE kodemix IS NOT NULL
+    GROUP BY kodemix, gender, series, color, tier
+)
+SELECT
+    kodemix, gender, series, color, tier,
+    ytd_now,
+    ytd_last,
+    -- Same-period YoY %
+    ROUND((ytd_now::numeric / NULLIF(ytd_last, 0) - 1) * 100, 1)   AS yoy_same_period_pct,
+    -- Annual forecast = full year 2025 × same-period growth rate
+    ROUND(full_last_year::numeric * ytd_now / NULLIF(ytd_last, 0), 0) AS annual_forecast
+FROM ytd
+ORDER BY ytd_now DESC;
+```
+
+**Dynamic month detection (auto-updates as months pass):**
+```sql
+WITH params AS (SELECT EXTRACT(MONTH FROM CURRENT_DATE)::int AS m),
+ytd AS (
+    SELECT kodemix,
+        SUM(
+            now_jan_qty
+            + CASE WHEN p.m >= 2  THEN now_feb_qty ELSE 0 END
+            + CASE WHEN p.m >= 3  THEN now_mar_qty ELSE 0 END
+            + CASE WHEN p.m >= 4  THEN now_apr_qty ELSE 0 END
+            + CASE WHEN p.m >= 5  THEN now_may_qty ELSE 0 END
+            + CASE WHEN p.m >= 6  THEN now_jun_qty ELSE 0 END
+            + CASE WHEN p.m >= 7  THEN now_jul_qty ELSE 0 END
+            + CASE WHEN p.m >= 8  THEN now_aug_qty ELSE 0 END
+            + CASE WHEN p.m >= 9  THEN now_sep_qty ELSE 0 END
+            + CASE WHEN p.m >= 10 THEN now_oct_qty ELSE 0 END
+            + CASE WHEN p.m >= 11 THEN now_nov_qty ELSE 0 END
+            + CASE WHEN p.m >= 12 THEN now_dec_qty ELSE 0 END
+        ) AS ytd_now,
+        SUM(
+            last_jan_qty
+            + CASE WHEN p.m >= 2  THEN last_feb_qty ELSE 0 END
+            + CASE WHEN p.m >= 3  THEN last_mar_qty ELSE 0 END
+            + CASE WHEN p.m >= 4  THEN last_apr_qty ELSE 0 END
+            + CASE WHEN p.m >= 5  THEN last_may_qty ELSE 0 END
+            + CASE WHEN p.m >= 6  THEN last_jun_qty ELSE 0 END
+            + CASE WHEN p.m >= 7  THEN last_jul_qty ELSE 0 END
+            + CASE WHEN p.m >= 8  THEN last_aug_qty ELSE 0 END
+            + CASE WHEN p.m >= 9  THEN last_sep_qty ELSE 0 END
+            + CASE WHEN p.m >= 10 THEN last_oct_qty ELSE 0 END
+            + CASE WHEN p.m >= 11 THEN last_nov_qty ELSE 0 END
+            + CASE WHEN p.m >= 12 THEN last_dec_qty ELSE 0 END
+        ) AS ytd_last,
+        SUM(last_year_qty) AS full_last_year
+    FROM mart.sku_portfolio_size, params p
+    WHERE kodemix IS NOT NULL
+    GROUP BY kodemix
+)
+SELECT *, 
+    ROUND((ytd_now::numeric / NULLIF(ytd_last, 0) - 1) * 100, 1) AS yoy_pct,
+    ROUND(full_last_year::numeric * ytd_now / NULLIF(ytd_last, 0), 0) AS annual_forecast
+FROM ytd
+ORDER BY ytd_now DESC;
+```
+
+### Annual Forecast Approaches
+
+| Approach | Formula | When to Use |
+|----------|---------|-------------|
+| **Same-period projection** ⭐ | `last_year × (ytd_now / ytd_last)` | Default — most accurate |
+| **Simple extrapolation** | `(ytd_now / months_elapsed) × 12` | Quick estimate, flat rate assumption |
+| **Seasonality-adjusted** | `sum over remaining months: last_year[m] × growth_rate` | Planning/budgeting precision |
+
+**Wayan's preference (2026-02-17):** Same-period as default. Add annualized estimate when useful for projection context.
+
+### Label Format
+Always state period explicitly:
+- ✅ "Jan-Feb 2026 vs Jan-Feb 2025: -16.7%"
+- ✅ "Annual forecast 2026: ~569K pairs"
+- ❌ "YoY 2026: -88.8%" (ambiguous — could be 2mo vs 12mo)
 
 ---
 
@@ -624,6 +728,8 @@ Before sending reply to user:
 - [ ] Picked the right data source (mart vs core)?
 - [ ] Applied mandatory filters (intercompany, non-product)?
 - [ ] Used correct column names (matched_store_name vs nama_gudang)?
+- [ ] **YoY comparison valid?** (same-period, not current_year vs last_year mid-year — see Section 2.5)
+- [ ] **Labels accurate?** (Tier ≠ product category; verify before generalizing)
 - [ ] Formatted for WhatsApp (emoji, bullets, max 30 lines)?
 - [ ] Added insights summary (positives, concerns, actions)?
 - [ ] Flagged alerts (🔥 stockout, ⚠️ negative stock, 📉 big drop)?
