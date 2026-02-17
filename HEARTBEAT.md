@@ -45,6 +45,23 @@
 
 ---
 
+## 📝 Auto Memory Update (Daily Memory)
+
+**Every 10 minutes:** Auto-append session context to `memory/YYYY-MM-DD.md`
+- Capture significant decisions, user requests, task completions
+- Prevent session loss due to compactions
+- NOT `MEMORY.md` (that's curated long-term) — this is raw daily log
+
+**What to capture:**
+- User requests & my responses
+- Delegations made (agent + task)
+- Errors/blockers encountered
+- Key decisions or clarifications
+
+**Format:** timestamp + brief description
+
+---
+
 **Instructions:**
 - When delegating with promise to follow up → add to Pending Tasks AND Delegation Tracking
 - Every heartbeat → check pending, poll status, deliver or escalate
