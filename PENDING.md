@@ -8,15 +8,13 @@
 
 ## 🔥 Urgent (This Week)
 
-### 0. BUILD mart.sto_analysis table ⚠️ FAILED — NEEDS RETRY
-- **Status:** Opencode session failed (wild-comet exited without completing)
-- **What:** mart schema table: store_name, kode, size, qty_m1/m2/m3, qty_3m, avg_monthly, current_stock, turnover
-- **Purpose:** Power STO tools for ALL branches (replaces per-branch embedded JSON)
-- **Function needed:** mart.rebuild_sto_analysis() for weekly cron
-- **Exclude:** wholesale, pusat, konsinyasi, online, bazar, event, pameran, wilbex, imbex, HO
-- **SQL template:** `/tmp/create_mart_sto.sql` (needs to be re-written)
-- **Who:** Iris via opencode
-- **Timeline:** ASAP — blocks all-branch STO tool
+### 0. BUILD mart.sto_analysis table ✅ COMPLETED
+- **Status:** ✅ DONE — 60,602 rows, 155 stores, 699 articles
+- **Source:** SQL `/tmp/create_mart_sto.sql` → direct psql execution
+- **Schema:** store_name, kode, size, product_name, series, gender, qty_m3/m2/m1, qty_3m, avg_monthly, current_stock, turnover, snapshot_date
+- **Filter:** Exclude wholesale, konsinyasi, pusat, wilbex, imbex, merchandise, HO, bazar, event, pameran
+- **Function:** `mart.rebuild_sto_analysis()` created (for weekly cron)
+- **Deployed:** Powering zuma-sto-jatim.vercel.app v2
 
 ### 1. Upload iSeller data (2024, 2025, 2026)
 - **Status:** Waiting for Wayan's download to complete
