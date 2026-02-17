@@ -251,14 +251,16 @@ ORDER BY transaction_month, kode_mix;
 
 **Example:** Merci sales query → Group by color only → Brief output
 
-### Product Analysis Template (2026-02-15) — UNIFIED
+### Product Analysis Template (2026-02-17) — UPDATED PRIMARY SOURCE
+
 **Template:** `templates/product-analysis-unified.md` (merged SQL query framework + WhatsApp formatting)
 **Combines:** zuma-data-analyst-skill query patterns + output formatting best practices
 
-**Data Source Priority:**
-1. **mart.sku_portfolio** (primary) — 101 columns, national aggregate, YoY comparison, monthly breakdown
-2. **core.sales_with_product** (fallback) — when need store/area breakdown or custom date ranges
-3. **core.stock_with_product** — stock breakdown by warehouse/store
+**Data Source Priority (updated 2026-02-17):**
+1. **mart.sku_portfolio_size** (primary) — 107 columns, size-level (most granular), can aggregate to article-level, YoY comparison, monthly breakdown
+2. **mart.sku_portfolio** (fallback) — 101 columns, article-level only, use when already have aggregates or prefer simpler structure
+3. **core.sales_with_product** (fallback) — when need store/area breakdown or custom date ranges
+4. **core.stock_with_product** — stock breakdown by warehouse/store
 
 **Query Framework (WHAT/WHERE/WHEN):**
 ```

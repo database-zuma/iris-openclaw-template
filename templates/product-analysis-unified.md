@@ -12,10 +12,13 @@
 User asks about product performance?
 │
 ├─ Need historical monthly breakdown? (Jan vs Feb vs Mar...)
-│  └─ ✅ mart.sku_portfolio (has all 12 months pre-computed)
+│  └─ ✅ mart.sku_portfolio_size (has all 12 months pre-computed, size-level)
 │
 ├─ Need comprehensive metrics? (sales + stock + turnover in one query)
-│  └─ ✅ mart.sku_portfolio (all-in-one table, 101 columns)
+│  └─ ✅ mart.sku_portfolio_size (all-in-one table, 107 columns, most granular)
+│
+├─ Already have article-level aggregates? (no size breakdown needed)
+│  └─ ✅ mart.sku_portfolio (article-level only, 101 columns)
 │
 ├─ Need real-time/custom time period? (last 7 days, specific date range)
 │  └─ ❌ core.sales_with_product (flexible date filtering)
@@ -27,20 +30,23 @@ User asks about product performance?
    └─ ❌ core.sales_with_product (has all raw columns)
 ```
 
-**DEFAULT:** Use `mart.sku_portfolio` for 90% of product analysis questions.
+**DEFAULT:** Use `mart.sku_portfolio_size` for 90% of product analysis questions (can aggregate up to article level if size not needed).
 
 ---
 
-## 1.1. Size Breakdown? Use `mart.sku_portfolio_size` ⚠️ CRITICAL QUERY RULE
+## 1.1. Default: `mart.sku_portfolio_size` ⚠️ CRITICAL QUERY RULE
 
-**When to use:**
-- User explicitly asks for **size breakdown** (e.g., "per size", "size 42 vs 40", "breakdown by size")
-- Need **SKU-level granularity** (kode_besar grain)
+**PRIMARY data source for product analysis (2026-02-17):**
 
 **Table:** `mart.sku_portfolio_size`
 - **Grain:** kode_besar (SKU with size + version, e.g., M1SPV201Z42)
 - **Rows:** 5,220 (all versions × sizes)
 - **Columns:** 107 (11 ID/Base + 83 Sales + 13 Stock)
+
+**Why default:**
+- Most granular level (can aggregate UP to article level if size not needed)
+- Same comprehensive metrics as sku_portfolio (sales + stock + turnover)
+- More flexible (supports both size-level and article-level queries)
 
 **⚠️ CRITICAL RULE (2026-02-17):**
 
@@ -71,9 +77,10 @@ GROUP BY size
 ORDER BY total_qty DESC;
 ```
 
-**Decision:**
-- Need **size breakdown** → `mart.sku_portfolio_size` + GROUP BY kodemix, size
-- Article-level only (no size) → `mart.sku_portfolio`
+**Query Pattern:**
+- **Size-level analysis** → `GROUP BY kodemix, size`
+- **Article-level analysis** → `GROUP BY kodemix` (aggregate across all sizes)
+- **Fallback to `mart.sku_portfolio`** → Only if already have article-level aggregates or need simpler structure
 
 ---
 
@@ -87,32 +94,35 @@ Every Zuma data question follows:
 
 ### Step 1 — Identify METRIC
 
-| User Says | mart.sku_portfolio Column | core View Equivalent |
-|-----------|--------------------------|---------------------|
-| "penjualan / sales 2026" | `current_year_qty` | `SUM(quantity) WHERE EXTRACT(YEAR FROM transaction_date) = 2026` |
-| "penjualan / sales 2025" | `last_year_qty` | `SUM(quantity) WHERE EXTRACT(YEAR FROM transaction_date) = 2025` |
-| "YoY growth" | `var_year_qty` (%) | Manual calc: `(cy - ly) / ly * 100` |
-| "sales mix / kontribusi %" | `current_sales_mix` | `(article_sales / total_sales) * 100` |
-| "rata-rata 3 bulan" | `avg_last_3_months` | Custom CTE with tier-aware logic |
-| "stock sekarang" | `stok_global` | `SUM(quantity) FROM core.stock_with_product` |
-| "stock gudang pusat" | `wh_pusat` | `SUM(quantity) WHERE nama_gudang LIKE '%pusat%'` |
-| "stock toko" | `stok_toko` | `SUM(quantity) WHERE gudang_category = 'RETAIL'` |
-| "turnover / TO" | `to_total` (months) | `stock / avg_monthly_sales` |
+| User Says | mart.sku_portfolio_size Column | core View Equivalent |
+|-----------|-------------------------------|---------------------|
+| "penjualan / sales 2026" | `SUM(current_year_qty)` | `SUM(quantity) WHERE EXTRACT(YEAR FROM transaction_date) = 2026` |
+| "penjualan / sales 2025" | `SUM(last_year_qty)` | `SUM(quantity) WHERE EXTRACT(YEAR FROM transaction_date) = 2025` |
+| "YoY growth" | Calc from `SUM(current_year_qty)` vs `SUM(last_year_qty)` | Manual calc: `(cy - ly) / ly * 100` |
+| "sales mix / kontribusi %" | Calc from `SUM(current_year_rp)` | `(article_sales / total_sales) * 100` |
+| "rata-rata 3 bulan" | `SUM(avg_last_3_months)` | Custom CTE with tier-aware logic |
+| "stock sekarang" | `SUM(stok_global)` | `SUM(quantity) FROM core.stock_with_product` |
+| "stock gudang pusat" | `SUM(wh_pusat)` | `SUM(quantity) WHERE nama_gudang LIKE '%pusat%'` |
+| "stock toko" | `SUM(stok_toko)` | `SUM(quantity) WHERE gudang_category = 'RETAIL'` |
+| "turnover / TO" | Calc: `SUM(stok_global) / SUM(avg_last_3_months)` | `stock / avg_monthly_sales` |
+
+**Note:** All metrics need `SUM()` because table grain is kode_besar (size-level). Aggregate to kodemix for article-level results.
 
 ### Step 2 — Identify WHAT (Product Granularity)
 
-| User Says | mart.sku_portfolio | core View GROUP BY |
-|-----------|-------------------|-------------------|
+| User Says | mart.sku_portfolio_size | core View GROUP BY |
+|-----------|------------------------|-------------------|
 | Specific article ("Jet Black") | `WHERE kodemix = 'SJ1ACAV201'` OR `WHERE UPPER(series || ' ' || color) LIKE '%JET BLACK%'` | `kode_mix, article` |
-| Series ("Classic", "Stripe") | `WHERE series = 'Classic'` | `series` |
-| Gender ("Men", "Ladies") | `WHERE gender = 'MEN'` | `gender` |
-| Gender + Tipe ("Men Jepit") | `WHERE gender = 'MEN' AND tipe = 'Jepit'` | `gender, tipe` |
-| Tier ("T1 articles") | `WHERE tier = '1'` | `tier` |
-| All products | _(no filter)_ | _(no grouping)_ |
+| Specific article + size | `WHERE kodemix = 'SJ1ACAV201' AND size = '42'` | `kode_besar, article` |
+| Series ("Classic", "Stripe") | `WHERE series = 'Classic' GROUP BY kodemix` | `series` |
+| Gender ("Men", "Ladies") | `WHERE gender = 'MEN' GROUP BY kodemix` | `gender` |
+| Gender + Tipe ("Men Jepit") | `WHERE gender = 'MEN' AND tipe = 'Jepit' GROUP BY kodemix` | `gender, tipe` |
+| Tier ("T1 articles") | `WHERE tier = '1' GROUP BY kodemix` | `tier` |
+| All products | `GROUP BY kodemix` | _(no grouping)_ |
 
 ### Step 3 — Identify WHERE (Geography)
 
-**⚠️ mart.sku_portfolio has NO store breakdown** — it's NATIONAL aggregate only.
+**⚠️ mart.sku_portfolio_size has NO store breakdown** — it's NATIONAL aggregate only.
 
 | User Says | mart.sku_portfolio | core View Filter |
 |-----------|-------------------|------------------|
