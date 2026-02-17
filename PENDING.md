@@ -2,7 +2,7 @@
 
 **Purpose:** Single source of truth untuk semua pending tasks (urgent → long-term)
 
-**Last updated:** 2026-02-17 14:37 WIB (EOD)
+**Last updated:** 2026-02-17 18:00 WIB
 
 ---
 
@@ -39,26 +39,13 @@
 
 ## 📊 Medium-Term (This Month)
 
-### Branch Manager Deck System — ALL BRANCHES ✅ JATIM DONE
-- **Status Jatim:** COMPLETE (11 slides + STO tool)
-- **URL:** https://zuma-bm-jatim.vercel.app + https://zuma-sto-jatim.vercel.app
-- **Next:** Build Bali, Jakarta, Sumatra, Sulawesi, Batam
-- **Prereq:** mart.sto_analysis table (see urgent #0 above)
-- **Workflow:** Add branch to config.py → build HTML → push zuma-bm-decks → deploy Vercel
-- **OLD STATUS WAS:** Discussion done, blocked on 2 data gaps
-- **Structure agreed (7 slides):**
-  1. Branch Scorecard (revenue, YoY, # stores, avg FF/FA/FS)
-  2. Store ABC (ranking + YoY per store)
-  3. Product Mix Jatim (top articles, vs nasional)
-  4. Stock & Planogram Health (FF/FA/FS per store, color-coded)
-  5. MoM Trend (Jan vs Feb trajectory)
-  6. Jatim vs Nasional benchmark
-  7. 3 Action Items
-- **Blocked on:**
-  - [ ] **Monthly target per store dari Finance** — Wayan cariin (needed for achievement % vs target)
-  - [ ] **Branch mapping fix** — portal.store JOIN timeout, needs index/materialized view
-- **When unblocked:** build Jatim dulu, lalu replicate ke semua cabang
-- **Note:** Tanpa target data, sementara pakai YoY sebagai proxy
+### Branch Manager Deck System — ALL BRANCHES 🔜 (Jatim ✅)
+- **Jatim:** COMPLETE — https://zuma-bm-jatim.vercel.app (11 slides, daily update)
+- **Pending:** Bali, Jakarta, Sumatra, Sulawesi, Batam (5 branches)
+- **URLs reserved:** `zuma-bm-{bali|jakarta|sumatra|sulawesi|batam}.vercel.app`
+- **Workflow:** Same structure as Jatim → query DB → build HTML → Vercel deploy
+- **Prereq per branch:** portal.store mapping, store targets, STO data available
+- **Priority order:** Bali → Jakarta → Sumatra/Sulawesi/Batam
 
 ### 4. Five Automation Reports — Script + SKILL.md each
 
@@ -106,6 +93,15 @@
 
 ## 🔧 Operational Improvements (This Quarter)
 
+### STO Tool — Improvements
+- **Status:** v5 deployed (filter + TO label fix) — https://zuma-sto.vercel.app
+- **Requested improvements (Wayan):**
+  - [ ] **Dynamic month window** — saat ini hardcoded Nov/Dec/Jan; perlu auto-calculate 3 bulan terakhir
+  - [ ] **National data** — saat ini Jatim only (11 stores); expand ke semua 155 stores
+  - [ ] **Export / download** — CSV atau Excel per artikel/toko
+  - [ ] **TO alert email/WA** — notify Mas Bagus/Virra kalau TO < 0.5 per store
+- **Priority:** Medium-High (dipakai Branch Manager harian)
+
 ### 7. Fix Branch-level Filtered Deck (portal.store JOIN timeout)
 - **Problem:** `portal.store` JOIN dengan ILIKE selalu timeout — blocks branch-specific analysis
 - **Solution:** Create indexed materialized view or use exact match instead of ILIKE
@@ -113,7 +109,28 @@
 - **Who:** Iris (opencode)
 - **Timeline:** Before next branch manager request
 
-### 8. Channel Split Analysis Query Pattern
+### 8. PPT "How OpenClaw Works" — Architecture Explainer for Presentation
+- **Requested by:** Wayan (17:45 WIB, 2026-02-17)
+- **Purpose:** Menjelaskan cara kerja Iris / OpenClaw ke audiences internal
+- **Content outline:**
+  - [ ] Hosting: Mac mini (primary) + VPS team (Atlas/Apollo/Iris Junior)
+  - [ ] LLM: Claude (Sonnet/Opus), model per task context
+  - [ ] Workspace structure: folder tree (`~/.openclaw/workspace/`) + tiap MD fungsinya
+    - SOUL.md, USER.md, AGENTS.md, TOOLS.md, MEMORY.md, HEARTBEAT.md, PENDING.md
+    - memory/, inbox/, knowledge/, zuma-business-skills/, zuma-bm-decks/, scripts/
+  - [ ] Tools yang ter-connect: Google Workspace, Terminal/SSH, OpenCode/Claude Code/Kimi CLI, DB PostgreSQL, WhatsApp, Vercel, Google Drive (gog CLI), Accurate Online API (via Atlas)
+  - [ ] Bawahan: Atlas (ops cron) + Apollo (rnd cron) di VPS
+  - [ ] Monitoring: SO L2, BM decks, STO tool, DB health, daily reports
+  - [ ] Output types: MD, Excel (.xlsx), PPT (HTML+Vercel), Docs, SQL queries, Python scripts
+  - [ ] User access channels: WhatsApp (primary), Signal (backup)
+  - [ ] Flowchart: request → Iris → delegate/execute → deliver
+  - [ ] Flowchart: data pipeline (Accurate → VPS raw → mart → deck/report)
+- **Style:** Banyak flowchart, visual architecture diagram, presentation-ready
+- **Format:** HTML + Vercel (standard PPT workflow)
+- **Who:** Iris build, Wayan configure/review
+- **Timeline:** TBD (belum urgent)
+
+### X. Channel Split Analysis Query Pattern
 - **Goal:** Clean separation: DDD=retail, MBB=online/marketplace, UBB=wholesale
 - **Use case:** Channel overview deck for CEO/GM, BusDev
 - **Action:** Test entity-based channel split query, document pattern in SKILL.md

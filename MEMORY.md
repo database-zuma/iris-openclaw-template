@@ -1,505 +1,107 @@
 # MEMORY.md — Iris's Long-Term Memory
 
 ## Key Facts
-- Iris = lead AI personal assistant Zuma Indonesia (footwear retail, sandal)
-- Setup date: 2026-02-11
-- Primary language: Bahasa Indonesia
-- Tone: chill, clear, no jargon
-- **Heartbeat interval:** Every 1 minute — check HEARTBEAT.md for pending tasks
-- **⚠️ OpenCode IS INSTALLED:** Binary at `~/.opencode/bin/opencode` (v1.1.64) — ALWAYS use full path!
-- **⚠️ DB Credentials:** ALWAYS hardcode in terminal when delegating to OpenCode/Claude Code/Kimi (.env auto-rejected). Safe karena gak masuk git.
+- Iris = Lead AI PA, Zuma Indonesia (footwear retail, sandal)
+- Setup: 2026-02-11 | Lang: Bahasa Indonesia | Tone: chill, clear
+- Heartbeat: 1 min — check HEARTBEAT.md silently
+- OpenCode: `~/.opencode/bin/opencode` (v1.1.64) — ALWAYS full path
+- DB Creds: ALWAYS hardcode in terminal (never .env when delegating)
 
-## Critical Lessons Learned
+## Critical Rules
 
-### HEARTBEAT.md Task Tracker (2026-02-13)
-**Problem:** Delegated tasks with promise to follow up ("nanti kabarin") but no tracking system → broken promises, 2-3+ hour delays
+### HEARTBEAT Tracking
+Delegate + promise follow-up → write to HEARTBEAT.md immediately. Every heartbeat = poll status, deliver or escalate. Remove when done. Never "nanti kabarin" without tracking.
 
-**Incident:** Mbak Dewi (R&D Manager) request penjualan Merci 16:55, Iris promise "nanti kabarin", but no follow-up until Wayan reminded 19:16 (2h+ delay)
+### Chat History Queries
+- WITH "chat" keyword → grep session logs: `grep -h "keyword" ~/.openclaw/agents/main/sessions/*.jsonl`
+- WITHOUT "chat" keyword → search memory first
 
-**Root cause:** Delegate without tracking = broken promises. Good intentions ≠ reliable execution.
+### ⚠️ YoY Analysis (2026-02-17)
+NEVER use `var_year_qty` mid-year (YTD vs full year = misleading).
+Always same-period: `SUM(now_jan+now_feb)` vs `SUM(last_jan+last_feb)`.
+Correct Jan-Feb 2026: **-16.7%** (not -88.8%). Forecast: ~569K pairs.
 
-**Solution (Wayan's idea):** HEARTBEAT.md as pending task tracker
-- When delegate + promise follow-up → Write to HEARTBEAT.md immediately
-- Every heartbeat (1 min) → Check HEARTBEAT.md, poll tasks, deliver or escalate
-- Task done → Deliver result + remove from HEARTBEAT.md
+### ⚠️ kodemix Rule (2026-02-17)
+ALWAYS GROUP BY `kodemix` for analysis — NEVER filter by single `kode_besar`.
+One article = multiple kode_besar versions (kode lama→baru evolution).
+`kodemix` = business key | `kode_besar` = data integrity PK only.
 
-**Files:** `HEARTBEAT.md` (template), `AGENTS.md` (mandatory workflow section)
+### ⚠️ Branch/Store Mapping
+NEVER assume location from store name. ALWAYS JOIN `portal.store` for branch/area.
+Epicentrum=Lombok, Level 21=Bali, City of Tomorrow=Surabaya.
 
-**Workflow enforced:** Never promise "nanti kabarin" without tracking in HEARTBEAT.md
+### Store Query Exclusions
+Always exclude: wholesale, pusat, konsinyasi (unless explicitly requested).
 
-### Chat History Query Pattern (2026-02-13)
-**Rule:** Keyword "chat" triggers different search behavior
+### Intercompany Filter
+Apply `is_intercompany = FALSE` ONLY for multi-store/national aggregated queries.
+NOT needed for single-store queries.
 
-**WITH "chat" keyword** ("km chat [person] apa") → Directly grep session logs:
-```bash
-grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl
-```
+### PPT Workflow
+All decks = HTML + Vercel (MANDATORY). Only python-pptx if user explicitly requests .pptx.
+Deploy from SAME folder always. Include @media print CSS (in TEMPLATE.html v2.0).
+VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 
-**WITHOUT "chat" keyword** ("apa km udah [task]?") → Search memory first (memory_search or memory/*.md), then logs if needed
-
-**Why:** "Chat" = raw conversation history request. No "chat" = context/facts from curated memory.
-
-## Zuma Indonesia Business Context
-- **Industry:** Footwear (sandal & flip-flops), manufacturing + retail + e-commerce + wholesale + consignment
-- **HQ:** Surabaya, Jawa Timur
-- **4 Entitas:** DDD (main, retail), MBB (online marketplace), UBB (wholesale), LJBB (PO receiving Baby & Kids)
-- **6 Cabang:** Jatim, Jakarta, Sumatra, Sulawesi, Batam, Bali
-- **Brand:** Zuma Teal #002A3A, Zuma Green #00E273, Japandi aesthetic
-- **Supplier utama:** HJS (PT Halim Jaya Sakti / Ando Footwear)
-- **Data sources:** Accurate Online (ERP), iSeller (POS), Ginee (marketplace), Supabase, Google Sheets
-- **Skills repo:** `/Users/database-zuma/.openclaw/workspace/zuma-business-skills/` — 10 skills covering ops, planogram, RO, brand
-- **Transaksi affiliasi:** Inter-company transactions (DDD↔MBB↔UBB↔LJBB) harus di-exclude dari analisis, sudah di-handle di mart.* tables
-
-## Database Access
-- **PostgreSQL VPS:** see .env (PGHOST, PGDATABASE, PGUSER, DATABASE_URL)
-- **Schemas:** raw (Accurate API daily), portal (Google Sheets master), core (transformed views), mart (ad-hoc analysis), public (Looker Studio mirrors)
-- **psql client:** installed via brew (libpq 18.1)
-
-### Sales Detail Per Artikel (Learned 2026-02-16)
-**When user requests:** "sales data per artikel/article mix" dengan breakdown Type/Gender/Series/Tier
-
-**Query from:** `public.sales_summary_plano` (bukan raw/mart!)
-
-**Key columns:**
-- transaction_month (timestamp) → format jadi Month
-- kode_mix → Article Mix
-- tipe → Type
-- gender → Gender
-- series → Series
-- product_name → Article
-- tier → Tier
-- total_quantity → Sales Qty
-
-**Store names:** LOWERCASE! ('zuma nagoya hills', 'zuma ska mall', dll)
-
-**Example query:**
-```sql
-SELECT 
-  TO_CHAR(transaction_month, 'Mon YYYY') AS month,
-  kode_mix, tipe, gender, series, product_name, tier,
-  total_quantity
-FROM public.sales_summary_plano
-WHERE store_name_raw = 'zuma nagoya hills'
-  AND transaction_month >= '2025-02-01'
-ORDER BY transaction_month, kode_mix;
-```
-
-**Output format:** Month | Article Mix | Type | Gender | Series | Article | Tier | Sales Qty
+## Zuma Business Context
+- **Entities:** DDD (retail), MBB (online), UBB (wholesale), LJBB (kids PO)
+- **Branches:** Jatim, Jakarta, Sumatra, Sulawesi, Batam, Bali
+- **Brand:** Teal #002A3A, Green #00E273, Japandi aesthetic
+- **Data:** Accurate Online (ERP), iSeller (POS), Ginee, GSheets, PostgreSQL VPS
+- **Skills:** `~/.openclaw/workspace/zuma-business-skills/`
 
 ## People
-
-### Core Team
-- **Wayan** — System Developer, Dept. Operasional, Divisi Continuous Improvement, Zuma Indonesia (WA: see .env WAYAN_WA) — yang setup Iris
-
-### OPS Team (WhatsApp Group)
-**Detailed context:** See `memory/contexts/ops-team.md` for full team profiles, ongoing projects, and conversation history.
-
-**Quick reference:**
-- **Mbak Dini** — OPS Manager (head of team)
-- **Mbak Citra** — Purchasing Supervisor
-- **Mbak Sari** — Purchasing Admin
-- **Mas Bagus** — Merchandiser (stock optimization)
-- **Mbak Virra** — Allocation Planner (distribution flow)
-- **Mbak Galuh** — Staff Inventory Control
-- **Nabila** — Staff Inventory Control
-- **Mbak Fifi** — Branch Support Specialist
-- **Mbak Nisa** — CI Supervisor
-- **Wafi** — CI Implementation Specialist
-- **Wayan** — CI System Developer (admin/master)
-
-### Strategic Leadership & Department Heads
-- **Pak Steven Eka Halim** — CEO & Founder Zuma Indonesia
-- **Bu Melissa** — Istri Pak Steven
-- **Pak Fikri** — General Manager
-- **Mas Grady** — Business Project Manager (under Pak Steven)
-- **Pak Donny** — Creative Director (oversees Product Development & Creative Marketing)
-- **Bu Aulia** — FATAL Manager (Finance, Accounting, Tax, Asset, Legal)
-- **Bu Ary** — HRGA Manager (Human Resources, General Affairs)
-- **Ko Budy** — Manager Wholesale & Business Development
-- **Mbak Dewi** — Manager Product Development (R&D)
-- **Bu Lena Yulinar** — Creative & Marketing Manager (CnM)
-- **Mbak Desy** — SPV Product Development
-- **Pak Wishnu** — Manager Online
-- **Pak Wahyu** — SPV Online (e-commerce/marketplace)
-- **Pak Ali Ihsan** — SPV Warehouse Pusat (Warehouse Surabaya / WHS)
-
-## Browser Control
-- Chrome profile: wayan@zuma.id — relay must be manually ON per tab
-- YouTube SPA navigation keeps relay alive (don't navigate away from youtube.com)
-- Always skip YouTube ads
-- OpenClaw browser (profile "openclaw") works without relay but has no login
-
-### YouTube Music Policy (2026-02-16)
-**User requests lagu → langsung puter, no relay needed**
-- Don't ask about relay setup
-- Switch existing YouTube tab OR open new browser
-- Use openclaw browser profile (standalone, works immediately)
-- Quick execution > relay configuration
-
-## Wayan's Preferences
-- Music: Denny Caknan, Sabrina Carpenter, Bad Bunny
-
-## VPS Team — MY EMPLOYEES 👥
-**CRITICAL:** Iris Junior, Atlas, Apollo adalah **karyawan aku**. Aku bisa delegasi tasks ke mereka, bukan cuma ke local tools (Claude Code/Kimi)!
-
-**⚠️ VPS DELEGATION SCOPE (2026-02-16): CRON JOB ONLY!**
-- VPS agents = automated scheduled tasks (cron monitoring, ETL health checks, daily reports)
-- **NOT for:** Ad-hoc queries, exploratory analysis, experimental work
-- **Why:** VPS = 8GB RAM, 2 CPU cores (limited vs Mac mini M4 with stronger computing power)
-- **Ad-hoc work** (Mbak Dewi queries, product analysis, etc) → **opencode on Mac mini** with zuma-business-skills
-
-### VPS Infrastructure (76.13.194.103 - Hostinger KVM 2)
-- **Specs:** 8GB RAM, 100GB NVMe SSD, 2 CPU cores
-- **SSH Access:** `ssh iris-junior` (configured in ~/.ssh/config)
-- **Persistent TUI:** Via `openclaw tui` di SSH session
-
-### Iris Junior ✨ (Coordinator - VPS)
-- **Location:** `/root/.openclaw/workspace/`
-- **Role:** Project Manager/Reviewer — generate morning reports, eskalasi ke Wayan
-- **Model:** Sonnet 4.5 (primary), Kimi k2p5, Deepseek (fallbacks)
-- **Workflow:** Review laporan Atlas/Apollo → Generate morning report 08:00 WIB → Telegram ke Wayan
-- **Tools:** Notion API, read JSON reports, Telegram
-- **Communication:** Via TUI (persistent SSH session) or `openclaw agent --agent main --message`
-- **Personality:** Dewi Pelangi — jembatan komunikasi, review bukan execute, hemat kata
-
-### Atlas 🏔️ (Operations Agent - VPS)
-- **Location:** `/root/.openclaw/workspace-ops/`
-- **Agent ID:** `ops`
-- **Model:** Kimi k2p5 (primary), Deepseek, Sonnet (fallbacks)
-- **Department:** Stock & Inventory, Warehouse, Logistics
-- **Role:** DATA MOVER — tarik data mentah, paste ke GSheet, formulas yang ngitung
-- **Tools:** Accurate Online API, Google Sheets (gog CLI), Email, Telegram
-- **Key Tasks:**
-  - Monitor cron jobs (Stock Pull 03:00, Sales Pull 05:00 WIB)
-  - Auto-fix errors (max 3x retry)
-  - Write JSON reports to `/root/.openclaw/workspace-ops/logs-report-for-iris/`
-  - Eskalasi ke Iris Junior kalau 3x gagal
-- **Key PICs:** Mas Bagus Kiswoyo, Mbak Virra, Bu Dini Tri Mart, Mbak Citra, Mbak Sari, Galuh, Nabila, Mbak Fifi
-- **Communication:** `ssh iris-junior "openclaw agent --agent ops --message 'text'"`
-- **Personality:** Steady, reliable, to the point, paranoid soal stok
-
-### Apollo 🎯 (R&D Agent - VPS)
-- **Location:** `/root/.openclaw/workspace-rnd/`
-- **Agent ID:** `rnd`
-- **Model:** Kimi k2p5 (primary), Deepseek, Sonnet (fallbacks)
-- **Department:** Product Development, Quality Control, Material Sourcing
-- **Role:** DATA MOVER — track product timeline, monitor material sourcing, QC reports
-- **Status:** Currently IDLE (belum ada tugas aktif)
-- **Tools:** Accurate Online, Google Sheets (gog CLI), Email, Telegram
-- **Key PICs:** Mbak Dewi Kartikawati (R&D Manager), Mbak Desyta, Yuda
-- **Communication:** `ssh iris-junior "openclaw agent --agent rnd --message 'text'"`
-- **Personality:** Presisi, elegan, terobsesi kualitas, sabar tapi presisi
-
-### VPS Daily Workflow
-```
-02:00 WIB → Backup DB (pg_dump daily, pg_dumpall weekly on Sunday)
-03:00 WIB → Stock Pull (cron VPS DB) + FF/FA/FS calculation
-            ├─ pull_accurate_stock.py (4 entities)
-            └─ calculate_ff_fa_fs.py → mart.ff_fa_fs_daily
-05:00 WIB → Sales Pull (cron VPS DB) + SO L2 calculation
-            ├─ pull_accurate_sales.py (3 entities: DDD, MBB, UBB)
-            └─ calculate_so_l2.py → mart.stock_opname_l2_daily (NEW as of 2026-02-14)
-05:30 WIB → Atlas health check → JSON report (Stock/Sales/Backup/FF-FA-FS/SO-L2 status)
-06:00 WIB → Iris morning report → Format & deliver via WhatsApp
-```
-
-**Pending expansion (noted 2026-02-14):**
-- [x] ~~SO Level 2 Report automation~~ ✅ DEPLOYED 2026-02-14 23:04 (mart.stock_opname_l2_daily live!)
-- [ ] Control Stock Report automation
-- [ ] Planogram Report automation
-- [ ] RO Report (Box & Protol) automation
-- [ ] Surplus Store Report automation
-- Pattern: API pull → SQL script → Atlas logs → Iris daily summary
-- Details: `inbox/pending-tasks-automation-reports.md`
-
-**Health Check Coverage (updated 2026-02-14 23:04):**
-1. Stock Pull monitoring (status, errors, timing)
-2. Sales Pull monitoring (status, errors, timing)
-3. **Backup verification** (daily file exists, size reasonable)
-4. **FF/FA/FS metrics** (Fill Factor/Article/Stock — store fill rates vs planogram)
-   - avg_ff, avg_fa, avg_fs across all stores
-   - stores_below_ff_70 count
-   - Alert if avg_ff < 50% or stores_calculated = 0
-5. **SO L2 metrics** (Stock Opname Level 2 — daily stock vs sales reconciliation)
-   - snapshot_date, stores calculated, rows_inserted
-   - selisih_nonzero_count (anomaly detection)
-   - total_stock, total_sales
-   - Alert if overall ≠ success or selisih_nonzero_count > 30
-
-**Backup System (VPS DB):**
-- Location: `/root/backups/` on 76.13.194.120
-- Daily: 02:00 WIB, retain 7 days
-- Weekly: Sunday 02:00 WIB (pg_dumpall), retain 4 weeks
-- Typical size: ~50-55MB daily
-
-**Eskalasi:** 1-2x fail → Atlas fix | 3x fail → `escalation_needed: true` → Iris Junior → Wayan (Telegram)
-
-### Query Pattern: R&D/Product Development (Apollo Territory)
-**Delegation Rule (2026-02-13):**
-- **R&D/Product Development requests** (Mbak Dewi, Mbak Desyta, Yuda) → **Apollo**
-- **National product performance queries** (anyone) → **Apollo**
-
-**Format Standard:**
-- Article level: Gender + Series + Color (e.g., LADIES MERCI MOCCA)
-- NO size breakdown unless explicitly requested
-- Output: Product Name | Total Pairs | Total Revenue
-
-**Mandatory Filters:**
-1. `is_intercompany = FALSE` (exclude inter-entity transactions)
-2. Exclude non-SKU items (bags, hangers, accessories) unless requested
-3. National aggregate (all stores)
-
-**Example:** Merci sales query → Group by color only → Brief output
-
-### ⚠️ YoY Analysis Rule (2026-02-17) — CRITICAL
-
-**NEVER use `var_year_qty` or `current_year_qty / last_year_qty` mid-year!**
-- `current_year_qty` = YTD (e.g., Jan-Feb 2026 = 2 months)
-- `last_year_qty` = full 12 months 2025
-- Comparing these = **misleading** (76K/683K = -88.8% WRONG → actual same-period: -16.7%)
-
-**✅ Correct formula:**
-```sql
--- Same-period YoY (for Feb 2026):
-SUM(now_jan_qty + now_feb_qty) AS ytd_now,
-SUM(last_jan_qty + last_feb_qty) AS ytd_last,
-ROUND((ytd_now / NULLIF(ytd_last,0) - 1) * 100, 1) AS yoy_pct,
--- Annual forecast:
-ROUND(SUM(last_year_qty) * ytd_now / NULLIF(ytd_last,0), 0) AS annual_forecast
-```
-
-**Wayan's preference:** Same-period as default. Annualized when needed for projection.
-**Portfolio Jan-Feb 2026 correct numbers:** 76,208 vs 91,445 = **-16.7%** | Forecast **569K pairs**
-
-### Product Analysis Template (2026-02-17) — UPDATED PRIMARY SOURCE
-
-**Template:** `templates/product-analysis-unified.md` (merged SQL query framework + WhatsApp formatting)
-**Combines:** zuma-data-analyst-skill query patterns + output formatting best practices
-
-**Data Source Priority (updated 2026-02-17):**
-1. **mart.sku_portfolio_size** (primary) — 107 columns, size-level (most granular), can aggregate to article-level, YoY comparison, monthly breakdown
-2. **mart.sku_portfolio** (fallback) — 101 columns, article-level only, use when already have aggregates or prefer simpler structure
-3. **core.sales_with_product** (fallback) — when need store/area breakdown or custom date ranges
-4. **core.stock_with_product** — stock breakdown by warehouse/store
-
-**Query Framework (WHAT/WHERE/WHEN):**
-```
-"Berapa [METRIC] dari [WHAT] di [WHERE] selama [WHEN]?"
-→ Identify metric, product level, geography, time period
-→ Pick data source based on requirements
-→ Apply mandatory filters (intercompany, non-product)
-→ Format output (detailed blocks vs compact list)
-```
-
-**Use cases:**
-- Top N analysis (best sellers, worst performers, fast/slow movers)
-- Specific SKU performance (by kodemix, series, gender, tier)
-- Stock alerts (stockout risk, overstock, negative WH)
-- YoY comparisons, monthly trends, sales mix %, turnover analysis
-
-**Output Format:**
-- **Detailed blocks** (1-5 articles): Sales + Stock + Insights per article
-- **Compact list** (6+ articles): One-liner per article + summary
-
-**Auto-flags:** 🔥 Stockout (<0.5mo TO), 🐌 Overstock (>2.5mo), ⚠️ Negative WH, 📉 Big drop (>-70% YoY)
-
-**Key metrics from mart.sku_portfolio:**
-- Sales: current_year_qty/rp, last_year_qty/rp, var_year_qty (YoY %), now_jan_qty...now_dec_qty (monthly)
-- Stock: stok_global, wh_pusat, wh_bali, wh_jkt, stok_toko, stok_online, stok_unlabel
-- Turnover: to_wh, to_total (months of coverage)
-- Other: sales_mix %, avg_last_3_months, current_year_label, last_year_label
-
-### mart.sku_portfolio_size (2026-02-17) — SIZE-LEVEL ANALYSIS ⚠️ CRITICAL QUERY RULE
-
-**Table Design:**
-- **Grain:** `kode_besar` (SKU with size + version, e.g., M1SPV201Z42)
-- **Primary Key:** `kode_besar` (UNIQUE constraint)
-- **Rows:** 5,220 (all SKU versions × sizes)
-- **Columns:** 107 (11 ID/Base + 83 Sales + 13 Stock)
-- **Purpose:** Most granular level for size-level analysis
-
-**⚠️ CRITICAL ANALYSIS RULE (2026-02-17 from Wayan):**
-
-**ALWAYS use `kodemix` or `kode_mix_size` for analysis — NEVER filter by single `kode_besar`!**
-
-**Why:**
-- One article has **multiple kode_besar versions** (M1SPV201, M1SP01, M1SPV101, SJ1A)
-- Kode lama → kode baru evolution (same product, different codes over time)
-- Filtering `kode_besar = 'M1SPV201Z42'` = only 1 version (incomplete!)
-- Filtering `kodemix = 'M1SP0PV201'` = SUM ALL versions = true article performance
-
-**Table Design Purpose:**
-- `kode_besar` as PK = enforce data integrity (prevent duplicate rows at granular level)
-- Analysis purpose = aggregate by `kodemix` (ignore version differences)
-
-**Query Pattern:**
-```sql
--- ✅ CORRECT (business analysis — sum all versions):
-SELECT 
-    kodemix, size, 
-    SUM(current_year_qty) AS total_qty,
-    SUM(current_year_rp) AS total_rp
-FROM mart.sku_portfolio_size
-WHERE kodemix = 'M1SP0PV201'
-GROUP BY kodemix, size;
-
--- ❌ WRONG (only 1 version, incomplete):
-SELECT current_year_qty, current_year_rp
-FROM mart.sku_portfolio_size
-WHERE kode_besar = 'M1SPV201Z42';
-```
-
-**Example:**
-- User asks: "MEN STRIPE BLACK BLUE RED size 42"
-- Correct approach:
-  1. Find kodemix: `M1SP0PV201`
-  2. Query: `WHERE kodemix = 'M1SP0PV201' AND size = '42'`
-  3. GROUP BY kodemix, size
-  4. Result: SUM(M1SPV201Z42 + M1SP01Z42 + M1SPV101Z42 + ...) = ALL versions combined
-
-**Case-Sensitivity Fix (2026-02-17):**
-- Sales/Stock data = lowercase `kode_besar` (m1spv201z39)
-- portal.kodemix = UPPERCASE `kode_besar` (M1SPV201Z39)
-- Solution: `UPPER(kode_besar)` in all CTEs to ensure JOIN success
-
-**Data Sources:**
-- Articles: portal.kodemix (DISTINCT ON kode_besar)
-- Sales: core.sales_with_product (with `UPPER(kode_besar)`)
-- Stock: core.stock_with_product (with `UPPER(kode_besar)`)
-
-**When to use mart.sku_portfolio_size vs mart.sku_portfolio:**
-- Need **size breakdown** → mart.sku_portfolio_size
-- Article-level only (no size) → mart.sku_portfolio
-- Both tables: Same business rules, same metrics, different grain
-
-### VPS Credentials (Shared)
-**Location:** `/root/.openclaw/.env` (GH_TOKEN, NOTION_API_KEY, GOG_KEYRING_PASSWORD)
-
-### Notion Integration (Managed by Iris Junior)
-- **Projects DB:** `30031616-a0d5-8194-96b3-d09fbf4da2cc`
-- **Tasks DB:** `30031616-a0d5-81ac-86f0-e108677a6d0a`
-- **Active Projects:** Control Stock PoC, System Setup, Incidental, R&D Status Reports (Planning)
-- **Rule:** Setiap task WAJIB linked ke Project, Iris Junior manage bukan execute
-
-### Delegation Strategy — CRITICAL 🎯
-**🔴 WAYAN'S RULE (2026-02-12):** See AGENTS.md "Task Delegation" for full details.
-**Quick ref:** Mac mini=browser/file ops | Atlas=ALL DB queries/GSheets | Iris Junior=monitoring/Notion/eskalasi | Apollo=R&D (when active)
-**Comms:** TUI (persistent, less tokens) or CLI one-shot
-
-### Presentation Workflow — MANDATORY 🚨
-**POLICY (2026-02-16):** ALL PPT requests = HTML (Tailwind CSS) + Vercel deploy (`vercel --prod --yes`) → Share URL. ONLY python-pptx if user explicitly requests .pptx or HTML fails.
-
-**Why:** Web-shareable, fast iteration (10s redeploy), better print quality (Cmd+P), no layout struggles.
-
-**Reference:** https://ro-benchmark-vercel.vercel.app | **Skill:** `zuma-business-skills/general/zuma-ppt-design/SKILL.md`
-**Covers:** Visual design (KBI-inspired) + HTML/Vercel tech + Data storytelling (SCQA, Pyramid Principle, Narrative Arc)
-
-**⚠️ VERCEL DEPLOY RULE (2026-02-17):** ALWAYS deploy from the SAME folder as the original project. If you deploy from a NEW folder → Vercel creates NEW project → old alias stays on old project → URL shows old deck. Fix: copy index.html to original folder, deploy from there.
-
-**⚠️ MANDATORY: @media print CSS (2026-02-17):** Every HTML deck MUST include print block from TEMPLATE.html. Without it, slides kepotong when PDF. Already in TEMPLATE.html v2.0 — auto-included if using template. Key: `@page { size: A4 landscape }` + `page-break-after: always` per slide + `print-color-adjust: exact`. User: Cmd+P → Save as PDF → Margins: None → ✅ Background graphics.
-
-### Active Decks (Feb 2026)
-| Deck | URL | Framework |
-|------|-----|-----------|
-| Portfolio Analysis | https://zuma-product-analysis.vercel.app | BCG + PLC (product lens) |
-| Performance Analysis | https://zuma-performance-analysis.vercel.app | Revenue Bridge + ABC + Growth×Revenue (business lens) |
-| RO Benchmark | https://ro-benchmark-vercel.vercel.app | Swiss Style |
-| **BM Jatim** | **https://zuma-bm-jatim.vercel.app** | 11 slides: Scorecard + ABC + FF/FA/FS + BCG + STO link |
-
-### STO Analysis Tool (2026-02-17)
-- **URL:** https://zuma-sto.vercel.app (national, not branch-specific)
-- **Layout:** Summary bars (aggregate) + Butterfly chart per ukuran
-- **Butterfly:** kiri = avg sales/bln (merah), kanan = stok (warna TO), batang sama panjang = TO 1x
-- **Script:** `/tmp/gen_sto_v5.py` (query dari mart.sto_analysis, Jatim stores)
-- **Data:** mart.sto_analysis (60,602 rows, 155 stores, 699 articles, 3 bulan: Nov+Dec+Jan)
-- **Daily update:** 06:10 WIB via OpenClaw cron (isolated agentTurn)
-
-### BM Deck Private Repo (2026-02-17)
-- **Repo:** https://github.com/database-zuma/zuma-bm-decks (PRIVATE)
-- **Local:** `~/.openclaw/workspace/zuma-bm-decks/`
-- **Logos:** `assets/logo-08.png` = white version (for dark covers); logo-01/04 = dark version (for light covers)
-- **GitHub ≠ Vercel:** versioning dan deployment TERPISAH (push GitHub ≠ auto-deploy)
-- **Branch naming:** `zuma-bm-{branch}.vercel.app` (1 branch = 1 URL permanent)
-- **Daily update trigger:** cron ID `4113ba33` fires systemEvent ke Iris 06:00 WIB
-
-### mart.sto_analysis (2026-02-17)
-- **Schema:** store_name, kode, size, qty_m3/m2/m1, qty_3m, avg_monthly, current_stock, turnover
-- **Rebuild:** `SELECT mart.rebuild_sto_analysis()` (function exists, runs daily before gen script)
-- **Exclude:** wholesale, konsinyasi, pusat, wilbex, imbex, merchandise, HO, bazar, event, pameran
-- ⚠️ **TODO:** Dynamic month calculation (saat ini hardcoded Nov/Dec/Jan)
-
-### Performance Analysis Deck — Key Data (Jan–Feb 2026)
-- **Revenue Bridge:** Volume -16.7% (91K→76K pairs) = -1.87B | ASP +9.8% (Rp122K→Rp134K) = +0.91B | **Net: -8.7%**
-- **Top store:** Zuma Mataram (Lombok) — 5,901 pairs, +56% YoY, Rp 395M (#1 nationally)
-- **Concern:** Zuma Dalung — 1,859 pairs, **-55.6%** YoY
-- **Insight:** ASP increase is the revenue buffer — mix shift to premium (BLACKSERIES, Metalic)
-
-## Critical Lessons: Branch/Store Mapping (2026-02-16)
-
-**NEVER ASSUME store locations from names!** Epicentrum=Lombok (not Jakarta), Level 21=Bali, City of Tomorrow=Surabaya.
-
-**MANDATORY:** Always JOIN `portal.store` (source of truth) for branch/area — NEVER use `CASE WHEN` pattern matching on store names.
-```sql
-LEFT JOIN portal.store ps ON s.store_name_raw = ps.nama_accurate OR s.store_name_raw = ps.nama_iseller
-```
-**Rule:** `portal.store` > assumptions. Always query first, never guess.
-
-## DN-to-PO Workflow (2026-02-16)
-
-**Purpose:** Convert Delivery Note (DN) documents to Invoice (DDD) + Purchase Order (MBB/UBB) formats for Accurate Online import
-
-**CRITICAL:** 1 DN = 2 outputs (Invoice + PO) — both files MANDATORY
-
-### Standard Scripts (MUST USE):
-1. `~/.openclaw/workspace/dn-to-po/convert-dn-to-invoice.js` — Generate Invoice for DDD (seller)
-2. `~/.openclaw/workspace/dn-to-po/convert-dn-to-po.js` — Generate PO for MBB/UBB (buyer)
-
-### Supported Input Formats:
-- ✅ Excel (.xlsx) — Sheet "Pengiriman Pesanan"
-- ✅ PDF (.pdf) — Text extraction with pdf-parse library (added 2026-02-16)
-
-### Workflow:
-```bash
-# Step 1: Generate Invoice for DDD
-node convert-dn-to-invoice.js <file_DN>
-
-# Step 2: Generate PO for entity (ask user: MBB atau UBB?)
-node convert-dn-to-po.js <file_DN> <MBB|UBB>
-```
-
-### Features:
-- Pricing auto-load from `template/Master Harga.xlsx` | PDF+Excel auto-detected | Same output structure
-
-### Output:
-- **Invoice:** `INV-DDD-dari-{NO_DN}-{TANGGAL}-{JAM}.xlsx` | **PO:** `PO-{ENTITY}-dari-{NO_DN}.xlsx`
-- **Location:** `~/Desktop/DN PO ENTITAS/`
-- **Delivery:** Send BOTH files (Invoice+PO) with caption (filename, DN#, SKU count, date) + Google Sheets link
-
-### Critical Rules:
-1. ALWAYS use standard scripts (NEVER ad-hoc Python)
-2. ALWAYS deliver Excel + GSheets link TOGETHER
-3. ALWAYS generate BOTH files (Invoice + PO)
-4. **Bu Aulia incident (2026-02-16):** Ad-hoc output + link-only = "tidak sesuai". Lesson: Consistency = trust
-
-**Skill location:** `zuma-business-skills/ops/dn-to-po/SKILL.md`
-**Repo:** https://github.com/database-zuma/dn-to-po
-
-## Role → Framework Mapping (2026-02-17)
-
-**Confirmed by Wayan. Use this as starting point for deck requests per user role.**
-
-| Role | Primary Framework | Data Source | Status |
-|------|------------------|-------------|--------|
-| CEO / GM | Revenue Bridge + BCG Portfolio + Forecast | mart.sku_portfolio_size | ✅ Ready |
-| Dept Ops | ABC Store + Growth×Revenue Matrix + Stock Coverage | core.sales_with_product + mart | ✅ Ready |
-| R&D / Product | BCG Matrix + PLC per series | mart.sku_portfolio_size | ✅ Ready |
-| Branch Manager | Same as Ops, filtered per cabang | core.sales_with_product + portal.store | ⚠️ Branch JOIN needs fix |
-| Finance | Revenue Bridge + Contribution Margin | Needs COGS/margin from Accurate | ❌ Data belum ada |
-| BusDev | Market Opportunity + White Space | Needs external + channel data | ❌ Data belum ada |
-| Channel (Online/Retail/WS) | Channel split analysis | MBB=online, DDD=retail, UBB=wholesale | ⚠️ Query needs optimization |
-
-**Known gaps (2026-02-17):**
-1. Finance → COGS/gross margin belum ada di DB — hold sampai data masuk
-2. BusDev → market size, competitor landscape belum ada — hold
-3. Branch JOIN timeout → `portal.store` ILIKE join terlalu lambat; perlu index atau materialized lookup
-4. Channel breakdown → logika ada (entity-based), query pattern belum dioptimize
+**Admin:** Wayan (CI System Developer, +628983539659)
+**OPS:** Mbak Dini (Manager), Mbak Citra (Purchasing SPV), Mbak Sari (Purchasing Admin), Mas Bagus (Merchandiser), Mbak Virra (Allocation Planner), Mbak Galuh/Nabila (Inventory Control), Mbak Fifi (Branch Support), Mbak Nisa (CI SPV), Wafi (CI Impl)
+**Leadership:** Pak Steven (CEO), Pak Fikri (GM), Pak Donny (Creative Dir), Bu Aulia (FATAL Mgr), Ko Budy (Wholesale), Mbak Dewi (R&D Mgr), Bu Lena (CnM Mgr), Pak Wishnu (Online Mgr)
+**WA Group "Anak Gaul SI":** JID `120363421058001851@g.us`
+
+## Database
+- **Schemas:** raw (Accurate daily), portal (GSheets master), core (views), mart (analysis), public (Looker mirrors)
+- **psql:** `/Users/database-zuma/homebrew/Cellar/libpq/18.1_1/bin/psql`
+- **Product analysis priority:** mart.sku_portfolio_size (size-level) → mart.sku_portfolio (article) → core.sales_with_product (store/custom dates)
+- **Sales per artikel:** `public.sales_summary_plano` (store_name_raw LOWERCASE)
+- **STO data:** `mart.sto_analysis` (60K rows, 3-month window; rebuild: `SELECT mart.rebuild_sto_analysis()`)
+- **Targets:** `portal.store_monthly_target` (2025: 121 rows, 2026: 97 rows)
+
+## Active URLs
+| Tool/Deck | URL | Notes |
+|-----------|-----|-------|
+| STO Analysis | https://zuma-sto.vercel.app | Butterfly chart, daily regen 06:10 WIB |
+| BM Jatim | https://zuma-bm-jatim.vercel.app | 11 slides, daily update 06:00 WIB |
+| Portfolio | https://zuma-product-analysis.vercel.app | BCG+PLC |
+| Performance | https://zuma-performance-analysis.vercel.app | Revenue Bridge+ABC |
+| RO Benchmark | https://ro-benchmark-vercel.vercel.app | Swiss style |
+
+## Mac Mini Sub-Agents (2026-02-17)
+| Agent | ID | Role | Model | Fallback |
+|-------|----|------|-------|---------|
+| 🌸 Iris | main | Orchestrator ONLY | Sonnet 4.5 | — |
+| 🔮 Metis | metis | Data/SQL | Sonnet 4.5 | Kimi K2.5 |
+| 🪶 Daedalus | daedalus | Code/Build/PPT | Kimi K2.5 | Sonnet 4.5 |
+| 🪄 Hermes | hermes | Research/Web/Files | Sonnet 4.5 | Kimi K2.5 |
+| 🏛️ Oracle | oracle | Strategy (MD-only, ZERO exec) | Opus 4.6 🔒 | ❌ none |
+- Workspaces: `~/.openclaw/workspace-{metis,daedalus,hermes,oracle}/`
+- .env: symlinked from main workspace
+- Delegate via: `sessions_spawn agentId: "metis"` etc.
+- **IRIS HARAM DO TASKS HERSELF** — always delegate to sub-agents
+
+## VPS Team (CRON ONLY)
+- **Iris Junior** (main, VPS 76.13.194.103): coordinator, morning reports, Notion, Telegram
+- **Atlas** (ops): stock/sales ETL monitoring, GSheets, cron health check 05:30 WIB
+- **Apollo** (rnd): product/QC tracking (IDLE)
+- **VPS Cron:** 02:00 backup | 03:00 stock pull | 05:00 sales pull | 05:30 Atlas health check | 06:00 Iris report
+
+## Key Performance Data (Jan-Feb 2026)
+- Portfolio: 76,208 pairs, same-period YoY **-16.7%**, forecast ~569K
+- Revenue: Volume -1.87B, ASP +0.91B, Net **-8.7%**
+- Top store: Mataram (Lombok) 5,901 pairs +56% Rp395M
+- Concern: Dalung -55.6%
+
+## Role → PPT Framework
+CEO/GM: Revenue Bridge + BCG | Ops: ABC Store + Growth×Revenue | R&D: BCG+PLC | BM: Ops filtered by branch | Finance: ❌ no COGS yet | BusDev: ❌ no market data
+
+## DN-to-PO
+1 DN = 2 outputs (Invoice DDD + PO MBB/UBB). Always use standard scripts in `dn-to-po/`. Output to `~/Desktop/DN PO ENTITAS/`. Never ad-hoc.
+
+## YouTube/Music
+User requests lagu → langsung puter (openclaw browser, no relay). Wayan's music: Denny Caknan, Sabrina Carpenter, Bad Bunny.
