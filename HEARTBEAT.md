@@ -1,6 +1,10 @@
 # HEARTBEAT.md — Task Tracker & Periodic Checks
 
-## 📋 Pending Tasks
+**⚠️ Note:** This file tracks **URGENT same-day tasks** only. For full backlog (medium + long-term), see **PENDING.md**
+
+---
+
+## 📋 Pending Tasks (Urgent - This Week)
 
 - [ ] **Upload iSeller data (2024, 2025, 2026)** — Database upload task, waiting for Wayan's download to complete
 

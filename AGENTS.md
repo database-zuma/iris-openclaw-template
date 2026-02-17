@@ -275,6 +275,35 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 **Root cause of failure:** Delegating without tracking = broken promises. HEARTBEAT.md fixes this.
 
+### 📋 PENDING.md — Full Task Backlog
+
+**Purpose:** Single source of truth untuk SEMUA pending tasks (urgent + medium-term + long-term)
+
+**MANDATORY CHECK:** When user asks "apa pending tasks ku?" → ALWAYS read `PENDING.md` first!
+
+**File location:** `/Users/database-zuma/.openclaw/workspace/PENDING.md`
+
+**Structure:**
+- **Urgent (This Week):** Immediate action needed
+- **Medium-Term (This Month):** Planning/design stage
+- **Long-Term (This Quarter):** Backlog/roadmap
+
+**Workflow:**
+1. **PENDING.md** = Full backlog (all tasks, categorized by urgency)
+2. **HEARTBEAT.md** = Active monitoring (urgent same-day tasks only)
+3. **When task becomes urgent:** Move from PENDING.md → HEARTBEAT.md (avoid duplication)
+4. **When task done:** Remove from both files
+
+**Review frequency:** Weekly (clean up completed, reprioritize)
+
+**Why separate files:**
+- HEARTBEAT.md = lightweight (checked every minute, small token burn)
+- PENDING.md = comprehensive (checked on-demand, full context)
+
+**⚠️ DON'T FORGET:** Check PENDING.md setiap kali user tanya tasks, or weekly review untuk identify what should move to HEARTBEAT.md
+
+---
+
 ## Task Delegation — EXPANDED STRATEGY 🎯
 
 ### Level 0: OpenCode (MANDATORY for ALL Technical Tasks) 🧠
