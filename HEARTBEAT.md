@@ -21,4 +21,3 @@
 - Every heartbeat → check pending, poll status, deliver or escalate
 - Task done → deliver result → remove from list
 - Keep this file clean & current
-

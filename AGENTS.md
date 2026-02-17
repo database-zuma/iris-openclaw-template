@@ -183,39 +183,12 @@ You are free to edit `HEARTBEAT.md` with a short checklist or reminders. Keep it
 - **Mentions** - Twitter/social notifications?
 - **Weather** - Relevant if your human might go out?
 
-**Track your checks** in `memory/heartbeat-state.json`:
+**Track checks** in `memory/heartbeat-state.json` (lastChecks: email, calendar, weather timestamps)
 
-```json
-{
-  "lastChecks": {
-    "email": 1703275200,
-    "calendar": 1703260800,
-    "weather": null
-  }
-}
-```
+**Reach out when:** Important email | Calendar event <2h | Something interesting | >8h silent
+**Stay quiet when:** Late night (23:00-08:00) | Human busy | Nothing new | Checked <30 min ago
 
-**When to reach out:**
-
-- Important email arrived
-- Calendar event coming up (&lt;2h)
-- Something interesting you found
-- It's been >8h since you said anything
-
-**When to stay quiet (HEARTBEAT_OK):**
-
-- Late night (23:00-08:00) unless urgent
-- Human is clearly busy
-- Nothing new since last check
-- You just checked &lt;30 minutes ago
-
-**Proactive work you can do without asking:**
-
-- Read and organize memory files
-- Check on projects (git status, etc.)
-- Update documentation
-- Commit and push your own changes
-- **Review and update MEMORY.md** (see below)
+**Proactive work (no permission needed):** Organize memory files, check projects (git status), update docs, commit/push own changes, review MEMORY.md
 
 ### 🔄 Memory Maintenance (During Heartbeats)
 
@@ -253,27 +226,9 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 - Mark as done or remove line from HEARTBEAT.md
 - Update memory if significant
 
-**Why this matters:**
-- **Keeps promises** — "nanti kabarin" actually means you'll kabarin
-- **No more 3+ hour delays** — systematic follow-up
-- **User doesn't have to remind you** — you track it yourself
-- **Trust & reliability** — do what you say you'll do
+**Why:** Keeps promises, no 3h+ delays, user doesn't have to remind you. Delegating without tracking = broken promises.
 
-**Example HEARTBEAT.md:**
-```md
-# Pending Tasks
-
-- [ ] Query Merci sales (Mbak Dewi) - delegated to Atlas 16:55 ⏰
-- [ ] RO Request benchmark (Wayan) - opencode session iris_benchmark, check status
-
-# Routine Checks (rotate 2-4x daily)
-
-- Email check (last: 08:00)
-- Calendar (next 24h)
-- Weather (if going out)
-```
-
-**Root cause of failure:** Delegating without tracking = broken promises. HEARTBEAT.md fixes this.
+**Example HEARTBEAT.md:** `- [ ] PENDING: Query Merci sales (Mbak Dewi) - Atlas 16:55` + Routine checks (email/calendar/weather)
 
 ### 📋 PENDING.md — Full Task Backlog
 
@@ -358,28 +313,7 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 - **Consistent model usage:** Sonnet/Kimi, not my default
 - **Parallelization:** opencode works, I monitor + respond to user
 
-**⚠️ CRITICAL: Delegation Workflow (2026-02-13)**
-
-**WRONG (blocking, not responsive):**
-```
-Delegate → poll → poll → poll → wait → poll → blocking sampai selesai
-[I'm NOT responsive during wait]
-```
-
-**RIGHT (non-blocking, responsive):**
-```
-1. Delegate task (opencode/Atlas/etc)
-2. Acknowledge "Task delegated, monitoring..."
-3. STOP — continue chatting, don't poll repeatedly
-4. User asks result → THEN check process/poll
-5. Or periodic passive check (don't block conversation)
-```
-
-**Key rules:**
-- Don't poll immediately after delegation
-- Don't block conversation waiting for background tasks
-- Check when user asks, or periodic (but non-blocking)
-- Acknowledge delegation, then FREE to chat other topics
+**⚠️ Delegation Workflow (2026-02-13):** Delegate → Acknowledge → Continue chatting (non-blocking) → Check when user asks or periodic. NEVER poll repeatedly or block conversation waiting for background tasks.
 
 ### Level 1: Local Sub-Agents (sessions_spawn)
 **Delegasi task terminal ke sub-agent** untuk install, build, atau task panjang yang bukan core conversation. Iris cukup monitor dan laporkan hasilnya. Ini menghindari polling berulang yang burn tokens.
@@ -477,120 +411,14 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 
 ## 📚 Knowledge Dump System (Auto-Mode)
 
-**Purpose:** Capture external knowledge (Twitter threads, Reddit posts, articles) into searchable, structured summaries.
+**Location:** `knowledge/` | **Setup:** 2026-02-14
 
-### How It Works
+**When Wayan sends a link** (Twitter/Reddit/article): Auto-detect → Scrape → Summarize (Style B) → Auto-categorize → Save to `knowledge/{topic}/YYYY-MM-DD_{source}_{slug}.md` → Update `knowledge/INDEX.md`
 
-When Wayan sends a link (Twitter/Reddit/article):
-1. **Auto-detect** URL pattern
-2. **Scrape** content (Nitter for Twitter, Reddit JSON API, web_fetch for articles)
-3. **Summarize** in structured format (Style B)
-4. **Auto-categorize** into topic folder
-5. **Save** to `knowledge/{topic}/YYYY-MM-DD_{source}_{slug}.md`
-6. **Update** `knowledge/INDEX.md` with new entry
-7. **Reply** with save location
+**Categories:** `ai-agents/` (AI/LLM/ML) | `business-ops/` (retail/logistics) | `dev-tools/` (code/infra) | `misc/` (unclear)
 
-### Folder Structure
+**Scraping priority:** Twitter→Nitter first, fallback browser | Reddit→append `.json` | Articles→`web_fetch` | Fallback→browser automation
 
-```
-knowledge/
-├── ai-agents/          # AI, ML, LLM, automation
-├── business-ops/       # Ops, retail, logistics
-├── dev-tools/          # Code, infra, frameworks
-├── misc/               # Uncategorized
-├── INDEX.md            # Master searchable index
-└── README.md           # System documentation
-```
+**Summary format (Style B):** Title, Source, Author, Date, Link, Key Points (3 bullets), Technical Details, Takeaways (for Zuma/Wayan), Tags
 
-### Summary Format (Style B - Structured)
-
-```markdown
-# [Title/Topic]
-
-**Source:** Twitter/Reddit/Article
-**Author:** @username / r/subreddit
-**Date:** YYYY-MM-DD
-**Link:** https://...
-
-**Key Points:**
-- Main insight 1
-- Main insight 2
-- Main insight 3
-
-**Technical Details:**
-- Implementation specifics
-- Architecture/approach
-
-**Takeaways:**
-- What matters for Zuma/Wayan
-- Action items (if any)
-
-**Tags:** #tag1 #tag2 #tag3
-```
-
-### Scraping Methods (Priority Order)
-
-1. **Twitter:**
-   - Try Nitter instance first: `nitter.privacydev.net/{user}/status/{id}` (no login)
-   - Fallback: Browser automation (Chrome relay)
-   
-2. **Reddit:**
-   - Append `.json` to URL → parse native API
-   - Fast, no auth needed
-   
-3. **Articles:**
-   - `web_fetch` (Readability extractor)
-   - Works for most public sites
-
-4. **Fallback:**
-   - Browser automation for paywalled/complex sites
-
-### Auto-Categorization Logic
-
-| Content Contains | Category |
-|-----------------|----------|
-| AI, LLM, agents, prompts, ML | `ai-agents/` |
-| Operations, retail, business, logistics, inventory | `business-ops/` |
-| Code, frameworks, devtools, infrastructure | `dev-tools/` |
-| Unclear or multiple topics | `misc/` (may ask user) |
-
-### URL Detection Patterns
-
-```javascript
-// Twitter/X
-/https?:\/\/(twitter\.com|x\.com)\/\w+\/status\/\d+/
-
-// Reddit
-/https?:\/\/(www\.)?reddit\.com\/r\/\w+\/comments/
-
-// Generic article
-/^https?:\/\//  // Any HTTP(S) URL
-```
-
-### INDEX.md Auto-Update
-
-Each new save appends to INDEX.md:
-
-```markdown
-## Recent Additions
-
-- **2026-02-14** | [Title](ai-agents/2026-02-14_twitter_summary.md) | #ai-agents #scaling | Twitter @username
-```
-
-### Error Handling
-
-| Error | Action |
-|-------|--------|
-| Scraper fails (404, rate limit) | Try fallback method, then report error |
-| Can't categorize | Save to `misc/`, ask user for category |
-| Duplicate content | Check if similar file exists, ask before overwriting |
-
-### Manual Override
-
-If Wayan specifies category:
-- "save this as business-ops" → override auto-categorization
-- "detailed summary" → expand summary depth
-- "brief only" → minimal 3-bullet summary
-
-**Setup date:** 2026-02-14  
-**Location:** `/Users/database-zuma/.openclaw/workspace/knowledge/`
+**Manual override:** User can specify category, "detailed summary", or "brief only" (3-bullet)

@@ -287,6 +287,69 @@ ORDER BY transaction_month, kode_mix;
 - Turnover: to_wh, to_total (months of coverage)
 - Other: sales_mix %, avg_last_3_months, current_year_label, last_year_label
 
+### mart.sku_portfolio_size (2026-02-17) — SIZE-LEVEL ANALYSIS ⚠️ CRITICAL QUERY RULE
+
+**Table Design:**
+- **Grain:** `kode_besar` (SKU with size + version, e.g., M1SPV201Z42)
+- **Primary Key:** `kode_besar` (UNIQUE constraint)
+- **Rows:** 5,220 (all SKU versions × sizes)
+- **Columns:** 107 (11 ID/Base + 83 Sales + 13 Stock)
+- **Purpose:** Most granular level for size-level analysis
+
+**⚠️ CRITICAL ANALYSIS RULE (2026-02-17 from Wayan):**
+
+**ALWAYS use `kodemix` or `kode_mix_size` for analysis — NEVER filter by single `kode_besar`!**
+
+**Why:**
+- One article has **multiple kode_besar versions** (M1SPV201, M1SP01, M1SPV101, SJ1A)
+- Kode lama → kode baru evolution (same product, different codes over time)
+- Filtering `kode_besar = 'M1SPV201Z42'` = only 1 version (incomplete!)
+- Filtering `kodemix = 'M1SP0PV201'` = SUM ALL versions = true article performance
+
+**Table Design Purpose:**
+- `kode_besar` as PK = enforce data integrity (prevent duplicate rows at granular level)
+- Analysis purpose = aggregate by `kodemix` (ignore version differences)
+
+**Query Pattern:**
+```sql
+-- ✅ CORRECT (business analysis — sum all versions):
+SELECT 
+    kodemix, size, 
+    SUM(current_year_qty) AS total_qty,
+    SUM(current_year_rp) AS total_rp
+FROM mart.sku_portfolio_size
+WHERE kodemix = 'M1SP0PV201'
+GROUP BY kodemix, size;
+
+-- ❌ WRONG (only 1 version, incomplete):
+SELECT current_year_qty, current_year_rp
+FROM mart.sku_portfolio_size
+WHERE kode_besar = 'M1SPV201Z42';
+```
+
+**Example:**
+- User asks: "MEN STRIPE BLACK BLUE RED size 42"
+- Correct approach:
+  1. Find kodemix: `M1SP0PV201`
+  2. Query: `WHERE kodemix = 'M1SP0PV201' AND size = '42'`
+  3. GROUP BY kodemix, size
+  4. Result: SUM(M1SPV201Z42 + M1SP01Z42 + M1SPV101Z42 + ...) = ALL versions combined
+
+**Case-Sensitivity Fix (2026-02-17):**
+- Sales/Stock data = lowercase `kode_besar` (m1spv201z39)
+- portal.kodemix = UPPERCASE `kode_besar` (M1SPV201Z39)
+- Solution: `UPPER(kode_besar)` in all CTEs to ensure JOIN success
+
+**Data Sources:**
+- Articles: portal.kodemix (DISTINCT ON kode_besar)
+- Sales: core.sales_with_product (with `UPPER(kode_besar)`)
+- Stock: core.stock_with_product (with `UPPER(kode_besar)`)
+
+**When to use mart.sku_portfolio_size vs mart.sku_portfolio:**
+- Need **size breakdown** → mart.sku_portfolio_size
+- Article-level only (no size) → mart.sku_portfolio
+- Both tables: Same business rules, same metrics, different grain
+
 ### VPS Credentials (Shared)
 **Location:** `/root/.openclaw/.env` (GH_TOKEN, NOTION_API_KEY, GOG_KEYRING_PASSWORD)
 
@@ -297,95 +360,27 @@ ORDER BY transaction_month, kode_mix;
 - **Rule:** Setiap task WAJIB linked ke Project, Iris Junior manage bukan execute
 
 ### Delegation Strategy — CRITICAL 🎯
-**🔴 WAYAN'S RULE (2026-02-12):** **ALWAYS USE ATLAS FOR DATABASE QUERIES** — jangan coba local psql di Mac mini!
-
-**OLD mindset:** Delegasi cuma ke Claude Code/Kimi di Mac mini
-**NEW mindset:** Delegasi ke **VPS agents** untuk:
-- Long-running data operations (Atlas/Apollo punya akses Accurate API, GSheets)
-- Monitoring & reporting tasks (Iris Junior punya system monitoring setup)
-- Notion task management (Iris Junior punya full Notion API access)
-- Background cron job coordination
-
-**When to delegate where:**
-- **Mac mini (local):** Browser control, file ops, NON-DATABASE quick analysis
-- **VPS (Iris Junior):** Monitoring, reporting, Notion coordination, eskalasi
-- **VPS (Atlas):** **ALL DATABASE QUERIES** (stock, sales, any PostgreSQL), data pulls, GSheet operations
-- **VPS (Apollo):** Product dev tracking, QC monitoring (when active)
-
-**Communication modes:**
-- **TUI (persistent):** Best for ongoing conversation, less token burn
-- **CLI one-shot:** Quick commands when TUI not needed
+**🔴 WAYAN'S RULE (2026-02-12):** See AGENTS.md "Task Delegation" for full details.
+**Quick ref:** Mac mini=browser/file ops | Atlas=ALL DB queries/GSheets | Iris Junior=monitoring/Notion/eskalasi | Apollo=R&D (when active)
+**Comms:** TUI (persistent, less tokens) or CLI one-shot
 
 ### Presentation Workflow — MANDATORY 🚨
-**CRITICAL POLICY (2026-02-16):** **ALL PPT requests = HTML + Vercel deployment**
+**POLICY (2026-02-16):** ALL PPT requests = HTML (Tailwind CSS) + Vercel deploy (`vercel --prod --yes`) → Share URL. ONLY python-pptx if user explicitly requests .pptx or HTML fails.
 
-**When ANY user requests PPT/presentation:**
-1. Generate HTML deck (single file with Tailwind CSS)
-2. Deploy to Vercel (`vercel --prod --yes`)
-3. Share permanent URL — NOT static file download
+**Why:** Web-shareable, fast iteration (10s redeploy), better print quality (Cmd+P), no layout struggles.
 
-**Why HTML + Vercel is mandatory:**
-- Web-shareable (permanent URL, accessible anywhere)
-- Better print quality (user prints to PDF themselves: Cmd+P, background graphics ON)
-- Fast iteration (re-deploy in 10 seconds)
-- No python-pptx layout struggles
-- Scrollable, responsive, modern UX
-
-**ONLY use python-pptx if:**
-- User explicitly requests .pptx file format
-- Or HTML approach fails multiple times
-
-**Proven success:** RO Benchmark deck (11 slides, 7 deployments, ~10 sec each, user satisfied)
-
-**Reference example:** https://ro-benchmark-vercel.vercel.app
-**Skill location:** `zuma-business-skills/general/zuma-ppt-design/SKILL.md`
-
-**Skill coverage (2026-02-16):** Complete presentation workflow
-- **Visual Design:** Colors, typography, layouts (KBI-inspired)
-- **Technical Implementation:** HTML + Vercel, python-pptx fallback
-- **Narrative Structure:** Data storytelling frameworks (SCQA, Pyramid Principle, Insight Hierarchy, Narrative Arc)
-- **Quality Bar:** Descriptive → Diagnostic → Predictive → Prescriptive insights
-
-**Storytelling integration:** Data storytelling consolidated into PPT skill (not separate skill) — one-stop resource for design + tech + narrative
+**Reference:** https://ro-benchmark-vercel.vercel.app | **Skill:** `zuma-business-skills/general/zuma-ppt-design/SKILL.md`
+**Covers:** Visual design (KBI-inspired) + HTML/Vercel tech + Data storytelling (SCQA, Pyramid Principle, Narrative Arc)
 
 ## Critical Lessons: Branch/Store Mapping (2026-02-16)
 
-**NEVER ASSUME store locations based on store names!**
+**NEVER ASSUME store locations from names!** Epicentrum=Lombok (not Jakarta), Level 21=Bali, City of Tomorrow=Surabaya.
 
-**Incident:** Performance analysis PPT — salah mapping branch 3x revisions:
-- Epicentrum assumed Jakarta → **ACTUAL: Lombok**
-- Level 21 assumed Jakarta → **ACTUAL: Bali**  
-- City of Tomorrow assumed Jakarta → **ACTUAL: Surabaya (Jatim)**
-
-**Root cause:** Pattern matching `ILIKE '%epicentrum%'` based on feeling ≠ actual data
-
-**MANDATORY workflow for branch/area queries:**
-
+**MANDATORY:** Always JOIN `portal.store` (source of truth) for branch/area — NEVER use `CASE WHEN` pattern matching on store names.
 ```sql
--- ❌ WRONG: CASE WHEN mapping based on store name
-CASE WHEN store_name ILIKE '%epicentrum%' THEN 'Jakarta' ...
-
--- ✅ CORRECT: JOIN with portal.store (source of truth)
-SELECT 
-  s.store_name_raw,
-  ps.branch,
-  ps.area,
-  ps.category
-FROM core.sales_with_product s
 LEFT JOIN portal.store ps ON s.store_name_raw = ps.nama_accurate OR s.store_name_raw = ps.nama_iseller
-WHERE ps.branch IS NOT NULL
 ```
-
-**Source of truth hierarchy:**
-1. `portal.store` table (branch, area, category columns) — **ALWAYS use this**
-2. Store name patterns — **NEVER trust assumptions**
-
-**Validation rules:**
-- Branch/area analysis → Query `portal.store` first
-- Cross-reference with master data before presenting
-- If unsure → Ask user, don't guess
-
-**Lesson:** Master data > assumptions. ALWAYS check source of truth before making claims about locations/branches.
+**Rule:** `portal.store` > assumptions. Always query first, never guess.
 
 ## DN-to-PO Workflow (2026-02-16)
 
@@ -411,46 +406,18 @@ node convert-dn-to-po.js <file_DN> <MBB|UBB>
 ```
 
 ### Features:
-- **Pricing automation:** Auto-load from `template/Master Harga.xlsx` (sheet MBB/UBB, column "Harga After Diskon")
-- **PDF support:** Parse DN metadata + items from PDF text (DN number, date, customer, SKU list)
-- **Field normalization:** Excel and PDF outputs use same structure (dnNumber, dnDate, customerName, items)
+- Pricing auto-load from `template/Master Harga.xlsx` | PDF+Excel auto-detected | Same output structure
 
-### Output Files:
-- **Invoice:** `INV-DDD-dari-{NO_DN}-{TANGGAL}-{JAM}.xlsx`
-- **PO:** `PO-{ENTITY}-dari-{NO_DN}.xlsx`
+### Output:
+- **Invoice:** `INV-DDD-dari-{NO_DN}-{TANGGAL}-{JAM}.xlsx` | **PO:** `PO-{ENTITY}-dari-{NO_DN}.xlsx`
 - **Location:** `~/Desktop/DN PO ENTITAS/`
-
-### Delivery Format:
-Send BOTH files (Invoice + PO) with captions:
-```
-📄 **{FILENAME}**
-
-{DN_NUMBER}
-{X} SKU, {Y} pairs
-Tanggal: {TANGGAL}
-
-🔗 **Google Sheets:**
-{LINK}
-```
+- **Delivery:** Send BOTH files (Invoice+PO) with caption (filename, DN#, SKU count, date) + Google Sheets link
 
 ### Critical Rules:
-1. **ALWAYS use standard scripts** — NEVER ad-hoc Python/manual conversions
-2. **ALWAYS deliver Excel + Google Sheets link TOGETHER** — never link-only first
-3. **ALWAYS generate BOTH files** — Invoice + PO (missing either = incomplete)
-4. **PDF or Excel auto-detected** — script handles both formats automatically
-
-### Common Mistakes:
-- ❌ Using ad-hoc Python scripts instead of standard scripts
-- ❌ Sending link-only without Excel file
-- ❌ Generating only PO without Invoice
-- ❌ Wrong filename format
-- ❌ Forgetting to move files to `~/Desktop/DN PO ENTITAS/`
-
-### Historical Incident (Bu Aulia, 2026-02-16):
-- User received Python ad-hoc output (wrong format) + link-only (missing file)
-- Reported as "tidak sesuai"
-- Resolution: Re-processed with standard script, sent file + link + apology
-- Permanent reminder: Consistency = trust
+1. ALWAYS use standard scripts (NEVER ad-hoc Python)
+2. ALWAYS deliver Excel + GSheets link TOGETHER
+3. ALWAYS generate BOTH files (Invoice + PO)
+4. **Bu Aulia incident (2026-02-16):** Ad-hoc output + link-only = "tidak sesuai". Lesson: Consistency = trust
 
 **Skill location:** `zuma-business-skills/ops/dn-to-po/SKILL.md`
 **Repo:** https://github.com/database-zuma/dn-to-po

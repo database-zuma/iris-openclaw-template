@@ -31,6 +31,52 @@ User asks about product performance?
 
 ---
 
+## 1.1. Size Breakdown? Use `mart.sku_portfolio_size` ⚠️ CRITICAL QUERY RULE
+
+**When to use:**
+- User explicitly asks for **size breakdown** (e.g., "per size", "size 42 vs 40", "breakdown by size")
+- Need **SKU-level granularity** (kode_besar grain)
+
+**Table:** `mart.sku_portfolio_size`
+- **Grain:** kode_besar (SKU with size + version, e.g., M1SPV201Z42)
+- **Rows:** 5,220 (all versions × sizes)
+- **Columns:** 107 (11 ID/Base + 83 Sales + 13 Stock)
+
+**⚠️ CRITICAL RULE (2026-02-17):**
+
+**ALWAYS aggregate by `kodemix` or `kode_mix_size` — NEVER filter by single `kode_besar`!**
+
+**Why:**
+- One article has **multiple kode_besar versions** (M1SPV201, M1SP01, M1SPV101, SJ1A)
+- Kode lama → kode baru evolution (same product, different codes over time)
+- `kode_besar` = PRIMARY KEY for data integrity (prevent duplicates)
+- **Business analysis** = SUM across ALL versions (ignore kode version differences)
+
+**Wrong vs Right Query:**
+```sql
+-- ❌ WRONG (incomplete — only 1 version):
+SELECT size, current_year_qty
+FROM mart.sku_portfolio_size
+WHERE kode_besar = 'M1SPV201Z42';
+
+-- ✅ CORRECT (complete — all versions):
+SELECT 
+    size,
+    SUM(current_year_qty) AS total_qty,
+    SUM(current_year_rp) AS total_rp,
+    SUM(stok_global) AS total_stock
+FROM mart.sku_portfolio_size
+WHERE kodemix = 'M1SP0PV201'
+GROUP BY size
+ORDER BY total_qty DESC;
+```
+
+**Decision:**
+- Need **size breakdown** → `mart.sku_portfolio_size` + GROUP BY kodemix, size
+- Article-level only (no size) → `mart.sku_portfolio`
+
+---
+
 ## 2. Query Framework (WHAT/WHERE/WHEN Pattern)
 
 Every Zuma data question follows:
