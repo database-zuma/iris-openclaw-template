@@ -90,12 +90,9 @@
   - [ ] **TO alert email/WA** — notify Mas Bagus/Virra kalau TO < 0.5 per store
 - **Priority:** Medium-High (dipakai Branch Manager harian)
 
-### 7. Fix Branch-level Filtered Deck (portal.store JOIN timeout)
-- **Problem:** `portal.store` JOIN dengan ILIKE selalu timeout — blocks branch-specific analysis
-- **Solution:** Create indexed materialized view or use exact match instead of ILIKE
-- **Impact:** Enables Branch Manager deck (per-cabang filtered analysis)
-- **Who:** Iris (opencode)
-- **Timeline:** Before next branch manager request
+### 7. Fix Branch-level Filtered Deck ✅ RESOLVED
+- Issue ILIKE timeout sudah fixed (Hash Join LOWER=LOWER, index idx_store_branch)
+- 6.5s query time normal untuk 1.5M rows — bukan bug
 
 ### 8. PPT "How OpenClaw Works" — Architecture Explainer for Presentation
 - **Requested by:** Wayan (17:45 WIB, 2026-02-17)

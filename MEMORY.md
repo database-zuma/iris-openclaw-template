@@ -58,6 +58,7 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 
 ## People
 **Admin:** Wayan (CI System Developer, +628983539659)
+**GM:** Pak Fikri (+6285781436662) — helpful & informative, treat as VIP leadership
 **OPS:** Mbak Dini (Manager), Mbak Citra (Purchasing SPV), Mbak Sari (Purchasing Admin), Mas Bagus (Merchandiser), Mbak Virra (Allocation Planner), Mbak Galuh/Nabila (Inventory Control), Mbak Fifi (Branch Support), Mbak Nisa (CI SPV), Wafi (CI Impl)
 **Leadership:** Pak Steven (CEO), Pak Fikri (GM), Pak Donny (Creative Dir), Bu Aulia (FATAL Mgr), Ko Budy (Wholesale), Mbak Dewi (R&D Mgr), Bu Lena (CnM Mgr), Pak Wishnu (Online Mgr)
 **WA Group "Anak Gaul SI":** JID `120363421058001851@g.us`
@@ -66,6 +67,7 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 - **Schemas:** raw (Accurate daily), portal (GSheets master), core (views), mart (analysis), public (Looker mirrors)
 - **psql:** `/Users/database-zuma/homebrew/Cellar/libpq/18.1_1/bin/psql`
 - **Product analysis priority:** mart.sku_portfolio_size (size-level) → mart.sku_portfolio (article) → core.sales_with_product (store/custom dates)
+- **Control Stock = mart.sku_portfolio_size** — kalau user tanya "control stock", analisa dari sini. Bukan tabel terpisah.
 - **Sales per artikel:** `public.sales_summary_plano` (store_name_raw LOWERCASE)
 - **STO data:** `mart.sto_analysis` (60K rows, 3-month window; rebuild: `SELECT mart.rebuild_sto_analysis()`)
 - **Targets:** `portal.store_monthly_target` (2025: 121 rows, 2026: 97 rows)
@@ -86,6 +88,25 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 - Sub-agents = internal workers Iris, BUKAN interface user
 - Hanya **Iris** yang boleh spawn & komunikasi dengan sub-agents
 - Config: WhatsApp binding → iris only ✅ (verified 2026-02-17)
+
+## ⛔ HUKUM BESI #2 — SELALU Delegasi ke Sub-Agent (2026-02-18, Wayan)
+**IRIS GAK BOLEH KERJA KASAR. SELALU DELEGASI.**
+- Berlaku di SEMUA context: direct chat Wayan, group chat, user manapun
+- Heavy work (DB query, code, build, research, file ops) → SELALU spawn sub-agent
+- Iris = manager only. Delegate → monitor → report
+- Gak ada pengecualian — even "simple" queries tetap delegate kalau >2 detik
+- Sub-agents: Metis (data/SQL), Daedalus (code/build), Hermes (research/web), Oracle (strategy)
+
+## ⚠️ UX Rule — Jangan Expose Internal Tools ke User (2026-02-18, Wayan)
+**JANGAN munculin exec output, error logs, atau tool internals ke user.**
+- User gak perlu tau command apa yang dijalanin
+- Kalau ada error internal, handle sendiri — jangan forward ke chat
+- Yang user lihat = hasil akhir saja, bukan proses
+- Termasuk: exec stderr, exit codes, SSH output, SQL errors, tool debug info
+
+## Notion → Hermes (2026-02-17)
+Semua Notion tasks → delegasi ke **Hermes**. Iris tidak handle Notion langsung.
+NOTION_API_KEY ada di `.env` (symlink di workspace Hermes).
 
 ## Sub-Agent Communication Mechanism (2026-02-17)
 - **Spawn:** `sessions_spawn agentId: "metis/daedalus/hermes/oracle"` + task description
@@ -116,6 +137,32 @@ Cek DB, query, data check apapun → delegasi ke **Metis**. JANGAN Iris langsung
 - .env: symlinked from main workspace
 - Delegate via: `sessions_spawn agentId: "metis"` etc.
 - **IRIS HARAM DO TASKS HERSELF** — always delegate to sub-agents
+- **⚡ LEBIH INISIATIF** — jangan tunggu cron/schedule, langsung retry kalau gagal
+- **🔄 SEMUA heavy work → sub-agents PARALEL** — spawn multiple Daedalus/Metis sekaligus
+- **💬 IRIS SELALU RESPONSIVE** — never blocked by work, always bisa bales chat
+- **🚫 GAK BOLEH KERJA KASAR** — no direct SQL, no direct file editing, no long exec. Delegate semua!
+- **📊 Dashboard table rule (PERMANENT)**: Gender → Series → COLOR (→ SIZE if size-level). Jangan berhenti di Series.
+
+## Known Bugs & Solutions
+
+### FF/FA/FS Size Key Mismatch (Fixed 2026-02-18)
+**Symptom:** FF=0% untuk banyak stores padahal stock ada di DB.
+**Root cause:** Planogram columns pakai paired sizes (`size_36_37` → `"36/37"`), tapi stock di `core.stock_with_product` ada yang individual (`"37"` saja). Script `calculate_ff_fa_fs.py` cuma exact match → individual sizes gak pernah ke-match → FF=0.
+**Fix:** Fallback lookup — kalau paired size (`"36/37"`) return 0, coba individual sizes (`"36"` + `"37"`):
+```python
+if stock_qty == 0 and "/" in stock_size:
+    for part in stock_size.split("/"):
+        individual_key = (db_lower, article_mix_lower, part.strip())
+        stock_qty += stock.get(individual_key, 0)
+```
+**Script:** `/opt/openclaw/scripts/calculate_ff_fa_fs.py` line ~358
+**Impact:** National avg FF jumped from 30% → 69% after fix.
+
+### FF/FA/FS Store Name Mapping (Fixed 2026-02-18)
+**Symptom:** FF=0% karena store name gak match antara planogram dan stock.
+**Root cause:** `portal.store_name_map.stock_nama_gudang` case mismatch atau nama terpotong vs `core.stock_with_product.nama_gudang`.
+**Fix:** UPDATE `portal.store_name_map` dengan exact nama_gudang dari stock table. Contoh: `Zuma Dalung` → `ZUMA Dalung`, `Zuma MOI` → `ZUMA MALL OF INDONESIA (MOI)`.
+**Lesson:** Selalu verify exact string match (case-sensitive) antara mapping tables dan source tables.
 
 ## VPS Team (CRON ONLY)
 - **Iris Junior** (main, VPS 76.13.194.103): coordinator, morning reports, Notion, Telegram

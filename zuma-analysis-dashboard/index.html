@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zuma Analysis Dashboard</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f7;
+  --card:#ffffff;
+  --border:#d2d2d7;
+  --text:#1d1d1f;
+  --sub:#6e6e73;
+  --accent:#0071e3;
+  --green:#34c759;
+  --orange:#ff9f0a;
+  --red:#ff3b30;
+  --purple:#bf5af2;
+  --indigo:#5e5ce6;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 2px 8px rgba(0,0,0,.08),0 4px 24px rgba(0,0,0,.06);
+  --radius:14px;
+  --radius-sm:10px;
+  --header-h:52px;
+  --filter-h:56px;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ─────────────────────────────────────────────────────────────────── */
+.header{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;height:var(--header-h)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;
+  height:100%;max-width:1440px;margin:0 auto;padding:0 24px}
+.logo{font-size:17px;font-weight:700;letter-spacing:-.5px;color:var(--text)}
+.logo em{color:var(--accent);font-style:normal}
+.badge{font-size:11px;color:var(--sub);background:var(--bg);border:1px solid var(--border);
+  border-radius:20px;padding:3px 10px;letter-spacing:0}
+
+/* ── FILTER BAR ──────────────────────────────────────────────────────────────── */
+.filter-bar{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  position:sticky;top:var(--header-h);z-index:190;padding:0 24px;height:var(--filter-h)}
+.filter-inner{display:flex;align-items:center;gap:8px;height:100%;max-width:1440px;margin:0 auto}
+.filter-select{height:34px;padding:0 30px 0 12px;border:1px solid var(--border);border-radius:20px;
+  background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236e6e73' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
+  font-size:13px;color:var(--text);cursor:pointer;appearance:none;-webkit-appearance:none;
+  transition:border-color .15s,box-shadow .15s;outline:none;font-family:inherit;min-width:140px}
+.filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,113,227,.2)}
+.filter-select.active{border-color:var(--accent);background-color:#f0f7ff;color:var(--accent);font-weight:600}
+.filter-divider{width:1px;height:20px;background:var(--border);margin:0 4px}
+.filter-reset{height:34px;padding:0 14px;border-radius:20px;border:none;
+  background:rgba(255,59,48,.08);color:var(--red);font-size:13px;cursor:pointer;
+  font-weight:500;transition:background .15s;font-family:inherit}
+.filter-reset:hover{background:rgba(255,59,48,.15)}
+.filter-label{font-size:12px;color:var(--sub);white-space:nowrap}
+
+/* ── DATE PICKER ─────────────────────────────────────────────────────────────── */
+.date-wrap{position:relative}
+.date-btn{height:34px;padding:0 14px;border:1px solid var(--border);border-radius:20px;
+  background:var(--card);cursor:pointer;font-size:13px;color:var(--text);
+  display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .15s;
+  font-family:inherit;outline:none}
+.date-btn:hover{border-color:var(--accent)}
+.date-btn.active{border-color:var(--accent);background:#f0f7ff;color:var(--accent);font-weight:600}
+.date-btn svg{flex-shrink:0}
+.date-dropdown{position:absolute;top:calc(100% + 8px);left:0;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  min-width:260px;z-index:300;overflow:hidden;display:none}
+.date-dropdown.open{display:block}
+.date-presets{padding:8px}
+.date-preset{display:block;width:100%;padding:8px 12px;border:none;background:none;
+  text-align:left;font-size:13px;color:var(--text);cursor:pointer;border-radius:8px;
+  transition:background .1s;font-family:inherit}
+.date-preset:hover{background:var(--bg)}
+.date-preset.sel{background:#f0f7ff;color:var(--accent);font-weight:600}
+.date-custom{border-top:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:8px}
+.date-custom-label{font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.date-custom-row{display:flex;gap:8px;align-items:center}
+.date-custom-row select{flex:1;height:32px;border:1px solid var(--border);border-radius:8px;
+  padding:0 8px;font-size:13px;color:var(--text);background:var(--bg);outline:none;font-family:inherit}
+.date-apply{width:100%;margin-top:4px;height:34px;background:var(--accent);color:#fff;
+  border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:opacity .15s}
+.date-apply:hover{opacity:.9}
+
+/* ── KPI CARDS ───────────────────────────────────────────────────────────────── */
+.kpi-section{max-width:1440px;margin:0 auto;padding:20px 24px 0}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi-card{background:var(--card);border-radius:var(--radius);padding:18px 20px;
+  box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,.04);
+  display:flex;flex-direction:column;gap:6px;transition:box-shadow .2s}
+.kpi-card:hover{box-shadow:var(--shadow)}
+.kpi-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:2px}
+.kpi-label{font-size:12px;font-weight:500;color:var(--sub);letter-spacing:-.1px}
+.kpi-value{font-size:26px;font-weight:700;letter-spacing:-.8px;color:var(--text);font-variant-numeric:tabular-nums}
+.kpi-sub{font-size:11px;color:var(--sub)}
+.kpi-card.wh .kpi-icon{background:rgba(94,92,230,.1);color:var(--indigo)}
+.kpi-card.store .kpi-icon{background:rgba(52,199,89,.1);color:var(--green)}
+.kpi-card.retail .kpi-icon{background:rgba(0,113,227,.1);color:var(--accent)}
+.kpi-card.online .kpi-icon{background:rgba(255,159,10,.1);color:var(--orange)}
+.kpi-card.nonretail .kpi-icon{background:rgba(191,90,242,.1);color:var(--purple)}
+
+/* ── TABS ────────────────────────────────────────────────────────────────────── */
+.tabs-section{max-width:1440px;margin:0 auto;padding:16px 24px 0}
+.tab-bar{display:flex;gap:4px;background:rgba(0,0,0,.05);padding:3px;border-radius:22px;
+  width:fit-content;overflow-x:auto}
+.tab-btn{height:34px;padding:0 18px;border:none;border-radius:19px;cursor:pointer;
+  font-size:13px;font-weight:500;color:var(--sub);background:none;transition:all .15s;
+  white-space:nowrap;font-family:inherit}
+.tab-btn.active{background:var(--card);color:var(--text);font-weight:600;
+  box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.tab-btn:hover:not(.active){color:var(--text)}
+
+/* ── TABLE PANEL ─────────────────────────────────────────────────────────────── */
+.panels-section{max-width:1440px;margin:0 auto;padding:16px 24px 40px}
+.panel{display:none}
+.panel.active{display:block}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.panel-title{font-size:15px;font-weight:600;color:var(--text)}
+.panel-count{font-size:13px;color:var(--sub)}
+.panel-search{display:flex;align-items:center;gap:8px}
+.search-input{height:32px;padding:0 12px;border:1px solid var(--border);border-radius:20px;
+  font-size:13px;color:var(--text);background:var(--card);outline:none;font-family:inherit;width:200px}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,113,227,.15)}
+
+/* Table wrapper */
+.tbl-wrap{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);
+  overflow:auto;box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+thead th{padding:10px 12px;font-size:11px;font-weight:600;color:var(--sub);
+  text-transform:uppercase;letter-spacing:.4px;background:var(--bg);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;
+  white-space:nowrap;cursor:pointer;user-select:none;transition:color .1s}
+thead th:hover{color:var(--accent)}
+thead th.sort-asc::after{content:' ↑';color:var(--accent)}
+thead th.sort-desc::after{content:' ↓';color:var(--accent)}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.04);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f9f9fb}
+td{padding:9px 12px;color:var(--text);vertical-align:middle;white-space:nowrap}
+td.art{font-weight:600;font-size:12px;font-family:'SF Mono','Courier New',monospace;color:var(--accent)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+td.zero{color:var(--border)}
+td.chip{padding:2px 0}
+.chip-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.chip-g{background:rgba(0,113,227,.08);color:var(--accent)}
+.chip-t1{background:rgba(52,199,89,.12);color:#1a7a35}
+.chip-t2{background:rgba(52,199,89,.08);color:var(--green)}
+.chip-t3{background:rgba(255,159,10,.1);color:var(--orange)}
+.chip-t4{background:rgba(255,59,48,.08);color:var(--red)}
+td.month-col{text-align:right;min-width:56px;font-variant-numeric:tabular-nums;font-size:12px}
+
+/* Month header scroll */
+.months-table thead th.month-col{background:var(--bg)}
+
+/* No data */
+.no-data{text-align:center;padding:48px;color:var(--sub);font-size:14px}
+
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;height:200px;
+  font-size:14px;color:var(--sub);gap:8px}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-top:1px solid var(--border)}
+.page-info{font-size:12px;color:var(--sub)}
+.page-btns{display:flex;gap:4px}
+.page-btn{height:28px;min-width:28px;padding:0 8px;border:1px solid var(--border);
+  border-radius:7px;background:var(--card);font-size:12px;cursor:pointer;
+  font-family:inherit;transition:all .1s;color:var(--text)}
+.page-btn:hover{border-color:var(--accent);color:var(--accent)}
+.page-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.page-btn:disabled{opacity:.4;cursor:default}
+
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .kpi-card:nth-child(5){grid-column:1/-1}
+}
+@media(max-width:600px){
+  .kpi-row{grid-template-columns:1fr}
+  .kpi-card:nth-child(5){grid-column:auto}
+  .header-inner,.filter-inner,.kpi-section,.tabs-section,.panels-section{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo"><em>Zuma</em> Analysis Dashboard</div>
+    <div class="badge" id="gen-badge">Loading…</div>
+  </div>
+</header>
+
+<!-- ── FILTER BAR ──────────────────────────────────────────────────────────── -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <span class="filter-label">Filter:</span>
+
+    <select class="filter-select" id="area-select" onchange="onAreaChange()">
+      <option value="">📍 Semua Area</option>
+    </select>
+
+    <select class="filter-select" id="store-select" onchange="onStoreChange()">
+      <option value="">🏪 Semua Toko</option>
+    </select>
+
+    <div class="filter-divider"></div>
+
+    <!-- Date Range Picker -->
+    <div class="date-wrap" id="date-wrap">
+      <button class="date-btn" id="date-btn" onclick="toggleDateDropdown()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span id="date-label">Last 12 Months</span>
+      </button>
+      <div class="date-dropdown" id="date-dropdown">
+        <div class="date-presets">
+          <button class="date-preset" onclick="setPreset('1m')">Last Month</button>
+          <button class="date-preset" onclick="setPreset('3m')">Last 3 Months</button>
+          <button class="date-preset" onclick="setPreset('6m')">Last 6 Months</button>
+          <button class="date-preset sel" onclick="setPreset('1y')">Last 12 Months</button>
+          <button class="date-preset" onclick="setPreset('custom')">Custom Range…</button>
+        </div>
+        <div class="date-custom" id="date-custom" style="display:none">
+          <div class="date-custom-label">Custom Range</div>
+          <div class="date-custom-row">
+            <span style="font-size:12px;color:var(--sub);width:30px">From</span>
+            <select id="date-from-sel" style="flex:1"></select>
+          </div>
+          <div class="date-custom-row">
+            <span style="font-size:12px;color:var(--sub);width:30px">To</span>
+            <select id="date-to-sel" style="flex:1"></select>
+          </div>
+          <button class="date-apply" onclick="applyCustomDate()">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+    <button class="filter-reset" onclick="resetFilters()">✕ Reset</button>
+  </div>
+</div>
+
+<!-- ── KPI CARDS ───────────────────────────────────────────────────────────── -->
+<div class="kpi-section">
+  <div class="kpi-row">
+    <div class="kpi-card wh">
+      <div class="kpi-icon">🏭</div>
+      <div class="kpi-label">Stock Gudang</div>
+      <div class="kpi-value" id="kpi-swh">—</div>
+      <div class="kpi-sub" id="kpi-swh-sub">pcs warehouse</div>
+    </div>
+    <div class="kpi-card store">
+      <div class="kpi-icon">🏪</div>
+      <div class="kpi-label">Stock Toko</div>
+      <div class="kpi-value" id="kpi-sst">—</div>
+      <div class="kpi-sub" id="kpi-sst-sub">pcs retail</div>
+    </div>
+    <div class="kpi-card retail">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-label">Sales Retail</div>
+      <div class="kpi-value" id="kpi-smr">—</div>
+      <div class="kpi-sub" id="kpi-smr-sub">pcs periode</div>
+    </div>
+    <div class="kpi-card online">
+      <div class="kpi-icon">🛒</div>
+      <div class="kpi-label">Sales Online</div>
+      <div class="kpi-value" id="kpi-smo">—</div>
+      <div class="kpi-sub" id="kpi-smo-sub">pcs periode</div>
+    </div>
+    <div class="kpi-card nonretail">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-label">Sales Non-Retail</div>
+      <div class="kpi-value" id="kpi-smn">—</div>
+      <div class="kpi-sub" id="kpi-smn-sub">pcs periode</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TABS ────────────────────────────────────────────────────────────────── -->
+<div class="tabs-section">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="setTab('stock-summary')">Stock Summary</button>
+    <button class="tab-btn" onclick="setTab('stock-detail')">Stock Detail</button>
+    <button class="tab-btn" onclick="setTab('stock-size')">Stock Detail Size</button>
+    <button class="tab-btn" onclick="setTab('sales-summary')">Sales Summary</button>
+    <button class="tab-btn" onclick="setTab('sales-detail')">Sales Detail</button>
+  </div>
+</div>
+
+<!-- ── PANELS ──────────────────────────────────────────────────────────────── -->
+<div class="panels-section">
+  <!-- STOCK SUMMARY -->
+  <div class="panel active" id="panel-stock-summary">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Stock Summary</div>
+        <div class="panel-count" id="cnt-stock-summary">—</div>
+      </div>
+      <div class="panel-search">
+        <input class="search-input" id="srch-stock-summary" placeholder="🔍 Cari artikel..." oninput="renderCurrentTab()">
+      </div>
+    </div>
+    <div class="tbl-wrap" id="tbl-stock-summary">
+      <div class="loading"><div class="spinner"></div>Loading data…</div>
+    </div>
+  </div>
+
+  <!-- STOCK DETAIL -->
+  <div class="panel" id="panel-stock-detail">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Stock Detail</div>
+        <div class="panel-count" id="cnt-stock-detail">—</div>
+      </div>
+      <div class="panel-search">
+        <input class="search-input" id="srch-stock-detail" placeholder="🔍 Cari artikel..." oninput="renderCurrentTab()">
+      </div>
+    </div>
+    <div class="tbl-wrap" id="tbl-stock-detail">
+      <div class="loading"><div class="spinner"></div>Loading data…</div>
+    </div>
+  </div>
+
+  <!-- STOCK DETAIL SIZE -->
+  <div class="panel" id="panel-stock-size">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Stock Detail Size</div>
+        <div class="panel-count" id="cnt-stock-size">—</div>
+      </div>
+      <div class="panel-search">
+        <input class="search-input" id="srch-stock-size" placeholder="🔍 Cari artikel/size..." oninput="renderCurrentTab()">
+      </div>
+    </div>
+    <div class="tbl-wrap" id="tbl-stock-size">
+      <div class="loading"><div class="spinner"></div>Loading data…</div>
+    </div>
+  </div>
+
+  <!-- SALES SUMMARY -->
+  <div class="panel" id="panel-sales-summary">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Sales Summary</div>
+        <div class="panel-count" id="cnt-sales-summary">—</div>
+      </div>
+      <div class="panel-search">
+        <input class="search-input" id="srch-sales-summary" placeholder="🔍 Cari artikel..." oninput="renderCurrentTab()">
+      </div>
+    </div>
+    <div class="tbl-wrap" id="tbl-sales-summary">
+      <div class="loading"><div class="spinner"></div>Loading data…</div>
+    </div>
+  </div>
+
+  <!-- SALES DETAIL -->
+  <div class="panel" id="panel-sales-detail">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Sales Detail (Monthly)</div>
+        <div class="panel-count" id="cnt-sales-detail">—</div>
+      </div>
+      <div class="panel-search">
+        <input class="search-input" id="srch-sales-detail" placeholder="🔍 Cari artikel..." oninput="renderCurrentTab()">
+      </div>
+    </div>
+    <div class="tbl-wrap" id="tbl-sales-detail">
+      <div class="loading"><div class="spinner"></div>Loading data…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+const S = {
+  area: '',
+  store: '',
+  dateFrom: '',
+  dateTo: '',
+  tab: 'stock-summary',
+  sortCol: {},   // tabId → {col, dir}
+  page: {},      // tabId → pageNum
+  preset: '1y',
+};
+
+let D = null; // loaded data.json
+
+const PAGE_SIZE = 100;
+const MONTH_ABBR = {
+  '01':'Jan','02':'Feb','03':'Mar','04':'Apr','05':'May','06':'Jun',
+  '07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'
+};
+
+// ── LOAD DATA ─────────────────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const r = await fetch('data.json?v=' + Date.now());
+    D = await r.json();
+    init();
+  } catch(e) {
+    document.getElementById('gen-badge').textContent = 'Error loading data';
+    console.error(e);
+  }
+}
+
+function init() {
+  const dt = new Date(D.generated_at);
+  document.getElementById('gen-badge').textContent =
+    'Updated ' + dt.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) +
+    ' ' + dt.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+
+  // Populate date selectors
+  const months = D.months;
+  const fromSel = document.getElementById('date-from-sel');
+  const toSel   = document.getElementById('date-to-sel');
+  months.forEach(m => {
+    const [y,mo] = m.split('-');
+    const label = MONTH_ABBR[mo] + ' ' + y;
+    fromSel.insertAdjacentHTML('beforeend', `<option value="${m}">${label}</option>`);
+    toSel.insertAdjacentHTML('beforeend',   `<option value="${m}">${label}</option>`);
+  });
+  toSel.value = months[months.length - 1];
+
+  // Set default date range (last 12 months)
+  setPreset('1y', false);
+
+  // Populate area dropdown
+  const areaSel = document.getElementById('area-select');
+  D.areas.forEach(a => {
+    areaSel.insertAdjacentHTML('beforeend', `<option value="${a}">${a}</option>`);
+  });
+
+  // Initial store dropdown (all)
+  rebuildStoreDropdown();
+
+  // Render
+  updateAll();
+}
+
+// ── DATE HELPERS ──────────────────────────────────────────────────────────────
+function setPreset(p, doUpdate = true) {
+  S.preset = p;
+  const months = D ? D.months : [];
+  if (!months.length) return;
+  const last = months[months.length - 1];
+  let from = months[0];
+
+  if (p === '1m') {
+    from = months[Math.max(0, months.length - 1)];
+  } else if (p === '3m') {
+    from = months[Math.max(0, months.length - 3)];
+  } else if (p === '6m') {
+    from = months[Math.max(0, months.length - 6)];
+  } else if (p === '1y') {
+    from = months[0]; // all 12-13 months
+  }
+
+  if (p !== 'custom') {
+    S.dateFrom = from;
+    S.dateTo   = last;
+    document.getElementById('date-from-sel').value = from;
+    document.getElementById('date-to-sel').value   = last;
+    document.getElementById('date-custom').style.display = 'none';
+  } else {
+    document.getElementById('date-custom').style.display = 'block';
+  }
+
+  // Update preset button styles
+  document.querySelectorAll('.date-preset').forEach(b => {
+    const presets = {'1m':0,'3m':1,'6m':2,'1y':3,'custom':4};
+    b.classList.toggle('sel', b.textContent.trim().startsWith(
+      {'1m':'Last Month','3m':'Last 3','6m':'Last 6','1y':'Last 12','custom':'Custom'}[p] || '---'
+    ));
+  });
+
+  updateDateLabel();
+  if (doUpdate) { closeDateDropdown(); updateAll(); }
+}
+
+function applyCustomDate() {
+  S.dateFrom = document.getElementById('date-from-sel').value;
+  S.dateTo   = document.getElementById('date-to-sel').value;
+  if (S.dateFrom > S.dateTo) [S.dateFrom, S.dateTo] = [S.dateTo, S.dateFrom];
+  S.preset = 'custom';
+  updateDateLabel();
+  closeDateDropdown();
+  updateAll();
+}
+
+function updateDateLabel() {
+  if (!D) return;
+  const [fy, fm] = S.dateFrom.split('-');
+  const [ty, tm] = S.dateTo.split('-');
+  const label = MONTH_ABBR[fm] + ' ' + fy + (S.dateFrom !== S.dateTo ? ' – ' + MONTH_ABBR[tm] + ' ' + ty : '');
+  document.getElementById('date-label').textContent = label;
+  document.getElementById('date-btn').classList.toggle('active', S.preset !== '1y');
+}
+
+function toggleDateDropdown() {
+  document.getElementById('date-dropdown').classList.toggle('open');
+}
+function closeDateDropdown() {
+  document.getElementById('date-dropdown').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('date-wrap').contains(e.target)) closeDateDropdown();
+});
+
+// ── AREA / STORE FILTERS ──────────────────────────────────────────────────────
+function onAreaChange() {
+  S.area = document.getElementById('area-select').value;
+  S.store = '';
+  document.getElementById('store-select').value = '';
+  rebuildStoreDropdown();
+  document.getElementById('area-select').classList.toggle('active', !!S.area);
+  document.getElementById('store-select').classList.remove('active');
+  updateAll();
+}
+
+function onStoreChange() {
+  S.store = document.getElementById('store-select').value;
+  document.getElementById('store-select').classList.toggle('active', !!S.store);
+  updateAll();
+}
+
+function rebuildStoreDropdown() {
+  const sel = document.getElementById('store-select');
+  const cur  = S.store;
+  sel.innerHTML = '<option value="">🏪 Semua Toko</option>';
+  let stores = [];
+  if (S.area) {
+    stores = (D.stores_by_area && D.stores_by_area[S.area]) || [];
+  } else {
+    stores = D.stores || [];
+  }
+  stores.forEach(st => {
+    sel.insertAdjacentHTML('beforeend', `<option value="${st}"${st===cur?' selected':''}>${toTitle(st)}</option>`);
+  });
+}
+
+function resetFilters() {
+  S.area = ''; S.store = '';
+  document.getElementById('area-select').value = '';
+  document.getElementById('store-select').value = '';
+  document.getElementById('area-select').classList.remove('active');
+  document.getElementById('store-select').classList.remove('active');
+  rebuildStoreDropdown();
+  setPreset('1y');
+}
+
+// ── ACTIVE MONTHS ─────────────────────────────────────────────────────────────
+function activeMonths() {
+  return D.months.filter(m => m >= S.dateFrom && m <= S.dateTo);
+}
+
+// ── KPI COMPUTATION ───────────────────────────────────────────────────────────
+function computeKPIs() {
+  let swh=0, sst=0, smr=0, smo=0, smn=0;
+  const months = activeMonths();
+  for (const art of D.articles) {
+    if (S.store) {
+      // Store filter
+      sst += getArtStoreStock(art, S.store);
+      for (const m of months) {
+        smr += art.smr?.[m]?.s?.[S.store] || 0;
+      }
+    } else if (S.area) {
+      // Area filter
+      swh += getArtAreaWH(art, S.area);
+      sst += art.sba?.[S.area] || 0;
+      for (const m of months) {
+        smr += art.smr?.[m]?.a?.[S.area] || 0;
+      }
+    } else {
+      // National
+      swh += art.swh || 0;
+      sst += art.sst || 0;
+      for (const m of months) {
+        smr += art.smr?.[m]?.t || 0;
+        smo += art.smo?.[m]  || 0;
+        smn += art.smn?.[m]  || 0;
+      }
+    }
+  }
+  return {swh, sst, smr, smo, smn};
+}
+
+function getArtAreaWH(art, area) {
+  if (!area) return art.swh || 0;
+  const whKey = D.area_wh_map?.[area];
+  if (!whKey) return 0;
+  return art.swh_w?.[whKey] || 0;
+}
+
+function getArtStoreStock(art, store) {
+  return art.sbs?.[store] || 0;
+}
+
+function getArtRetailSales(art, months) {
+  let total = 0;
+  for (const m of months) {
+    if (S.store)      total += art.smr?.[m]?.s?.[S.store] || 0;
+    else if (S.area)  total += art.smr?.[m]?.a?.[S.area]  || 0;
+    else              total += art.smr?.[m]?.t || 0;
+  }
+  return total;
+}
+
+function updateKPIs() {
+  const k = computeKPIs();
+  const months = activeMonths();
+  const ctx = S.store ? `Toko: ${toTitle(S.store)}` :
+              S.area  ? `Area: ${S.area}` : 'Nasional';
+  const period = months.length === 1
+    ? `${MONTH_ABBR[months[0].split('-')[1]]} ${months[0].split('-')[0]}`
+    : `${months.length} bulan`;
+
+  setText('kpi-swh', fmt(k.swh));
+  setText('kpi-sst', fmt(k.sst));
+  setText('kpi-smr', fmt(k.smr));
+  setText('kpi-smo', S.area || S.store ? '—' : fmt(k.smo));
+  setText('kpi-smn', S.area || S.store ? '—' : fmt(k.smn));
+  setText('kpi-swh-sub', `pcs warehouse · ${ctx}`);
+  setText('kpi-sst-sub', `pcs retail · ${ctx}`);
+  setText('kpi-smr-sub', `pcs · ${period} · ${ctx}`);
+  setText('kpi-smo-sub', S.area || S.store ? 'tidak tersedia' : `pcs · ${period} · Nasional`);
+  setText('kpi-smn-sub', S.area || S.store ? 'tidak tersedia' : `pcs · ${period} · Nasional`);
+}
+
+// ── TABLE RENDERING ───────────────────────────────────────────────────────────
+function setTab(tab) {
+  S.tab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    const tabs = ['stock-summary','stock-detail','stock-size','sales-summary','sales-detail'];
+    b.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  renderCurrentTab();
+}
+
+function renderCurrentTab() {
+  switch(S.tab) {
+    case 'stock-summary': renderStockSummary(); break;
+    case 'stock-detail':  renderStockDetail();  break;
+    case 'stock-size':    renderStockSize();    break;
+    case 'sales-summary': renderSalesSummary(); break;
+    case 'sales-detail':  renderSalesDetail();  break;
+  }
+}
+
+function updateAll() {
+  updateKPIs();
+  renderCurrentTab();
+}
+
+// ── FILTERED + SORTED ARTICLES ─────────────────────────────────────────────────
+function filteredArticles(searchId) {
+  const q = (document.getElementById(searchId)?.value || '').toLowerCase().trim();
+  let arts = D.articles;
+  if (q) arts = arts.filter(a =>
+    (a.km||'').toLowerCase().includes(q) ||
+    (a.g||'').toLowerCase().includes(q)  ||
+    (a.s||'').toLowerCase().includes(q)  ||
+    (a.c||'').toLowerCase().includes(q)
+  );
+  return arts;
+}
+
+function sortedBy(arr, colKey, dir) {
+  if (!colKey) return arr;
+  return [...arr].sort((a,b) => {
+    let va = a[colKey] ?? 0, vb = b[colKey] ?? 0;
+    if (typeof va === 'string') return dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    return dir === 'asc' ? va - vb : vb - va;
+  });
+}
+
+// ── STOCK SUMMARY TAB ─────────────────────────────────────────────────────────
+function renderStockSummary() {
+  const months = activeMonths();
+  let rows = filteredArticles('srch-stock-summary').map(a => ({
+    km: a.km, g: a.g, s: a.s, c: a.c, t: a.t,
+    swh: S.store ? 0 : S.area ? getArtAreaWH(a, S.area) : a.swh,
+    sst: S.store ? getArtStoreStock(a, S.store) : S.area ? (a.sba?.[S.area]||0) : a.sst,
+    smr: getArtRetailSales(a, months),
+  }));
+  rows = rows.map(r => ({...r, tot: r.swh + r.sst}));
+
+  const sc = S.sortCol['stock-summary'] || {col:'tot',dir:'desc'};
+  rows = sortedBy(rows, sc.col, sc.dir);
+
+  setText('cnt-stock-summary', `${rows.length} artikel`);
+
+  const showWH = !S.store;
+  const cols = [
+    {k:'km',  label:'ARTIKEL',     cl:'art', numeric:false},
+    {k:'g',   label:'GENDER',      cl:'',    numeric:false},
+    {k:'s',   label:'SERIES',      cl:'',    numeric:false},
+    {k:'c',   label:'COLOR',       cl:'',    numeric:false},
+    {k:'t',   label:'TIER',        cl:'num', numeric:true},
+    ...(showWH ? [{k:'swh', label:'STOCK WH',    cl:'num', numeric:true}] : []),
+    {k:'sst', label:'STOCK TOKO',  cl:'num', numeric:true},
+    {k:'tot', label:'TOTAL STOCK', cl:'num', numeric:true},
+    {k:'smr', label:'SALES RETAIL',cl:'num', numeric:true},
+  ];
+
+  const html = buildTable('stock-summary', cols, rows, r => {
+    const zero = v => v === 0 ? '<td class="num zero">—</td>' : `<td class="num">${fmt(v)}</td>`;
+    return `<tr>
+      <td class="art">${r.km}</td>
+      <td><span class="chip-pill chip-g">${r.g}</span></td>
+      <td>${r.s}</td>
+      <td>${r.c}</td>
+      <td class="num">${tierChip(r.t)}</td>
+      ${showWH ? zero(r.swh) : ''}
+      ${zero(r.sst)}
+      ${zero(r.tot)}
+      ${zero(r.smr)}
+    </tr>`;
+  });
+  document.getElementById('tbl-stock-summary').innerHTML = html;
+  bindSort('stock-summary');
+}
+
+// ── STOCK DETAIL TAB ──────────────────────────────────────────────────────────
+function renderStockDetail() {
+  const months = activeMonths();
+  const showWH = !S.store;
+  const national = !S.area && !S.store;
+
+  let rows = filteredArticles('srch-stock-detail').map(a => {
+    const swh_p = a.swh_w?.['Jatim'] || 0;
+    const swh_b = a.swh_w?.['Warehouse Bali'] || 0;
+    const swh_j = a.swh_w?.['Warehouse Jakarta'] || 0;
+    const swh   = showWH ? (S.area ? getArtAreaWH(a, S.area) : a.swh) : 0;
+    const sst   = S.store ? getArtStoreStock(a, S.store) : S.area ? (a.sba?.[S.area]||0) : a.sst;
+    const smr   = getArtRetailSales(a, months);
+    const avg3m = a.avg3m || 0;
+    const to_wh = avg3m > 0 ? (swh / avg3m).toFixed(1) : '—';
+    return {km:a.km, g:a.g, s:a.s, c:a.c, t:a.t,
+      swh_p, swh_b, swh_j, swh, sst, smr, avg3m, to_wh};
+  });
+
+  const sc = S.sortCol['stock-detail'] || {col:'swh',dir:'desc'};
+  rows = sortedBy(rows, sc.col, sc.dir);
+  setText('cnt-stock-detail', `${rows.length} artikel`);
+
+  let cols = [
+    {k:'km',   label:'ARTIKEL',     cl:'art', numeric:false},
+    {k:'g',    label:'GENDER',      cl:'',    numeric:false},
+    {k:'s',    label:'SERIES',      cl:'',    numeric:false},
+    {k:'c',    label:'COLOR',       cl:'',    numeric:false},
+    {k:'t',    label:'TIER',        cl:'num', numeric:true},
+  ];
+  if (national && showWH) {
+    cols.push({k:'swh_p', label:'WH PUSAT',   cl:'num', numeric:true});
+    cols.push({k:'swh_b', label:'WH BALI',    cl:'num', numeric:true});
+    cols.push({k:'swh_j', label:'WH JAKARTA', cl:'num', numeric:true});
+  }
+  if (showWH) cols.push({k:'swh', label:'STOCK WH',  cl:'num', numeric:true});
+  cols.push({k:'sst',   label:'STOCK TOKO', cl:'num', numeric:true});
+  cols.push({k:'smr',   label:'SALES RETAIL',cl:'num',numeric:true});
+  cols.push({k:'avg3m', label:'AVG 3M',     cl:'num', numeric:true});
+  cols.push({k:'to_wh', label:'TO WH',      cl:'num', numeric:false});
+
+  const html = buildTable('stock-detail', cols, rows, r => {
+    const zero = v => v === 0 ? '<td class="num zero">—</td>' : `<td class="num">${fmt(v)}</td>`;
+    const z2   = v => `<td class="num">${v === '—' ? '<span style="color:var(--sub)">—</span>' : v}</td>`;
+    return `<tr>
+      <td class="art">${r.km}</td>
+      <td><span class="chip-pill chip-g">${r.g}</span></td>
+      <td>${r.s}</td>
+      <td>${r.c}</td>
+      <td class="num">${tierChip(r.t)}</td>
+      ${national && showWH ? zero(r.swh_p) + zero(r.swh_b) + zero(r.swh_j) : ''}
+      ${showWH ? zero(r.swh) : ''}
+      ${zero(r.sst)}
+      ${zero(r.smr)}
+      ${z2(r.avg3m.toFixed(1))}
+      ${z2(r.to_wh)}
+    </tr>`;
+  });
+  document.getElementById('tbl-stock-detail').innerHTML = html;
+  bindSort('stock-detail');
+}
+
+// ── STOCK DETAIL SIZE TAB ────────────────────────────────────────────────────
+function renderStockSize() {
+  const q = (document.getElementById('srch-stock-size')?.value || '').toLowerCase().trim();
+  let rows = [];
+  for (const art of D.articles) {
+    if (!art.sz || !art.sz.length) continue;
+    for (const sz of art.sz) {
+      const sst = S.store ? (sz.sbs?.[S.store]||0) : S.area ? (sz.sba?.[S.area]||0) : sz.sst;
+      const swh = S.store ? 0 : sz.swh || 0;
+      if (q && !(
+        (art.km||'').toLowerCase().includes(q) ||
+        (art.g||'').toLowerCase().includes(q)  ||
+        (art.s||'').toLowerCase().includes(q)  ||
+        (art.c||'').toLowerCase().includes(q)  ||
+        (sz.kb||'').toLowerCase().includes(q)  ||
+        (sz.sz||'').toLowerCase().includes(q)
+      )) continue;
+      rows.push({
+        kb: sz.kb, km: art.km, g: art.g, s: art.s, c: art.c, sz: sz.sz, t: art.t,
+        swh, sst, tot: swh + sst,
+      });
+    }
+  }
+
+  const sc = S.sortCol['stock-size'] || {col:'tot',dir:'desc'};
+  rows = sortedBy(rows, sc.col, sc.dir);
+  setText('cnt-stock-size', `${rows.length} baris`);
+
+  const showWH = !S.store;
+  const cols = [
+    {k:'kb',  label:'ARTIKEL',    cl:'art', numeric:false},
+    {k:'g',   label:'GENDER',     cl:'',    numeric:false},
+    {k:'s',   label:'SERIES',     cl:'',    numeric:false},
+    {k:'c',   label:'COLOR',      cl:'',    numeric:false},
+    {k:'sz',  label:'SIZE',       cl:'num', numeric:false},
+    {k:'t',   label:'TIER',       cl:'num', numeric:true},
+    ...(showWH ? [{k:'swh',label:'STOCK WH',  cl:'num',numeric:true}] : []),
+    {k:'sst', label:'STOCK TOKO', cl:'num', numeric:true},
+    {k:'tot', label:'TOTAL',      cl:'num', numeric:true},
+  ];
+
+  const html = buildTable('stock-size', cols, rows, r => {
+    const zero = v => v === 0 ? '<td class="num zero">—</td>' : `<td class="num">${fmt(v)}</td>`;
+    return `<tr>
+      <td class="art" style="font-size:11px">${r.kb}</td>
+      <td><span class="chip-pill chip-g">${r.g}</span></td>
+      <td>${r.s}</td>
+      <td>${r.c}</td>
+      <td class="num" style="font-weight:600">${r.sz}</td>
+      <td class="num">${tierChip(r.t)}</td>
+      ${showWH ? zero(r.swh) : ''}
+      ${zero(r.sst)}
+      ${zero(r.tot)}
+    </tr>`;
+  });
+  document.getElementById('tbl-stock-size').innerHTML = html;
+  bindSort('stock-size');
+}
+
+// ── SALES SUMMARY TAB ─────────────────────────────────────────────────────────
+function renderSalesSummary() {
+  const months = activeMonths();
+  const hasOnlineNR = !S.area && !S.store;
+
+  let rows = filteredArticles('srch-sales-summary').map(a => {
+    const smr = getArtRetailSales(a, months);
+    const smo = hasOnlineNR ? months.reduce((t,m) => t + (a.smo?.[m]||0), 0) : 0;
+    const smn = hasOnlineNR ? months.reduce((t,m) => t + (a.smn?.[m]||0), 0) : 0;
+    return {km:a.km, g:a.g, s:a.s, c:a.c, t:a.t, smr, smo, smn, tot: smr+smo+smn};
+  });
+
+  const sc = S.sortCol['sales-summary'] || {col:'smr',dir:'desc'};
+  rows = sortedBy(rows, sc.col, sc.dir);
+  setText('cnt-sales-summary', `${rows.length} artikel`);
+
+  const cols = [
+    {k:'km',  label:'ARTIKEL',       cl:'art', numeric:false},
+    {k:'g',   label:'GENDER',        cl:'',    numeric:false},
+    {k:'s',   label:'SERIES',        cl:'',    numeric:false},
+    {k:'c',   label:'COLOR',         cl:'',    numeric:false},
+    {k:'t',   label:'TIER',          cl:'num', numeric:true},
+    {k:'smr', label:'SALES RETAIL',  cl:'num', numeric:true},
+    ...(hasOnlineNR ? [
+      {k:'smo', label:'SALES ONLINE',   cl:'num', numeric:true},
+      {k:'smn', label:'SALES NON-RETAIL',cl:'num',numeric:true},
+      {k:'tot', label:'TOTAL SALES',    cl:'num', numeric:true},
+    ] : []),
+  ];
+
+  const html = buildTable('sales-summary', cols, rows, r => {
+    const zero = v => v === 0 ? '<td class="num zero">—</td>' : `<td class="num">${fmt(v)}</td>`;
+    return `<tr>
+      <td class="art">${r.km}</td>
+      <td><span class="chip-pill chip-g">${r.g}</span></td>
+      <td>${r.s}</td>
+      <td>${r.c}</td>
+      <td class="num">${tierChip(r.t)}</td>
+      ${zero(r.smr)}
+      ${hasOnlineNR ? zero(r.smo) + zero(r.smn) + zero(r.tot) : ''}
+    </tr>`;
+  });
+  document.getElementById('tbl-sales-summary').innerHTML = html;
+  bindSort('sales-summary');
+}
+
+// ── SALES DETAIL TAB ──────────────────────────────────────────────────────────
+function renderSalesDetail() {
+  const months = activeMonths();
+  let rows = filteredArticles('srch-sales-detail').map(a => {
+    const byMonth = {};
+    let total = 0;
+    for (const m of months) {
+      const v = S.store ? (a.smr?.[m]?.s?.[S.store]||0) :
+                S.area  ? (a.smr?.[m]?.a?.[S.area]||0)  :
+                          (a.smr?.[m]?.t||0);
+      byMonth[m] = v;
+      total += v;
+    }
+    return {km:a.km, g:a.g, s:a.s, c:a.c, t:a.t, byMonth, total};
+  });
+
+  const sc = S.sortCol['sales-detail'] || {col:'total',dir:'desc'};
+  rows = sortedBy(rows, sc.col, sc.dir);
+  setText('cnt-sales-detail', `${rows.length} artikel`);
+
+  // Only show months with any sales (filter out all-zero month columns)
+  const visMonths = months.filter(m => rows.some(r => r.byMonth[m] > 0));
+
+  const fixedCols = [
+    {k:'km', label:'ARTIKEL', cl:'art', numeric:false},
+    {k:'g',  label:'GENDER',  cl:'',   numeric:false},
+    {k:'s',  label:'SERIES',  cl:'',   numeric:false},
+    {k:'c',  label:'COLOR',   cl:'',   numeric:false},
+    {k:'t',  label:'TIER',    cl:'num',numeric:true},
+  ];
+  const monthCols = visMonths.map(m => {
+    const [y,mo] = m.split('-');
+    return {k:m, label: MONTH_ABBR[mo]+"'"+y.slice(2), cl:'month-col', numeric:true};
+  });
+  const cols = [...fixedCols, ...monthCols, {k:'total',label:'TOTAL',cl:'num',numeric:true}];
+
+  const html = buildTable('sales-detail', cols, rows, r => {
+    const mcells = visMonths.map(m => {
+      const v = r.byMonth[m];
+      return v ? `<td class="month-col">${fmt(v)}</td>` : '<td class="month-col zero">—</td>';
+    }).join('');
+    return `<tr>
+      <td class="art">${r.km}</td>
+      <td><span class="chip-pill chip-g">${r.g}</span></td>
+      <td>${r.s}</td>
+      <td>${r.c}</td>
+      <td class="num">${tierChip(r.t)}</td>
+      ${mcells}
+      ${r.total ? `<td class="num" style="font-weight:700">${fmt(r.total)}</td>` : '<td class="num zero">—</td>'}
+    </tr>`;
+  });
+  document.getElementById('tbl-sales-detail').innerHTML = html;
+  bindSort('sales-detail');
+}
+
+// ── TABLE BUILDER ─────────────────────────────────────────────────────────────
+function buildTable(tabId, cols, rows, rowFn) {
+  if (!rows.length) return '<div class="no-data">Tidak ada data untuk filter ini</div>';
+
+  const sc = S.sortCol[tabId] || {};
+  const thead = cols.map(c => {
+    const cls = sc.col === c.k ? (' sort-' + sc.dir) : '';
+    return `<th class="${c.cl}${cls}" data-col="${c.k}" data-tab="${tabId}">${c.label}</th>`;
+  }).join('');
+
+  const tbody = rows.map(rowFn).join('');
+
+  return `<table>
+    <thead><tr>${thead}</tr></thead>
+    <tbody>${tbody}</tbody>
+  </table>`;
+}
+
+function bindSort(tabId) {
+  const wrap = document.getElementById('tbl-' + tabId);
+  wrap.querySelectorAll('thead th').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      const cur = S.sortCol[tabId] || {};
+      S.sortCol[tabId] = {
+        col,
+        dir: cur.col === col && cur.dir === 'desc' ? 'asc' : 'desc'
+      };
+      renderCurrentTab();
+    });
+  });
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function fmt(n) {
+  return Math.round(n).toLocaleString('id-ID');
+}
+function setText(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = v;
+}
+function toTitle(s) {
+  return s ? s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : s;
+}
+function tierChip(t) {
+  const cls = t==='1'?'chip-t1':t==='2'?'chip-t2':t==='3'?'chip-t3':'chip-t4';
+  return `<span class="chip-pill ${cls}">T${t}</span>`;
+}
+
+// ── BOOTSTRAP ─────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>

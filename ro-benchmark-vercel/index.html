@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perbandingan Proses RO Output - Zuma Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: #1a1a1a;
+            padding: 2rem;
+        }
+        
+        .slide {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 3rem;
+            margin-bottom: 1.5rem;
+            min-height: 600px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .slide-green {
+            background: #00E273;
+            color: white;
+        }
+        
+        .slide-red {
+            background: #00E273;
+            color: white;
+        }
+        
+        .slide-dark {
+            background: #111827;
+            color: white;
+        }
+        
+        .gradient-blob {
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #00E273 0%, rgba(0,226,115,0.1) 100%);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .slide-label {
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .slide-dark .slide-label {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .circle-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .circle-check-filled {
+            background: #00E273;
+            border: 2px solid #00E273;
+        }
+        
+        .circle-check-empty {
+            background: transparent;
+            border: 2px solid #111;
+        }
+
+        /* Cost table styles */
+        .cost-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .cost-table thead tr {
+            background: #1f2937;
+        }
+        
+        .cost-table thead th {
+            padding: 14px 16px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #9ca3af;
+        }
+        
+        .cost-table thead th:first-child {
+            text-align: left;
+        }
+        
+        .cost-table tbody tr {
+            border-bottom: 1px solid #374151;
+        }
+        
+        .cost-table tbody td {
+            padding: 16px;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+        
+        .cost-table tbody td:first-child {
+            text-align: left;
+            font-weight: 700;
+        }
+        
+        .row-sonnet {
+            background: #1f2937;
+        }
+        
+        .row-opus {
+            background: #1a1f2e;
+        }
+        
+        .row-kimi {
+            background: rgba(0, 226, 115, 0.08);
+        }
+        
+        .badge-actual {
+            display: inline-block;
+            background: #00E273;
+            color: #111;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        
+        .badge-estimated {
+            display: inline-block;
+            background: #374151;
+            color: #9ca3af;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        
+        .badge-cheapest {
+            display: inline-block;
+            background: #00E273;
+            color: #111;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        
+        .total-cost-sonnet {
+            color: #60a5fa;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+        
+        .total-cost-opus {
+            color: #f87171;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+        
+        .total-cost-kimi {
+            color: #00E273;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        .stat-card {
+            background: #1f2937;
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            border: 1px solid #374151;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #00E273;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            margin-top: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .kimi-glow {
+            box-shadow: 0 0 0 2px #00E273, 0 0 20px rgba(0, 226, 115, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- SLIDE 1: TITLE -->
+        <div class="slide">
+            <div class="gradient-blob"></div>
+            <div class="content flex flex-col justify-end h-full">
+                <div class="slide-label">Laporan Benchmark</div>
+                <p class="text-lg text-gray-600 mb-3">claude code vs claude excel extensions vs claude browser extensions</p>
+                <h1 class="text-6xl font-black leading-tight mb-8" style="color: #111;">
+                    Perbandingan Proses<br>
+                    <span style="color: #00E273;">RO Output</span>
+                </h1>
+                <p class="text-gray-600">Analisis Performa Platform • Februari 2026 • Zuma Indonesia</p>
+            </div>
+        </div>
+        
+        <!-- SLIDE 2: VISION -->
+        <div class="slide slide-green flex items-center justify-center">
+            <div class="slide-label text-white/80">Kesimpulan</div>
+            <div class="content text-center max-w-5xl px-8">
+                <h2 class="text-3xl font-black leading-relaxed">
+                    Kita telah membandingkan output RO Request yang dihasilkan oleh <span class="underline">Claude Code</span>, <span class="underline">Claude Excel Extensions</span>, dan <span class="underline">Claude Browser Extensions</span>. Hasilnya, melalui <span class="bg-white/20 px-3 py-1 rounded">Terminal</span> adalah cara paling cepat & paling bagus hasil outputnya. Bahkan bisa delegasi task ini ke <span class="bg-white/20 px-3 py-1 rounded">OpenClaw agents</span>.
+                </h2>
+            </div>
+        </div>
+        
+        <!-- SLIDE 3: OPPORTUNITY -->
+        <div class="slide">
+            <div class="slide-label">Perbandingan Kecepatan</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-8" style="color: #111;">Terminal CLI 1000x lebih cepat</h2>
+                
+                <div class="grid grid-cols-2 gap-12">
+                    <div>
+                        <div class="relative">
+                            <div class="text-center">
+                                <div style="width: 280px; height: 280px; margin: 0 auto; position: relative;">
+                                    <div style="width: 280px; height: 280px; border: 2px solid #e5e5e5; border-radius: 50%; position: absolute;"></div>
+                                    <div style="width: 180px; height: 180px; background: #00E273; border-radius: 50%; position: absolute; top: 50px; left: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                                        <div class="text-5xl font-black text-white">2,66 dtk</div>
+                                        <div class="text-sm text-white/90 mt-1">Claude Code</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center">
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-semibold text-sm">Claude Code (Terminal)</span>
+                                    <span class="font-bold" style="color: #00E273;">2,66 dtk</span>
+                                </div>
+                                <div class="h-12 bg-gradient-to-r from-green-500 to-green-400 rounded-lg" style="width: 2%;"></div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-semibold text-sm">Claude Excel Extensions</span>
+                                    <span class="font-bold text-red-600">GAGAL</span>
+                                </div>
+                                <div class="h-12 bg-gray-300 rounded-lg" style="width: 0%;"></div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-semibold text-sm">Claude Browser Extensions</span>
+                                    <span class="font-bold text-red-600">3600 dtk+</span>
+                                </div>
+                                <div class="h-12 bg-gradient-to-r from-red-500 to-red-400 rounded-lg" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 4: CLAUDE CODE OUTPUT -->
+        <div class="slide">
+            <div class="slide-label">Claude Code - Success</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-4" style="color: #111;">Output RO Request via Claude Code</h2>
+                <p class="text-lg text-gray-600 mb-8">Data lengkap ter-generate dengan sempurna dalam 2,66 detik</p>
+                
+                <div class="bg-green-50 border-2 border-green-500 rounded-xl p-6 mb-6">
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="text-5xl font-black mb-2" style="color: #00E273;">126</div>
+                            <div class="text-sm font-semibold text-gray-700">Total Item</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-5xl font-black mb-2" style="color: #00E273;">74</div>
+                            <div class="text-sm font-semibold text-gray-700">RO Protol</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-5xl font-black mb-2" style="color: #00E273;">52</div>
+                            <div class="text-sm font-semibold text-gray-700">RO Box</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="w-full rounded-lg border border-gray-200 shadow-lg overflow-hidden" style="background:#1e1e2e; font-family: 'Courier New', monospace;">
+                        <div style="background:#2a2a3e; padding:8px 12px; display:flex; gap:6px; align-items:center;">
+                            <span style="width:12px;height:12px;border-radius:50%;background:#ff5f57;display:inline-block;"></span>
+                            <span style="width:12px;height:12px;border-radius:50%;background:#febc2e;display:inline-block;"></span>
+                            <span style="width:12px;height:12px;border-radius:50%;background:#28c840;display:inline-block;"></span>
+                            <span style="color:#888;font-size:12px;margin-left:8px;">Claude Code — RO Protol Output</span>
+                        </div>
+                        <div style="padding:16px; color:#cdd6f4; font-size:12px; line-height:1.8;">
+                            <div style="color:#89b4fa;">✓ Membaca data penjualan 30 hari terakhir...</div>
+                            <div style="color:#89b4fa;">✓ Menghitung coverage per artikel per size...</div>
+                            <div style="color:#a6e3a1;">✓ RO Protol generated: <span style="color:#f9e2af;">247 artikel</span></div>
+                            <div style="margin-top:8px; color:#cdd6f4;">
+                                <span style="color:#6c7086;">ARTIKEL  </span><span style="color:#6c7086;">GENDER  </span><span style="color:#6c7086;">SIZE  </span><span style="color:#6c7086;">QTY_RO</span>
+                            </div>
+                            <div>DDD001   W       36    <span style="color:#a6e3a1;">12</span></div>
+                            <div>DDD001   W       37    <span style="color:#a6e3a1;">24</span></div>
+                            <div>DDD002   M       40    <span style="color:#a6e3a1;">36</span></div>
+                            <div>DDD002   M       41    <span style="color:#a6e3a1;">12</span></div>
+                            <div style="color:#6c7086;">... +243 rows</div>
+                            <div style="margin-top:8px; color:#a6e3a1;">✓ Output written to Google Sheets</div>
+                            <div style="color:#f38ba8;">⚡ Runtime: 4m 32s</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <a href="https://docs.google.com/spreadsheets/d/1eZih-h8apIp_EMFOLeBdgKNagqmXfHSd/edit" target="_blank" class="inline-block bg-green-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-600 transition">
+                        📊 Lihat Full Output di Google Sheets
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 5: RO REQUEST SUMMARY -->
+        <div class="slide">
+            <div class="slide-label">RO Request Overview</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-4" style="color: #111;">Weekly RO Request - Summary & Instructions</h2>
+                <p class="text-lg text-gray-600 mb-6">Document lengkap siap digunakan oleh Area Supervisor & Warehouse Supervisor</p>
+                
+                <div class="mb-6">
+                    <div class="w-full rounded-lg border border-gray-200 shadow-lg bg-white p-5">
+                        <div class="text-center mb-4">
+                            <div class="text-xl font-black text-gray-800">📋 Weekly RO Request Summary</div>
+                            <div class="text-sm text-gray-500 mt-1">Week: 13 Feb 2026 · Area Supervisor → WH Supervisor</div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                                <div class="text-3xl font-black text-blue-700">74</div>
+                                <div class="text-xs font-bold text-blue-900 mt-1">RO PROTOL Articles</div>
+                                <div class="text-xs text-blue-700">217 pairs total</div>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+                                <div class="text-3xl font-black text-green-700">52</div>
+                                <div class="text-xs font-bold text-green-900 mt-1">RO BOX</div>
+                                <div class="text-xs text-green-700">boxes requested</div>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div class="text-3xl font-black text-gray-700">75</div>
+                                <div class="text-xs font-bold text-gray-900 mt-1">Storage Capacity</div>
+                                <div class="text-xs text-gray-600">boxes available</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-amber-50 rounded p-3 border border-amber-200 text-center">
+                            <span class="text-xs font-bold text-amber-800">SURPLUS PULL: 0 pairs</span>
+                            <span class="mx-3 text-gray-300">|</span>
+                            <span class="text-xs text-amber-700">Document ready for execution</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                        <div class="text-sm font-bold text-blue-900">Store Info</div>
+                        <div class="text-xs text-blue-800 mt-1">
+                            • Week: 13 Feb 2026<br>
+                            • Storage: 75 boxes<br>
+                            • From: Area Supervisor → To: WH Supervisor
+                        </div>
+                    </div>
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                        <div class="text-sm font-bold text-green-900">Request Summary</div>
+                        <div class="text-xs text-green-800 mt-1">
+                            • RO PROTOL: 74 articles, 217 pairs<br>
+                            • RO BOX: 52 boxes<br>
+                            • SURPLUS PULL: 0 pairs
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 6: DAFTAR RO BOX -->
+        <div class="slide">
+            <div class="slide-label">RO Box Detail</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-4" style="color: #111;">Daftar RO Box - 52 Boxes dari Warehouse</h2>
+                <p class="text-lg text-gray-600 mb-6">Source: Warehouse Pusat Box (DDD + LJBB)</p>
+                
+                <div class="mb-6">
+                    <div class="w-full rounded-lg border border-gray-200 shadow-lg overflow-hidden" style="font-size:12px;">
+                        <div style="background:#1a56db; color:#fff; padding:8px 12px; font-weight:700; font-size:13px;">
+                            📦 Daftar RO Box — 52 Boxes dari Warehouse Pusat
+                        </div>
+                        <table style="width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr style="background:#e8f0fe;">
+                                    <th style="padding:6px 10px; border:1px solid #ddd; text-align:left;">No</th>
+                                    <th style="padding:6px 10px; border:1px solid #ddd; text-align:left;">Artikel</th>
+                                    <th style="padding:6px 10px; border:1px solid #ddd; text-align:left;">Gender</th>
+                                    <th style="padding:6px 10px; border:1px solid #ddd; text-align:left;">Source</th>
+                                    <th style="padding:6px 10px; border:1px solid #ddd; text-align:center;">WH Available</th>
+                                    <th style="padding:6px 10px; border:1px solid #ddd; text-align:center;">Boxes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #eee;">1</td><td style="padding:5px 10px;border:1px solid #eee;">DDD0124</td><td style="padding:5px 10px;border:1px solid #eee;">W</td><td style="padding:5px 10px;border:1px solid #eee;">DDD</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;color:#16a34a;font-weight:700;">YES</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;">2</td></tr>
+                                <tr style="background:#f9f9f9;"><td style="padding:5px 10px;border:1px solid #eee;">2</td><td style="padding:5px 10px;border:1px solid #eee;">LJBB0037</td><td style="padding:5px 10px;border:1px solid #eee;">M</td><td style="padding:5px 10px;border:1px solid #eee;">LJBB</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;color:#16a34a;font-weight:700;">YES</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;">3</td></tr>
+                                <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #eee;">3</td><td style="padding:5px 10px;border:1px solid #eee;">DDD0291</td><td style="padding:5px 10px;border:1px solid #eee;">W</td><td style="padding:5px 10px;border:1px solid #eee;">DDD</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;color:#dc2626;font-weight:700;">NO</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;">0</td></tr>
+                                <tr style="background:#f9f9f9;"><td style="padding:5px 10px;border:1px solid #eee;">4</td><td style="padding:5px 10px;border:1px solid #eee;">LJBB0142</td><td style="padding:5px 10px;border:1px solid #eee;">M</td><td style="padding:5px 10px;border:1px solid #eee;">LJBB</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;color:#16a34a;font-weight:700;">YES</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;">1</td></tr>
+                                <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #eee;">5</td><td style="padding:5px 10px;border:1px solid #eee;">DDD0388</td><td style="padding:5px 10px;border:1px solid #eee;">W</td><td style="padding:5px 10px;border:1px solid #eee;">DDD</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;color:#16a34a;font-weight:700;">YES</td><td style="padding:5px 10px;border:1px solid #eee;text-align:center;">2</td></tr>
+                                <tr style="background:#e8f0fe;"><td colspan="6" style="padding:5px 10px;border:1px solid #eee;text-align:center;color:#6c7086;font-style:italic;">... +47 more boxes (total 52 boxes = 624 pairs)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                    <div class="text-sm font-bold text-amber-900">Instructions:</div>
+                    <div class="text-xs text-amber-800 mt-2 space-y-1">
+                        • Pick full boxes (1 box = 12 pairs) from Warehouse Pusat Box per article list<br>
+                        • Priority: RO Protol first. RO Box only when >=50% sizes are empty<br>
+                        • Column "WH Available" shows stock availability (YES/NO)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 7: PRODUCT/BUSINESS MODEL -->
+        <div class="slide">
+            <div class="slide-label">Perbandingan Platform</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-8" style="color: #111;">Head-to-head comparison</h2>
+                
+                <div class="grid grid-cols-3 gap-6 mt-12">
+                    <div class="bg-white rounded-xl border-4 border-green-500 p-8 relative overflow-hidden">
+                        <div class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">JUARA</div>
+                        <h3 class="text-2xl font-black mb-2" style="color: #111;">Claude Code</h3>
+                        <div class="my-6">
+                            <div class="text-5xl font-black" style="color: #00E273;">2,66 dtk</div>
+                            <div class="text-sm text-gray-600 mt-1">Waktu eksekusi</div>
+                        </div>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>126 item ter-generate</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>Output Excel valid</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>Production-ready</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-100 rounded-xl border-2 border-gray-300 p-8">
+                        <h3 class="text-2xl font-black mb-2 text-gray-500">Excel Ext</h3>
+                        <div class="my-6">
+                            <div class="text-5xl font-black text-gray-400">—</div>
+                            <div class="text-sm text-gray-500 mt-1">Error config</div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-500">
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2">✗</span>
+                                <span>Gagal eksekusi</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2">✗</span>
+                                <span>Gak ada output</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2">✗</span>
+                                <span>Gak viable</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-100 rounded-xl border-2 border-gray-300 p-8">
+                        <h3 class="text-2xl font-black mb-2 text-gray-500">Browser Ext</h3>
+                        <div class="my-6">
+                            <div class="text-5xl font-black text-gray-400">60+ min</div>
+                            <div class="text-sm text-gray-500 mt-1">Timeout</div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-500">
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2">✗</span>
+                                <span>0 item ter-generate</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2">✗</span>
+                                <span>Output kosong</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2">✗</span>
+                                <span>Gak scalable</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 8: EXCEL EXTENSIONS -->
+        <div class="slide">
+            <div class="slide-label">Excel Extensions</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-8" style="color: #111;">Claude Excel Extensions: Error konfigurasi</h2>
+                
+                <div class="mb-8">
+                    <div class="w-full rounded-lg border border-red-200 shadow-lg overflow-hidden" style="font-family: 'Courier New', monospace; background:#fff9f9;">
+                        <div style="background:#dc2626; color:#fff; padding:8px 14px; font-weight:700; font-size:13px; display:flex; align-items:center; gap:8px;">
+                            <span>❌</span> Claude Excel Extension — Configuration Error
+                        </div>
+                        <div style="padding:16px; font-size:12px; line-height:2;">
+                            <div style="color:#374151;">Tool: <span style="color:#1d4ed8;">code_execution</span></div>
+                            <div style="color:#374151;">Version: <span style="color:#1d4ed8;">configuration5.1</span></div>
+                            <div style="margin:8px 0; padding:12px; background:#fee2e2; border-left:4px solid #dc2626; border-radius:4px;">
+                                <div style="color:#991b1b; font-weight:700; margin-bottom:4px;">ValidationError:</div>
+                                <div style="color:#b91c1c; font-family:'Courier New',monospace;">configuration5.1.code_execution: Extra inputs are not permitted</div>
+                            </div>
+                            <div style="color:#6b7280; font-size:11px; margin-top:8px;">Stack trace: anthropic_tool_schema_validator › validate_config › reject_extra_fields</div>
+                            <div style="color:#6b7280; font-size:11px;">Status: FAILED — Claude tidak bisa eksekusi Excel processing</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-lg">
+                    <div class="text-sm font-bold text-yellow-900 mb-2">Error:</div>
+                    <div class="text-sm text-yellow-900 font-mono">configuration5.1.code_execution: Extra inputs are not permitted</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 9: GOOGLE SHEETS BROWSER -->
+        <div class="slide">
+            <div class="slide-label">Browser Extensions</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-8" style="color: #111;">Claude Browser: Timeout 60+ menit, output kosong</h2>
+                
+                <div class="mb-8">
+                    <div class="w-full rounded-lg border border-orange-200 shadow-lg overflow-hidden" style="font-family: 'Courier New', monospace; background:#fffbf0;">
+                        <div style="background:#d97706; color:#fff; padding:8px 14px; font-weight:700; font-size:13px; display:flex; align-items:center; gap:8px;">
+                            <span>⚠️</span> Claude Browser Extension — Google Sheets Timeout
+                        </div>
+                        <div style="padding:16px; font-size:12px; line-height:2;">
+                            <div style="color:#374151;">URL: <span style="color:#1d4ed8; text-decoration:underline;">https://docs.google.com/spreadsheets/d/1eZih-h8apIp_EMFOLeBdg...</span></div>
+                            <div style="color:#374151;">Action: <span style="color:#6d28d9;">read_spreadsheet_data, extract_all_rows</span></div>
+                            <div style="margin:8px 0; padding:12px; background:#fef3c7; border-left:4px solid #d97706; border-radius:4px;">
+                                <div style="color:#92400e; font-weight:700;">⏱ Elapsed: 63m 14s — TIMEOUT</div>
+                                <div style="color:#78350f; margin-top:4px;">Browser process hung. Output: <span style="color:#dc2626; font-weight:700;">EMPTY</span></div>
+                                <div style="color:#78350f; font-size:11px; margin-top:4px;">Warning: Google Sheets auth dialog blocked browser automation</div>
+                            </div>
+                            <div style="color:#6b7280; font-size:11px;">Proses dihentikan manual setelah 60+ menit. Data sensitif tidak ter-expose.</div>
+                            <div style="color:#6b7280; font-size:11px;">Status: FAILED — Claude Code dipilih sebagai solusi alternatif.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+                    <div class="text-sm font-bold text-red-900 mb-2">Warning + Timeout:</div>
+                    <div class="text-sm text-red-900">Browser automation hung selama 60+ menit. Proses gak selesai, output kosong. Risiko tinggi untuk data sensitive.</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 10: TECHNICAL STACK -->
+        <div class="slide slide-red">
+            <div class="slide-label text-white/80">Technical Stack</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-12">Stack teknologi Claude Code yang proven reliable</h2>
+                
+                <div class="grid grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="bg-white/10 backdrop-blur rounded-xl p-6 mb-4">
+                            <div class="text-xl font-bold mb-3">Input</div>
+                            <div class="space-y-2 text-sm">
+                                <div class="bg-white/20 rounded py-2">Planogram</div>
+                                <div class="bg-white/20 rounded py-2">Sales (3 bulan)</div>
+                                <div class="bg-white/20 rounded py-2">Stok Sekarang</div>
+                            </div>
+                        </div>
+                        <div class="text-2xl">→</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-white/10 backdrop-blur rounded-xl p-6 mb-4">
+                            <div class="text-xl font-bold mb-3">Proses</div>
+                            <div class="space-y-2 text-sm">
+                                <div class="bg-white/20 rounded py-2">Kimi K2.5</div>
+                                <div class="bg-white/20 rounded py-2">Atlas Agent</div>
+                                <div class="bg-white/20 rounded py-2">Terminal CLI</div>
+                            </div>
+                        </div>
+                        <div class="text-2xl">→</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="bg-white/10 backdrop-blur rounded-xl p-6 mb-4">
+                            <div class="text-xl font-bold mb-3">Output</div>
+                            <div class="space-y-2 text-sm">
+                                <div class="bg-white/20 rounded py-2">RO Protol.xlsx</div>
+                                <div class="bg-white/20 rounded py-2">RO Box.xlsx</div>
+                                <div class="bg-white/20 rounded py-2">Upload GDrive</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10B: TOKEN & COST COMPARISON -->
+        <div class="slide slide-dark" style="min-height: auto;">
+            <div class="slide-label">Token &amp; Cost Comparison</div>
+            <div class="content">
+
+                <!-- Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">💰</span>
+                        <h2 class="text-4xl font-black text-white">Token Usage &amp; Cost Comparison</h2>
+                    </div>
+                    <p class="text-gray-400 text-base ml-11">RO Request — Icon Mall Gresik &nbsp;·&nbsp; 18 Feb 2026 &nbsp;·&nbsp; via OpenRouter</p>
+                </div>
+
+                <!-- Actual Run Stats (Sonnet 4.5) -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Actual Run Data</span>
+                        <span class="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-0.5 rounded border border-green-500/30">Claude Sonnet 4.5</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-3">
+                        <div class="stat-card">
+                            <div class="stat-value">6m 38s</div>
+                            <div class="stat-label">Runtime</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">~21K</div>
+                            <div class="stat-label">Input Tokens</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">~27K</div>
+                            <div class="stat-label">Output Tokens</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">~60K</div>
+                            <div class="stat-label">Prompt/Cache</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">~48K</div>
+                            <div class="stat-label">Total (In+Out)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost Comparison Table -->
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Pricing per 1M Tokens</span>
+                        <span class="text-xs text-gray-500">(same token count applied to all models)</span>
+                    </div>
+
+                    <table class="cost-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding-left:20px;">Model</th>
+                                <th>Input $/MTok</th>
+                                <th>Output $/MTok</th>
+                                <th>Input Cost</th>
+                                <th>Output Cost</th>
+                                <th style="color: white;">Total Cost</th>
+                                <th>Runtime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Sonnet 4.5 -->
+                            <tr class="row-sonnet">
+                                <td style="padding-left:20px;">
+                                    <div class="text-white text-sm font-bold">Claude Sonnet 4.5</div>
+                                    <span class="badge-actual">ACTUAL</span>
+                                </td>
+                                <td class="text-gray-300">$3.00</td>
+                                <td class="text-gray-300">$15.00</td>
+                                <td class="text-gray-300">$0.063</td>
+                                <td class="text-gray-300">$0.405</td>
+                                <td><span class="total-cost-sonnet">$0.468</span></td>
+                                <td class="text-gray-300 text-xs">6m 38s<br><span class="text-gray-500">(actual)</span></td>
+                            </tr>
+                            <!-- Opus 4.6 -->
+                            <tr class="row-opus">
+                                <td style="padding-left:20px;">
+                                    <div class="text-white text-sm font-bold">Claude Opus 4.6</div>
+                                    <span class="badge-estimated">ESTIMATED</span>
+                                </td>
+                                <td class="text-gray-300">$5.00</td>
+                                <td class="text-gray-300">$25.00</td>
+                                <td class="text-gray-300">$0.105</td>
+                                <td class="text-gray-300">$0.675</td>
+                                <td><span class="total-cost-opus">$0.780</span></td>
+                                <td class="text-gray-300 text-xs">~10–15m<br><span class="text-gray-500">(est.)</span></td>
+                            </tr>
+                            <!-- Kimi K2.5 -->
+                            <tr class="row-kimi kimi-glow">
+                                <td style="padding-left:20px;">
+                                    <div class="text-white text-sm font-bold">Kimi K2.5</div>
+                                    <span class="badge-cheapest">✦ CHEAPEST</span>
+                                    <span class="badge-estimated">ESTIMATED</span>
+                                </td>
+                                <td class="text-gray-300">$0.23</td>
+                                <td class="text-gray-300">$3.00</td>
+                                <td class="text-gray-300">$0.005</td>
+                                <td class="text-gray-300">$0.081</td>
+                                <td><span class="total-cost-kimi">$0.086</span></td>
+                                <td class="text-gray-300 text-xs">~5–8m<br><span class="text-gray-500">(est.)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Savings callouts -->
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="rounded-xl p-4 border border-blue-500/30 bg-blue-500/10 text-center">
+                        <div class="text-blue-400 text-2xl font-black">$0.468</div>
+                        <div class="text-blue-300 text-xs font-bold mt-1">Sonnet 4.5</div>
+                        <div class="text-gray-500 text-xs mt-0.5">Baseline (actual)</div>
+                    </div>
+                    <div class="rounded-xl p-4 border border-red-500/30 bg-red-500/10 text-center">
+                        <div class="text-red-400 text-2xl font-black">$0.780</div>
+                        <div class="text-red-300 text-xs font-bold mt-1">Opus 4.6</div>
+                        <div class="text-gray-500 text-xs mt-0.5">1.67× more expensive</div>
+                    </div>
+                    <div class="rounded-xl p-4 border border-green-500/40 bg-green-500/10 text-center" style="box-shadow: 0 0 16px rgba(0,226,115,0.15);">
+                        <div class="text-green-400 text-2xl font-black">$0.086</div>
+                        <div class="text-green-300 text-xs font-bold mt-1">Kimi K2.5</div>
+                        <div class="text-gray-400 text-xs mt-0.5">5.4× cheaper than Sonnet · 9× cheaper than Opus</div>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="bg-gray-900 rounded-xl p-4 border border-gray-700">
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">📌 Notes</div>
+                    <ul class="text-xs text-gray-400 space-y-1.5">
+                        <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">•</span> <span>Sonnet 4.5 is <strong class="text-white">ACTUAL</strong> data from the Icon Mall Gresik RO run on 18 Feb 2026</span></li>
+                        <li class="flex items-start gap-2"><span class="text-gray-500 mt-0.5">•</span> <span>Opus 4.6 &amp; Kimi K2.5 costs are <strong class="text-white">ESTIMATED</strong> using the same token count — actual usage may differ per model</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">•</span> <span>Kimi K2.5 is <strong class="text-green-400">~5.4× cheaper</strong> than Sonnet 4.5 and <strong class="text-green-400">~9× cheaper</strong> than Opus 4.6</span></li>
+                        <li class="flex items-start gap-2"><span class="text-gray-500 mt-0.5">•</span> <span>All pricing via OpenRouter (Feb 2026) · Token counts: ~21K input, ~27K output, ~60K prompt/cache</span></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- SLIDE 11: COMPETITIVE ANALYSIS -->
+        <div class="slide">
+            <div class="slide-label">Analisis Kompetitif</div>
+            <div class="content">
+                <h2 class="text-4xl font-black mb-8" style="color: #111;">Claude Code unggul di semua kriteria</h2>
+                
+                <div class="mt-12">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b-2 border-gray-800">
+                                <th class="text-left pb-4 text-lg font-black">Platform</th>
+                                <th class="text-center pb-4 text-sm font-bold">Kecepatan</th>
+                                <th class="text-center pb-4 text-sm font-bold">Reliabilitas</th>
+                                <th class="text-center pb-4 text-sm font-bold">Otomasi</th>
+                                <th class="text-center pb-4 text-sm font-bold">Production</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-6 text-xl font-bold">Claude Code</td>
+                                <td class="text-center"><span class="circle-check circle-check-filled"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-filled"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-filled"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-filled"></span></td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-6 text-xl font-bold text-gray-500">Excel Extensions</td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-6 text-xl font-bold text-gray-500">Browser Extensions</td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                                <td class="text-center"><span class="circle-check circle-check-empty"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</body>
+</html>

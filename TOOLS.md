@@ -45,6 +45,14 @@ Semua credentials tersimpan di `/Users/database-zuma/.openclaw/workspace/.env` �
 Isi: GitHub token, Vercel token, PostgreSQL connection string, Notion API key.
 Load dengan `source .env` atau `python-dotenv`.
 
+### API Keys
+
+**Firecrawl API:**
+- Key: `fc-255b25fa2e70444987cb8570dbbc70b1`
+- Account: database-zuma
+- Docs: https://www.firecrawl.dev/
+- Use case: Web scraping, extracting structured data from websites
+
 ### Output File Locations
 
 **Purchase Orders (PO):**
@@ -119,25 +127,26 @@ gunzip -c ~/backups/db/openclaw_ops_YYYYMMDD.sql.gz | \
 **Account:** harveywayan@gmail.com
 
 **Auto-share rule (MANDATORY):**
-When uploading files to Google Drive, ALWAYS grant edit access to:
-- `wayan@zuma.id` (role: writer)
-- `database@zuma.id` (role: writer)
+When uploading files to Google Drive, ALWAYS:
+1. Set **Anyone with link = Editor** (so any user can access without requesting)
+2. Also share edit access to specific emails as backup
 
 ```bash
 # Upload file
 gog drive upload <file> --name "..." --json
 
-# Share with edit access
+# MANDATORY: Anyone with link = Editor
+gog drive share <file_id> --anyone --role writer
+
+# Also share specific emails
 gog drive share <file_id> --email wayan@zuma.id --role writer
 gog drive share <file_id> --email database@zuma.id --role writer
-
-# Public link (optional)
-gog drive share <file_id> --anyone --role reader
 ```
 
 **Standard workflow:**
 1. Upload file → get file_id
-2. Share edit access to wayan@zuma.id & database@zuma.id
+2. `--anyone --role writer` (ALWAYS!)
+3. Share to wayan@zuma.id & database@zuma.id
 3. Share public link (reader) if needed
 4. Reply with shareable link
 
@@ -447,3 +456,15 @@ matched_store_name LIKE '%konsinyasi%' → EXCLUDE
 - Speaker: Polytron (BluOS-enabled)
 - Network: [TBD - check when speaker is ON]
 - Default device: [TBD - set after first discovery]
+
+### Control Stock Sheet (PO Tracking)
+
+**Source:** Google Sheets dari Mbak Citra
+**Sheet ID:** `1qInTrRUOUi2983vefS8doS5Pt3jC2yftQAG99yYlVOE`
+**Link:** https://docs.google.com/spreadsheets/d/1qInTrRUOUi2983vefS8doS5Pt3jC2yftQAG99yYlVOE
+**Sheet name:** `PO`
+
+**Rule (dari Mas Wayan 2026-02-18):** Kalau user tanya soal PO, CEK SHEET INI DULU sebelum query database.
+
+**Isi:** Rekap PO 2025 — per artikel, tier, status PO, jumlah PO, jumlah received (RCV 1-10), total RCV.
+**Kolom penting:** TIER | CODE | TYPE | GENDER | SUDAH PO | Done PO 1-6 | TGL PO | STATUS PO | JML RCV 1-10 | TOTAL RCV
