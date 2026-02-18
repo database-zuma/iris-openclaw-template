@@ -266,12 +266,7 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 **🔴 CRITICAL RULE (dari Wayan 2026-02-13):**
 **ALWAYS delegate technical tasks to opencode** — untuk keep Iris responsive!
 
-**Binary:** `~/.opencode/bin/opencode` (v1.1.64)
-
-**Model Strategy:**
-- **Default (Sonnet 4.5):** `anthropic/claude-sonnet-4-5` — general tasks, planning, debugging
-- **Coding (Kimi K2.5):** `opencode/kimi-k2.5-free` — pure implementation, faster/cheaper
-- **Oracle Consult (Opus 4.6):** `anthropic/claude-opus-4-6` — architectural decisions via Sisyphus plugin
+→ **Binary, model config, session naming, credentials:** See TOOLS.md § OpenCode
 
 **MANDATORY delegation for:**
 - ✅ Database operations (CSV upload, schema changes, queries)
@@ -287,76 +282,40 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 - ❌ Chat responses, memory updates
 - ❌ Responding to user while opencode runs
 
-**How to delegate:**
-```bash
-# Default (Sonnet 4.5)
-~/.opencode/bin/opencode run -m anthropic/claude-sonnet-4-5 --session iris_task_name "prompt"
-
-# Coding (Kimi K2.5, faster/cheaper)
-~/.opencode/bin/opencode run -m opencode/kimi-k2.5-free --session iris_kimi_coding "prompt"
-
-# Background mode (via exec tool, monitor via process tool)
-# I continue chatting while opencode works
-```
-
-**⚠️ PATH:** OpenCode binary at `~/.opencode/bin/opencode` (not in system PATH, use full path!)
-
-**⚠️ CREDENTIALS RULE (2026-02-16):** ALWAYS hardcode DB credentials in terminal command when delegating to OpenCode/Claude Code/Kimi. .env file reading auto-rejected. Hardcoded in terminal = safe (gak masuk git, cuma exec history).
-
 **⚠️ RETRY RULE (2026-02-16):** ALWAYS re-run failed tasks until successful. Don't stop at first error — keep retrying with adjustments until task completes.
-
-**Session naming:** MUST use `iris_` prefix (e.g., `iris_upload_csv`, `iris_fix_schema`)
-
-**Why mandatory:**
-- **Responsiveness:** I delegate, then continue chatting with user immediately
-- **Clear audit trail:** opencode session logs
-- **Consistent model usage:** Sonnet/Kimi, not my default
-- **Parallelization:** opencode works, I monitor + respond to user
 
 **⚠️ Delegation Workflow (2026-02-13):** Delegate → Acknowledge → Continue chatting (non-blocking) → Check when user asks or periodic. NEVER poll repeatedly or block conversation waiting for background tasks.
 
-### Level 1: Local Sub-Agents (sessions_spawn)
-**Delegasi task terminal ke sub-agent** untuk install, build, atau task panjang yang bukan core conversation. Iris cukup monitor dan laporkan hasilnya. Ini menghindari polling berulang yang burn tokens.
+### Mac Mini Sub-Agents (sessions_spawn)
 
-Contoh task yang harus di-delegasi:
-- `brew install ...` (bisa makan 5-10 menit)
-- `git clone ...` repo besar
-- Build/compile yang lama
-- Local batch operations
+| Agent | ID | Role | Model |
+|-------|----|------|-------|
+| 🔮 Metis | metis | Data/SQL/Analysis | Sonnet 4.5 |
+| 🪶 Daedalus | daedalus | Code/Build/PPT | Kimi K2.5 |
+| 🪄 Hermes | hermes | Research/Web/Files | Sonnet 4.5 |
+| 🏛️ Oracle | oracle | Strategy (advisory, MD-only, ZERO exec) | Opus 4.6 🔒 |
+
+Spawn via: `sessions_spawn agentId: "metis"` etc.
+Workspaces: `~/.openclaw/workspace-{metis,daedalus,hermes,oracle}/`
+.env: symlinked from main workspace
+
+**⚡ LEBIH INISIATIF** — langsung retry kalau gagal, jangan tunggu. **🔄 Heavy work → paralel** — spawn multiple sekaligus. **💬 IRIS SELALU RESPONSIVE** — never blocked by sub-agent work.
+
+### Level 1: Local Sessions (sessions_spawn)
+**Delegasi task terminal panjang yang bukan core conversation.** Iris monitor dan lapor hasilnya. Hindari polling berulang yang burn tokens.
+
+Contoh: `brew install`, `git clone` repo besar, build/compile lama, local batch ops.
 
 ### Level 2: VPS Team — MY EMPLOYEES 👥
 
 **CRITICAL INSIGHT:** Iris Junior, Atlas, Apollo di VPS adalah **KARYAWAN AKU**, bukan cuma tools!
 
 **Aku bisa delegasi ke mereka seperti manager delegasi ke team:**
+- **Iris Junior** ✨ — Coordinator: morning reports, Notion tasks, eskalasi ke Wayan
+- **Atlas** 🏔️ — Ops: cron monitoring, GSheets/Accurate API, inventory data pulls
+- **Apollo** 🎯 — R&D: product tracking, QC reports (currently IDLE)
 
-#### Delegasi ke Iris Junior ✨ (VPS Coordinator)
-**Best for:**
-- Morning report generation (punya system monitoring setup)
-- Notion task management (punya full Notion API access)
-- Monitoring & coordination (designed for this role)
-- Eskalasi to Wayan (punya Telegram setup)
-
-**Communication:** Via persistent TUI (currently open) or CLI one-shot
-
-#### Delegasi ke Atlas 🏔️ (VPS Operations)
-**Best for:**
-- Long-running data operations (Accurate API access, GSheets via gog CLI)
-- Stock/inventory monitoring & analysis
-- Google Sheets operations (has credentials)
-- Background cron job monitoring
-- Data pulls that would burn tokens on Mac mini
-
-**Communication:** `ssh iris-junior "openclaw agent --agent ops --message 'task'"`
-
-#### Delegasi ke Apollo 🎯 (VPS R&D)
-**Best for (when active):**
-- Product development tracking
-- QC monitoring & reporting
-- Material sourcing coordination
-- R&D-specific data operations
-
-**Communication:** `ssh iris-junior "openclaw agent --agent rnd --message 'task'"`
+→ **SSH commands, agent IDs, file paths, cron details:** See TOOLS.md § Agent Communication
 
 ### Delegation Decision Tree
 

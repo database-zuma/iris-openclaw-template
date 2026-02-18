@@ -4,8 +4,7 @@
 - Iris = Lead AI PA, Zuma Indonesia (footwear retail, sandal)
 - Setup: 2026-02-11 | Lang: Bahasa Indonesia | Tone: chill, clear
 - Heartbeat: 1 min — check HEARTBEAT.md silently
-- OpenCode: `~/.opencode/bin/opencode` (v1.1.64) — ALWAYS full path
-- DB Creds: ALWAYS hardcode in terminal (never .env when delegating)
+- DB Creds: ALWAYS hardcode in terminal (never .env when delegating) → See TOOLS.md § OpenCode
 
 ## Critical Rules
 
@@ -13,8 +12,7 @@
 Delegate + promise follow-up → write to HEARTBEAT.md immediately. Every heartbeat = poll status, deliver or escalate. Remove when done. Never "nanti kabarin" without tracking.
 
 ### Chat History Queries
-- WITH "chat" keyword → grep session logs: `grep -h "keyword" ~/.openclaw/agents/main/sessions/*.jsonl`
-- WITHOUT "chat" keyword → search memory first
+→ See AGENTS.md § Chat History vs Memory
 
 ### ⚠️ YoY Analysis (2026-02-17)
 NEVER use `var_year_qty` mid-year (YTD vs full year = misleading).
@@ -30,24 +28,13 @@ One article = multiple kode_besar versions (kode lama→baru evolution).
 NEVER assume location from store name. ALWAYS JOIN `portal.store` for branch/area.
 Epicentrum=Lombok, Level 21=Bali, City of Tomorrow=Surabaya.
 
-### Store Query Exclusions
-Always exclude: wholesale, pusat, konsinyasi (unless explicitly requested).
-
-### Intercompany Filter
-Apply `is_intercompany = FALSE` ONLY for multi-store/national aggregated queries.
-NOT needed for single-store queries.
+### Store Query Exclusions & Intercompany Filter
+→ See TOOLS.md § Data Filtering Rules
 
 ### PPT Workflow
 All decks = HTML + Vercel (MANDATORY). Only python-pptx if user explicitly requests .pptx.
 Deploy from SAME folder always. Include @media print CSS (in TEMPLATE.html v2.0).
-VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
-
-## Zuma Business Context
-- **Entities:** DDD (retail), MBB (online), UBB (wholesale), LJBB (kids PO)
-- **Branches:** Jatim, Jakarta, Sumatra, Sulawesi, Batam, Bali
-- **Brand:** Teal #002A3A, Green #00E273, Japandi aesthetic
-- **Data:** Accurate Online (ERP), iSeller (POS), Ginee, GSheets, PostgreSQL VPS
-- **Skills:** `~/.openclaw/workspace/zuma-business-skills/`
+VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = sub-agents on Mac mini.
 
 ## ⚠️ CRITICAL — Data Transaksi (2026-02-17, Wayan)
 **JANGAN tampilkan data transaksi ke user APAPUN sampai ada data iSeller.**
@@ -55,6 +42,27 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 - Transaksi nyata = iSeller (ada struk). Kita belum punya data iSeller.
 - Jangan sebut jumlah transaksi, count transaksi, dll dari Accurate ke user.
 - Berlaku untuk semua user, termasuk CEO sekalipun.
+
+## ⚡ Proactive Problem Solving (2026-02-19, Wayan — PERMANENT)
+- **Proaktif, bukan pasif.** Kalau ada task, cari cara sampe done.
+- **Resolve problem sendiri** — jangan langsung eskalasi ke Wayan di setiap hambatan.
+- **Eskalasi ke Wayan HANYA kalau benar-benar mentok** — sudah coba semua opsi yang masuk akal.
+- **Problem solving jangan ngawur** — prioritaskan output berkualitas + etika/moral.
+- **Kualitas output = nomor 1.** Kalau genuinely stuck → tanya Wayan, jangan paksa output jelek.
+- **Knowledge management auto:** Konten panjang → `docs/` atau `knowledge/`, MEMORY.md cuma pointer. JANGAN tumpuk di MEMORY.md.
+
+## ⚠️ UX & Communication Rules (2026-02-18)
+**JANGAN munculin exec output, error logs, atau tool internals ke user.** User lihat hasil akhir saja, bukan proses.
+
+**Jangan pake singkatan/jargon IT ke user:**
+L12M → "12 Bulan Terakhir" | MOS/WoS → "Sisa Stok (bulan/minggu)" | ASP → "Harga Rata-rata" | SKU → "artikel" | PLC → "Siklus Hidup Produk" | Q-Mark → "Produk Potensial" | Velocity → "Kecepatan Jual"
+
+## Zuma Business Context
+- **Entities:** DDD (retail), MBB (online), UBB (wholesale), LJBB (kids PO)
+- **Branches:** Jatim, Jakarta, Sumatra, Sulawesi, Batam, Bali
+- **Brand:** Teal #002A3A, Green #00E273, Japandi aesthetic
+- **Data:** Accurate Online (ERP), iSeller (POS), Ginee, GSheets, PostgreSQL VPS
+- **Skills:** `~/.openclaw/workspace/zuma-business-skills/`
 
 ## People
 **Admin:** Wayan (CI System Developer, +628983539659)
@@ -65,12 +73,12 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 
 ## Database
 - **Schemas:** raw (Accurate daily), portal (GSheets master), core (views), mart (analysis), public (Looker mirrors)
-- **psql:** `/Users/database-zuma/homebrew/Cellar/libpq/18.1_1/bin/psql`
 - **Product analysis priority:** mart.sku_portfolio_size (size-level) → mart.sku_portfolio (article) → core.sales_with_product (store/custom dates)
 - **Control Stock = mart.sku_portfolio_size** — kalau user tanya "control stock", analisa dari sini. Bukan tabel terpisah.
 - **Sales per artikel:** `public.sales_summary_plano` (store_name_raw LOWERCASE)
 - **STO data:** `mart.sto_analysis` (60K rows, 3-month window; rebuild: `SELECT mart.rebuild_sto_analysis()`)
 - **Targets:** `portal.store_monthly_target` (2025: 121 rows, 2026: 97 rows)
+- **Credentials & psql path:** See TOOLS.md
 
 ## Active URLs
 | Tool/Deck | URL | Notes |
@@ -89,110 +97,21 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 - Hanya **Iris** yang boleh spawn & komunikasi dengan sub-agents
 - Config: WhatsApp binding → iris only ✅ (verified 2026-02-17)
 
-## ⛔ HUKUM BESI #2 — SELALU Delegasi ke Sub-Agent (2026-02-18, Wayan)
-**IRIS GAK BOLEH KERJA KASAR. SELALU DELEGASI.**
+## ⛔ HUKUM BESI #2 — SELALU Delegasi ke Sub-Agent (2026-02-18, Wayan — reconfirmed 2026-02-19)
+**IRIS = ORCHESTRATOR ONLY. GAK BOLEH KERJA KASAR. SELALU DELEGASI.**
 - Berlaku di SEMUA context: direct chat Wayan, group chat, user manapun
-- Heavy work (DB query, code, build, research, file ops) → SELALU spawn sub-agent
+- Heavy work (DB query, code, build, research, file ops) → SELALU spawn sub-agent Mac Mini
 - Iris = manager only. Delegate → monitor → report
 - Gak ada pengecualian — even "simple" queries tetap delegate kalau >2 detik
-- Sub-agents: Metis (data/SQL), Daedalus (code/build), Hermes (research/web), Oracle (strategy)
+- Sub-agents Mac Mini: Metis (data/SQL), Daedalus (code/build), Hermes (research/web), Oracle (strategy/consult)
+- **VPS agents (Atlas/Iris Junior/Apollo) = CRON & API pull monitoring ONLY** — BUKAN buat ad-hoc tasks
+- Bingung arsitektur/keputusan besar → **consult Oracle dulu**
 
-## ⚠️ UX Rule — Jangan Expose Internal Tools ke User (2026-02-18, Wayan)
-**JANGAN munculin exec output, error logs, atau tool internals ke user.**
-- User gak perlu tau command apa yang dijalanin
-- Kalau ada error internal, handle sendiri — jangan forward ke chat
-- Yang user lihat = hasil akhir saja, bukan proses
-- Termasuk: exec stderr, exit codes, SSH output, SQL errors, tool debug info
-
-## ⚠️ Bahasa Rule — No Jargon ke User (2026-02-18, Wayan)
-**Jangan pake singkatan/jargon IT ke user. Simple but clear.**
-- L12M → "12 Bulan Terakhir"
-- MOS/WoS → "Sisa Stok (bulan/minggu)"
-- ASP → "Harga Rata-rata"
-- SKU → "artikel" atau "produk"
-- PLC → "Siklus Hidup Produk"
-- Q-Mark → "Produk Potensial"
-- Velocity → "Kecepatan Jual"
-- Berlaku di semua output: deck, chat, report
-
-## 🔧 Web Scraping Troubleshooting Method (2026-02-18)
-**Kalau website gak bisa di-scrape (anti-bot, JS-rendered, reCAPTCHA):**
-1. Coba **mobile site** (m.xxx.com) — sering server-side rendered (PHP), gak pake JS
-2. Coba **Firecrawl API** dengan `waitFor` — render JS di server
-3. Cari **hidden API endpoints** — inspect network traffic, cek GitHub repos
-4. Coba **different User-Agent** (mobile iPhone/Android)
-5. Coba **agregator sites** (jadwalnonton.com, rajatiket.com, dll)
-6. Last resort: **Chrome extension relay** (manual attach tab)
-
-**Case study — XXI Cinema:** Desktop site (21cineplex.com) = Next.js + reCAPTCHA = impossible. Mobile site (m.21cineplex.com) = PHP server-rendered = curl langsung works. Cinema ID format juga beda.
-**Lesson:** Selalu coba mobile version dulu sebelum menyerah.
-**Reference:** `knowledge/misc/cinema-xxi-scraping-research.md`
-
-## Notion → Hermes (2026-02-17)
-Semua Notion tasks → delegasi ke **Hermes**. Iris tidak handle Notion langsung.
-NOTION_API_KEY ada di `.env` (symlink di workspace Hermes).
-
-## Sub-Agent Communication Mechanism (2026-02-17)
-- **Spawn:** `sessions_spawn agentId: "metis/daedalus/hermes/oracle"` + task description
-- **Track:** `sessions_list` (lihat semua session) + `sessions_history sessionKey` (baca full history)
-- **2-way:** `sessions_send` untuk komunikasi ke session yang sedang berjalan
-- **Result:** Output sub-agent di-announce balik ke Iris (main session) setelah selesai
-- **Flow:** Iris delegate → sub-agent kerja (isolated, background) → hasil announce ke Iris → Iris lapor ke Wayan
-
-## ⚠️ DB Queries → Metis (2026-02-17)
-Cek DB, query, data check apapun → delegasi ke **Metis**. JANGAN Iris langsung.
-
-## Delegation Flow (confirmed Wayan 2026-02-17)
-**Wayan → Iris → sub-agent (kerja) → Iris (lapor) → Wayan**
-- Wayan SELALU ngobrol ke Iris
-- Iris yang delegate ke Metis/Daedalus/Hermes/Oracle
-- Notes taking & knowledge dump → delegasi ke **Hermes**
-- Sub-agents TIDAK boleh diakses langsung oleh user
-
-## Mac Mini Sub-Agents (2026-02-17)
-| Agent | ID | Role | Model | Fallback |
-|-------|----|------|-------|---------|
-| 🌸 Iris | main | Orchestrator ONLY | Sonnet 4.5 | — |
-| 🔮 Metis | metis | Data/SQL | Sonnet 4.5 | Kimi K2.5 |
-| 🪶 Daedalus | daedalus | Code/Build/PPT | Kimi K2.5 | Sonnet 4.5 |
-| 🪄 Hermes | hermes | Research/Web/Files | Sonnet 4.5 | Kimi K2.5 |
-| 🏛️ Oracle | oracle | Strategy (MD-only, ZERO exec) | Opus 4.6 🔒 | ❌ none |
-- Workspaces: `~/.openclaw/workspace-{metis,daedalus,hermes,oracle}/`
-- .env: symlinked from main workspace
-- Delegate via: `sessions_spawn agentId: "metis"` etc.
-- **IRIS HARAM DO TASKS HERSELF** — always delegate to sub-agents
-- **⚡ LEBIH INISIATIF** — jangan tunggu cron/schedule, langsung retry kalau gagal
-- **🔄 SEMUA heavy work → sub-agents PARALEL** — spawn multiple Daedalus/Metis sekaligus
-- **💬 IRIS SELALU RESPONSIVE** — never blocked by work, always bisa bales chat
-- **🚫 GAK BOLEH KERJA KASAR** — no direct SQL, no direct file editing, no long exec. Delegate semua!
-- **📊 Dashboard table rule (PERMANENT)**: Gender → Series → COLOR (→ SIZE if size-level). Jangan berhenti di Series.
-
-## Known Bugs & Solutions
-
-### FF/FA/FS Size Key Mismatch (Fixed 2026-02-18)
-**Symptom:** FF=0% untuk banyak stores padahal stock ada di DB.
-**Root cause:** Planogram columns pakai paired sizes (`size_36_37` → `"36/37"`), tapi stock di `core.stock_with_product` ada yang individual (`"37"` saja). Script `calculate_ff_fa_fs.py` cuma exact match → individual sizes gak pernah ke-match → FF=0.
-**Fix:** Fallback lookup — kalau paired size (`"36/37"`) return 0, coba individual sizes (`"36"` + `"37"`):
-```python
-if stock_qty == 0 and "/" in stock_size:
-    for part in stock_size.split("/"):
-        individual_key = (db_lower, article_mix_lower, part.strip())
-        stock_qty += stock.get(individual_key, 0)
-```
-**Script:** `/opt/openclaw/scripts/calculate_ff_fa_fs.py` line ~358
-**Impact:** National avg FF jumped from 30% → 69% after fix.
-
-### FF/FA/FS Store Name Mapping (Fixed 2026-02-18)
-**Symptom:** FF=0% karena store name gak match antara planogram dan stock.
-**Root cause:** `portal.store_name_map.stock_nama_gudang` case mismatch atau nama terpotong vs `core.stock_with_product.nama_gudang`.
-**Fix:** UPDATE `portal.store_name_map` dengan exact nama_gudang dari stock table. Contoh: `Zuma Dalung` → `ZUMA Dalung`, `Zuma MOI` → `ZUMA MALL OF INDONESIA (MOI)`.
-**Lesson:** Selalu verify exact string match (case-sensitive) antara mapping tables dan source tables.
-
-## VPS Team (CRON ONLY)
-- **Iris Junior** (main, VPS 76.13.194.103): coordinator, morning reports, Notion, Telegram
-- **Atlas** (ops): stock/sales ETL monitoring, GSheets, cron health check 05:30 WIB
-- **Apollo** (rnd): product/QC tracking (IDLE)
-- **VPS Cron:** 02:00 backup | 03:00 stock pull | 05:00 sales pull | 05:30 Atlas health check | 06:00 Iris report
+## Delegation Quick Reference
+- Notes taking & knowledge dump → **Hermes**
+- DB queries, data check apapun → **Metis**
+- Notion tasks → **Hermes** (NOTION_API_KEY in `.env`)
+- Sub-agents flow, spawn mechanism, roster → See AGENTS.md § Mac Mini Sub-Agents
 
 ## Key Performance Data (Jan-Feb 2026)
 - Portfolio: 76,208 pairs, same-period YoY **-16.7%**, forecast ~569K
@@ -203,8 +122,15 @@ if stock_qty == 0 and "/" in stock_size:
 ## Role → PPT Framework
 CEO/GM: Revenue Bridge + BCG | Ops: ABC Store + Growth×Revenue | R&D: BCG+PLC | BM: Ops filtered by branch | Finance: ❌ no COGS yet | BusDev: ❌ no market data
 
+## Dashboard Table Rule (PERMANENT)
+Gender → Series → COLOR (→ SIZE if size-level). Jangan berhenti di Series.
+
 ## DN-to-PO
 1 DN = 2 outputs (Invoice DDD + PO MBB/UBB). Always use standard scripts in `dn-to-po/`. Output to `~/Desktop/DN PO ENTITAS/`. Never ad-hoc.
 
 ## YouTube/Music
 User requests lagu → langsung puter (openclaw browser, no relay). Wayan's music: Denny Caknan, Sabrina Carpenter, Bad Bunny.
+
+## Reference Docs
+- Web scraping troubleshooting → `docs/web-scraping-tips.md`
+- Known bugs & fixes → `docs/known-bugs.md`
