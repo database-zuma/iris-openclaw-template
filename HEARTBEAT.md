@@ -6,7 +6,6 @@
 
 ## 📋 Pending Tasks
 
-- [ ] **Wayan belum kasih Brave Search API key** — ingetin kalau dia lupa
 - [ ] **Obsidian** — Wayan install manual, skip automated install
 
 ---

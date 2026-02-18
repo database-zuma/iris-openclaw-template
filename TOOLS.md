@@ -14,10 +14,59 @@ Load dengan `source .env` atau `python-dotenv`.
 ### API Keys
 
 **Firecrawl API:**
-- Key: `fc-255b25fa2e70444987cb8570dbbc70b1`
+- Key: `$FIRECRAWL_API_KEY` (see `.env`)
 - Account: database-zuma
 - Docs: https://www.firecrawl.dev/
 - Use case: Web scraping, JS-rendered pages (XXI, TIX ID, dll yang anti-scraping)
+
+**Tavily API:**
+- Key: `$TAVILY_API_KEY` (see `.env`)
+- Docs: https://tavily.com/
+- Use case: AI-optimized web search & research
+
+**Google Gemini API:**
+- Key: `$GEMINI_API_KEY` (see `.env`)
+- Project: `iris-zuma-openclaw` (Google Cloud Console)
+- Models available: Gemini Nano, Flash, Pro
+- Tier: Free trial — Rp5,016,451 credit, 90 days remaining (per 2026-02-19)
+- Docs: https://ai.google.dev/
+- SDK: `google-genai` (Python), installed di Mac mini
+
+### 🎨 Image Generation (Iris Capability)
+
+**User request:** "buatkan gambar [deskripsi], AR [ratio], [style]"
+→ Iris generate via Imagen 4 Fast, kirim langsung ke WhatsApp
+
+**Model:** `imagen-4.0-generate-001` (Google Imagen 4 Standard) — default sejak 2026-02-19
+- `imagen-4.0-fast-generate-001` — Fast (lebih cepat tapi sering typo di teks)
+- `imagen-4.0-ultra-generate-001` — Ultra (kualitas max, belum ditest)
+
+**Image Editing (Terbatas):**
+- `gemini-3-pro-image-preview` — bisa terima foto + instruksi, output modified image
+- ⚠️ Kualitas face compositing jelek via API (jauh dari Google AI Studio)
+- **Kesimpulan:** Iris = image generation ✅, image editing/face swap ❌ (butuh Adobe Firefly/InsightFace)
+- Kualitas foto realistis sangat bagus
+- Aspect ratio: 1:1, 16:9, 9:16, 4:3, dll
+- Output: 1024x1024 (default 1:1)
+- Cost: dari Gemini free trial credit
+
+**Code pattern:**
+```python
+import google.genai as genai
+from google.genai import types
+client = genai.Client(api_key="$GEMINI_API_KEY")
+response = client.models.generate_images(
+    model='imagen-4.0-fast-generate-001',
+    prompt='[deskripsi]',
+    config=types.GenerateImagesConfig(number_of_images=1, aspect_ratio="1:1")
+)
+```
+
+### ⚠️ Gemini sebagai Fallback Agent (2026-02-19)
+- Google provider sudah ditambahkan ke OpenClaw config (`models.providers.google`)
+- `google/gemini-3-pro-preview` sebagai default fallback GLOBAL
+- **Tapi:** Iris, Metis, Daedalus, Hermes, Oracle punya per-agent model config sendiri → Gemini **BELUM** otomatis jadi fallback mereka
+- **TODO:** Patch per-agent config kalau Wayan mau Gemini masuk fallback tiap agent individual
 
 ### Browser & Screenshot Capabilities
 
@@ -34,11 +83,31 @@ Load dengan `source .env` atau `python-dotenv`.
 
 **Firecrawl (JS-rendered scraping):**
 - API: `https://api.firecrawl.dev/v1/scrape`
-- Key: `fc-255b25fa2e70444987cb8570dbbc70b1`
+- Key: `$FIRECRAWL_API_KEY`
 - Bisa render JS, bypass anti-scraping → dapat full content
 - Use case: XXI jadwal, TIX ID, atau site manapun yang butuh JS rendering
 
-**Priority:** Firecrawl > browser openclaw > web_fetch (untuk JS-heavy sites)
+**Priority screenshot:** Pinchtab > browser openclaw > web_fetch
+
+### ⚠️ Screenshot Rule (PERMANENT — 2026-02-19)
+**Default untuk semua screenshot request → PINCHTAB**
+
+Berlaku untuk:
+- User minta SS hasil pencarian Google/browser
+- Screenshot website atau web app
+- Screenshot halaman apapun untuk dikirim ke user
+
+**Kenapa Pinchtab:**
+- Murah (HTTP call via exec, gambar TIDAK masuk AI context → hemat token)
+- Browser tool screenshot = mahal (gambar embed ke context = ribuan token) + auto-send ke WA
+
+**Cara pakai:**
+```bash
+curl -s "http://localhost:9867/screenshot?url=URL_ENCODE_HERE" > /tmp/resp.json
+python3 -c "import json,base64; d=json.load(open('/tmp/resp.json')); open('/path/out.jpg','wb').write(base64.b64decode(d['base64']))"
+```
+
+**Browser tool** = hanya untuk AI analisis konten (snapshot, act, click, read DOM) — BUKAN untuk kirim SS ke user.
 
 ### Output File Locations
 
@@ -76,6 +145,28 @@ gunzip -c ~/backups/db/openclaw_ops_YYYYMMDD.sql.gz | \
 ```
 
 **Purpose:** Offline redundancy — VPS backup + local Mac mini mirror for disaster recovery
+
+### Jadwal Sholat & Puasa
+
+**API:** AlAdhan (free, no key needed)
+**Method ID 20** = Kementerian Agama RI (standard Indonesia)
+
+**Endpoint (1 hari spesifik):**
+```
+GET https://api.aladhan.com/v1/timingsByCity/{DD-MM-YYYY}?city={Kota}&country=Indonesia&method=20
+```
+
+**Contoh Surabaya hari ini:**
+```
+https://api.aladhan.com/v1/timingsByCity/19-02-2026?city=Surabaya&country=Indonesia&method=20
+```
+
+**Fields yang dikembalikan:** Imsak, Fajr (Subuh), Sunrise (Terbit), Dhuhr (Dzuhur), Asr (Ashar), Maghrib (Buka Puasa), Isha (Isya)
+
+**Default kota:** Surabaya (kecuali user minta kota lain)
+**Cara pakai:** `web_fetch` langsung ke URL di atas — gak perlu sub-agent, simple fetch
+
+---
 
 ### Notion API
 
@@ -173,7 +264,7 @@ ALL sessions spawned by Iris MUST use the prefix `iris_` followed by a descripti
   Host: 76.13.194.120
   Database: openclaw_ops
   User: openclaw_app
-  Password: Zuma-0psCl4w-2026!
+  Password: $PGPASSWORD
   
   [task details]"
   ```

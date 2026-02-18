@@ -19,47 +19,19 @@
 
 ## 📊 Medium-Term (This Month)
 
-### 2. Five Automation Reports — Script + SKILL.md each
+### 2. Planogram Report (satu-satunya yang belum fix)
 
-**Pattern:** Each needs TWO components:
-1. Python wrapper script (cron automation)
-2. SKILL.md documentation (on-the-fly generation capability)
+- **Purpose:** Planogram compliance & fill rate — semua toko (bukan cuma Jatim)
+- **Current state:** Pakai tabel temp (Jatim only), belum production-ready
+- **Target:** Ganti temp table → tabel proper yang cover semua area/toko
+- **Who:** Iris + Wayan (confirm table name & schema)
+- **Timeline:** This month
 
-**Reference:** `inbox/pending-tasks-automation-reports.md` for detailed specs
-
-#### A. Control Stock Report
-- **Purpose:** Stock control metrics & alerts
-- **Table:** `mart.control_stock_daily` (TBD schema)
-- **Status:** Planning stage (query design needed)
-
-#### B. Planogram Report
-- **Purpose:** Planogram compliance & fill rate
-- **Table:** `mart.planogram_daily` (TBD schema, may overlap with FF/FA/FS)
-- **Status:** Planning stage (query design needed)
-
-#### C. RO Report (Box & Protol)
-- **Purpose:** Replenishment Order status & fulfillment
-- **Table:** `mart.ro_box_protol_daily` (TBD schema)
-- **Status:** Planning stage (query design needed)
-
-#### D. Surplus Store Report
-- **Purpose:** Store surplus inventory for redistribution
-- **Table:** `mart.surplus_store_daily` (TBD schema, related to Distribution Flow v3)
-- **Status:** Planning stage (query design needed)
-
-#### E. SKU Analysis Report (R&D/Apollo territory)
-- **Purpose:** SKU performance analysis untuk Product Development decisions
-- **Table:** `mart.sku_analysis` (flat structure, TBD)
-- **Key users:** Mbak Dewi (R&D Manager), Mbak Desyta (SPV ProdDev), Yuda, Apollo
-- **Priority:** Medium-High (strategic data)
-- **Status:** Planning stage (schema design needed)
-- **Note:** SKILL.md MANDATORY for Apollo (ad-hoc analysis capability)
-
-**Next steps:**
-1. Define SQL queries for each report (collaborate with Wayan)
-2. Test queries on mart/core tables
-3. Write Python wrappers + SKILL.md docs
-4. Deploy to VPS cron + add to Atlas monitoring
+> **Catatan (2026-02-19):** 4 laporan lain dari rencana awal sudah selesai:
+> - Control Stock → sudah di `mart.sku_portfolio_size` ✅
+> - SKU Analysis → sudah di `mart.sku_portfolio_size` ✅
+> - RO Report → sudah ada `zuma-ro-surplus` skill ✅
+> - Surplus Store → sudah ada `zuma-ro-surplus` skill ✅
 
 ---
 
@@ -74,26 +46,10 @@
   - [ ] **TO alert email/WA** — notify Mas Bagus/Virra kalau TO < 0.5 per store
 - **Priority:** Medium-High (dipakai Branch Manager harian)
 
-### 4. PPT "How OpenClaw Works" — Architecture Explainer for Presentation
-- **Requested by:** Wayan (17:45 WIB, 2026-02-17)
-- **Purpose:** Menjelaskan cara kerja Iris / OpenClaw ke audiences internal
-- **Content outline:**
-  - [ ] Hosting: Mac mini (primary) + VPS team (Atlas/Apollo/Iris Junior)
-  - [ ] LLM: Claude (Sonnet/Opus), model per task context
-  - [ ] Workspace structure: folder tree (`~/.openclaw/workspace/`) + tiap MD fungsinya
-    - SOUL.md, USER.md, AGENTS.md, TOOLS.md, MEMORY.md, HEARTBEAT.md, PENDING.md
-    - memory/, inbox/, knowledge/, zuma-business-skills/, zuma-bm-decks/, scripts/
-  - [ ] Tools yang ter-connect: Google Workspace, Terminal/SSH, OpenCode/Claude Code/Kimi CLI, DB PostgreSQL, WhatsApp, Vercel, Google Drive (gog CLI), Accurate Online API (via Atlas)
-  - [ ] Bawahan: Atlas (ops cron) + Apollo (rnd cron) di VPS
-  - [ ] Monitoring: SO L2, BM decks, STO tool, DB health, daily reports
-  - [ ] Output types: MD, Excel (.xlsx), PPT (HTML+Vercel), Docs, SQL queries, Python scripts
-  - [ ] User access channels: WhatsApp (primary), Signal (backup)
-  - [ ] Flowchart: request → Iris → delegate/execute → deliver
-  - [ ] Flowchart: data pipeline (Accurate → VPS raw → mart → deck/report)
-- **Style:** Banyak flowchart, visual architecture diagram, presentation-ready
-- **Format:** HTML + Vercel (standard PPT workflow)
-- **Who:** Iris build, Wayan configure/review
-- **Timeline:** TBD (belum urgent)
+### 4. PPT "How OpenClaw Works" — Architecture Explainer
+- **URL:** https://openclaw-explainer.vercel.app/ (deployed tapi belum selesai)
+- **Status:** Wayan build manual — Iris support kalau dibutuhkan
+- **Timeline:** TBD (Wayan-driven)
 
 ### 5. Channel Split Analysis Query Pattern
 - **Goal:** Clean separation: DDD=retail, MBB=online/marketplace, UBB=wholesale
@@ -138,19 +94,19 @@
 - **Who:** Iris coordinate with Wayan, then reach out to Tim SI PIC
 - **Timeline:** TBD (coordinate with Wayan)
 
-### 8. Install PicoClaw di VPS — SPG Agent
-- **Purpose:** Bikin lightweight agent di VPS untuk follow-up SPG (Stock Opname + Product Knowledge)
-- **Why PicoClaw:** Enteng, VPS gak ngelag (8GB RAM, 2 CPU)
+### 8. Install Nanobot di VPS — SPG Agent
+- **Purpose:** Lightweight agent di VPS untuk follow-up SPG (Stock Opname + Product Knowledge)
+- **Framework:** ~~PicoClaw~~ → **Nanobot** (dipilih 2026-02-19, WhatsApp ✅, Claude ✅)
 - **Use case:**
   - Follow up SPG soal stock opname (reminder, status check)
   - Sarana SPG nanya product knowledge (series, tier, harga, material)
 - **Steps:**
-  - [ ] Install PicoClaw di VPS
+  - [ ] Install Nanobot di VPS (Python, Node.js ≥18)
   - [ ] Setup agent khusus SPG
-  - [ ] Connect ke WhatsApp (SPG group atau individual)
+  - [ ] Connect ke WhatsApp (QR scan)
   - [ ] Load product knowledge dari DB/skills
   - [ ] Test end-to-end
-- **Who:** Wayan (install) + Iris (setup agent config)
+- **Who:** Wayan (install/QR) + Iris (setup agent config)
 - **Priority:** Medium
 - **Timeline:** This month
 
@@ -182,14 +138,11 @@
 - **Who:** Wayan (install) + Iris (setup vault)
 - **Timeline:** This month
 
-### 12. Bandingin PicoClaw vs Nanobot
-- **Purpose:** Compare lightweight agent frameworks buat VPS deployment
-- **Steps:**
-  - [ ] Research Nanobot (GitHub)
-  - [ ] Compare: resource usage, features, VPS-friendliness
-  - [ ] Decide mana yang dipake buat SPG agent
-- **Who:** Hermes (research) + Wayan (decide)
-- **Timeline:** This month
+### 12. ~~Bandingin PicoClaw vs Nanobot~~ → ✅ DONE — Nanobot dipilih
+- **Hasil research (2026-02-19):** Nanobot menang telak
+- **Alasan:** PicoClaw WhatsApp = disabled. Nanobot = WA ✅, Claude ✅, Python ✅, VPS-friendly ✅
+- **Detail:** `knowledge/ai-agents/picoclaw-vs-nanobot.md`
+- **Next:** Install Nanobot di VPS → lihat item #9 (PicoClaw di VPS = ganti ke Nanobot)
 
 ### 13. Official WhatsApp API Setup
 - **Purpose:** Migrate Iris to official WhatsApp Business API (dedicated number)
