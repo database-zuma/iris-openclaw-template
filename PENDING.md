@@ -2,19 +2,11 @@
 
 **Purpose:** Single source of truth untuk semua pending tasks (urgent → long-term)
 
-**Last updated:** 2026-02-17 18:00 WIB
+**Last updated:** 2026-02-19
 
 ---
 
 ## 🔥 Urgent (This Week)
-
-### 0. BUILD mart.sto_analysis table ✅ COMPLETED
-- **Status:** ✅ DONE — 60,602 rows, 155 stores, 699 articles
-- **Source:** SQL `/tmp/create_mart_sto.sql` → direct psql execution
-- **Schema:** store_name, kode, size, product_name, series, gender, qty_m3/m2/m1, qty_3m, avg_monthly, current_stock, turnover, snapshot_date
-- **Filter:** Exclude wholesale, konsinyasi, pusat, wilbex, imbex, merchandise, HO, bazar, event, pameran
-- **Function:** `mart.rebuild_sto_analysis()` created (for weekly cron)
-- **Deployed:** Powering zuma-sto-jatim.vercel.app v2
 
 ### 1. Create SO L2 SKILL.md (retroactive documentation)
 - **Status:** Script LIVE ✅, skill doc MISSING ⚠️
@@ -27,15 +19,7 @@
 
 ## 📊 Medium-Term (This Month)
 
-### Branch Manager Deck System — ALL BRANCHES 🔜 (Jatim ✅)
-- **Jatim:** COMPLETE — https://zuma-bm-jatim.vercel.app (11 slides, daily update)
-- **Pending:** Bali, Jakarta, Sumatra, Sulawesi, Batam (5 branches)
-- **URLs reserved:** `zuma-bm-{bali|jakarta|sumatra|sulawesi|batam}.vercel.app`
-- **Workflow:** Same structure as Jatim → query DB → build HTML → Vercel deploy
-- **Prereq per branch:** portal.store mapping, store targets, STO data available
-- **Priority order:** Bali → Jakarta → Sumatra/Sulawesi/Batam
-
-### 4. Five Automation Reports — Script + SKILL.md each
+### 2. Five Automation Reports — Script + SKILL.md each
 
 **Pattern:** Each needs TWO components:
 1. Python wrapper script (cron automation)
@@ -81,7 +65,7 @@
 
 ## 🔧 Operational Improvements (This Quarter)
 
-### STO Tool — Improvements
+### 3. STO Tool — Improvements
 - **Status:** v5 deployed (filter + TO label fix) — https://zuma-sto.vercel.app
 - **Requested improvements (Wayan):**
   - [ ] **Dynamic month window** — saat ini hardcoded Nov/Dec/Jan; perlu auto-calculate 3 bulan terakhir
@@ -90,11 +74,7 @@
   - [ ] **TO alert email/WA** — notify Mas Bagus/Virra kalau TO < 0.5 per store
 - **Priority:** Medium-High (dipakai Branch Manager harian)
 
-### 7. Fix Branch-level Filtered Deck ✅ RESOLVED
-- Issue ILIKE timeout sudah fixed (Hash Join LOWER=LOWER, index idx_store_branch)
-- 6.5s query time normal untuk 1.5M rows — bukan bug
-
-### 8. PPT "How OpenClaw Works" — Architecture Explainer for Presentation
+### 4. PPT "How OpenClaw Works" — Architecture Explainer for Presentation
 - **Requested by:** Wayan (17:45 WIB, 2026-02-17)
 - **Purpose:** Menjelaskan cara kerja Iris / OpenClaw ke audiences internal
 - **Content outline:**
@@ -115,21 +95,21 @@
 - **Who:** Iris build, Wayan configure/review
 - **Timeline:** TBD (belum urgent)
 
-### X. Channel Split Analysis Query Pattern
+### 5. Channel Split Analysis Query Pattern
 - **Goal:** Clean separation: DDD=retail, MBB=online/marketplace, UBB=wholesale
 - **Use case:** Channel overview deck for CEO/GM, BusDev
 - **Action:** Test entity-based channel split query, document pattern in SKILL.md
 - **Who:** Iris
 - **Timeline:** TBD (lower priority until Finance data available)
 
-### 9. Finance Role Data — COGS / Gross Margin from Accurate
+### 6. Finance Role Data — COGS / Gross Margin from Accurate
 - **Blocker:** No COGS/margin data in DB — Finance deck (Contribution Margin) can't be built yet
 - **Action:** Coordinate with Wayan when Accurate margin data becomes available
 - **Impact:** Unlocks Finance role deck + proper profitability analysis
 - **Who:** Wayan (data source) + Iris (implementation)
 - **Timeline:** TBD (data dependency)
 
-### 5. Tim SI Coordination — SO Level 1 Manual Input
+### 7. Tim SI Coordination — SO Level 1 Manual Input
 - **Task:** Coordinate dengan Tim SI soal kolom "fisik" di SO Level 1 AppSheet
 - **Context:** Manual entry via AppSheet, bukan automated
 - **Action items:**
@@ -140,7 +120,7 @@
 - **Who:** Iris coordinate with Wayan, then reach out to Tim SI PIC
 - **Timeline:** TBD (coordinate with Wayan)
 
-### 6. Install PicoClaw di VPS — SPG Agent
+### 8. Install PicoClaw di VPS — SPG Agent
 - **Purpose:** Bikin lightweight agent di VPS untuk follow-up SPG (Stock Opname + Product Knowledge)
 - **Why PicoClaw:** Enteng, VPS gak ngelag (8GB RAM, 2 CPU)
 - **Use case:**
@@ -156,7 +136,7 @@
 - **Priority:** Medium
 - **Timeline:** This month
 
-### 7. Skill Graph (replace Skill.md)
+### 9. Skill Graph (replace Skill.md)
 - **Purpose:** Explore skill graph sebagai pengganti flat SKILL.md — more structured, interconnected
 - **Steps:**
   - [ ] Research skill graph format/tools
@@ -165,7 +145,7 @@
 - **Who:** Iris + Wayan
 - **Timeline:** This month
 
-### 8. `/done` Command in OpenCode/Claude Code
+### 10. `/done` Command in OpenCode/Claude Code
 - **Purpose:** Command `/done` yang auto-summarize session dan save ke Obsidian
 - **Steps:**
   - [ ] Build custom command/plugin for OpenCode + Claude Code
@@ -174,7 +154,7 @@
 - **Who:** Daedalus (build) + Wayan (review)
 - **Timeline:** This month
 
-### 9. Setup Obsidian di Mac Mini
+### 11. Setup Obsidian di Mac Mini
 - **Purpose:** Knowledge base / second brain untuk Zuma + personal
 - **Steps:**
   - [ ] Install Obsidian di Mac mini
@@ -184,7 +164,7 @@
 - **Who:** Wayan (install) + Iris (setup vault)
 - **Timeline:** This month
 
-### 10. Bandingin PicoClaw vs Nanobot
+### 12. Bandingin PicoClaw vs Nanobot
 - **Purpose:** Compare lightweight agent frameworks buat VPS deployment
 - **Steps:**
   - [ ] Research Nanobot (GitHub)
@@ -193,16 +173,7 @@
 - **Who:** Hermes (research) + Wayan (decide)
 - **Timeline:** This month
 
-### 11. Explore Pinchtab — Browser Control for AI Agents
-- **Purpose:** Browser control tool for AI agents (GitHub repo)
-- **Steps:**
-  - [ ] Hermes riset repo (in progress)
-  - [ ] Evaluate: cocok buat Iris/OpenClaw atau gak
-  - [ ] Setup kalau worth it
-- **Who:** Iris + Wayan
-- **Timeline:** This month
-
-### 11. Official WhatsApp API Setup
+### 13. Official WhatsApp API Setup
 - **Purpose:** Migrate Iris to official WhatsApp Business API (dedicated number)
 - **Current:** Using personal WhatsApp (relay-based)
 - **Target:** Official API for reliability, scalability, business features
