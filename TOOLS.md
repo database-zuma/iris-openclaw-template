@@ -51,7 +51,28 @@ Load dengan `source .env` atau `python-dotenv`.
 - Key: `fc-255b25fa2e70444987cb8570dbbc70b1`
 - Account: database-zuma
 - Docs: https://www.firecrawl.dev/
-- Use case: Web scraping, extracting structured data from websites
+- Use case: Web scraping, JS-rendered pages (XXI, TIX ID, dll yang anti-scraping)
+
+### Browser & Screenshot Capabilities
+
+**Screenshot:**
+- `browser(action=screenshot, profile=openclaw)` → save ke `~/.openclaw/media/browser/`
+- Kirim ke user via `message(action=send, filePath=...)` langsung di WhatsApp
+- Full page: `fullPage=true` | Specific element: pakai `selector`
+- Use case: QA dashboard, preview deploy, debug visual, bukti ke user
+
+**Browser Automation:**
+- `browser(action=open/snapshot/act, profile=openclaw)` → headless browser
+- Bisa navigate, click, type, scroll, wait
+- **Limitasi:** Anti-bot sites (XXI, dll) gak load content → pakai Firecrawl instead
+
+**Firecrawl (JS-rendered scraping):**
+- API: `https://api.firecrawl.dev/v1/scrape`
+- Key: `fc-255b25fa2e70444987cb8570dbbc70b1`
+- Bisa render JS, bypass anti-scraping → dapat full content
+- Use case: XXI jadwal, TIX ID, atau site manapun yang butuh JS rendering
+
+**Priority:** Firecrawl > browser openclaw > web_fetch (untuk JS-heavy sites)
 
 ### Output File Locations
 

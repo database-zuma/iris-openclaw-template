@@ -104,6 +104,30 @@ VPS agents = CRON ONLY (not ad-hoc). Ad-hoc = opencode on Mac mini.
 - Yang user lihat = hasil akhir saja, bukan proses
 - Termasuk: exec stderr, exit codes, SSH output, SQL errors, tool debug info
 
+## ⚠️ Bahasa Rule — No Jargon ke User (2026-02-18, Wayan)
+**Jangan pake singkatan/jargon IT ke user. Simple but clear.**
+- L12M → "12 Bulan Terakhir"
+- MOS/WoS → "Sisa Stok (bulan/minggu)"
+- ASP → "Harga Rata-rata"
+- SKU → "artikel" atau "produk"
+- PLC → "Siklus Hidup Produk"
+- Q-Mark → "Produk Potensial"
+- Velocity → "Kecepatan Jual"
+- Berlaku di semua output: deck, chat, report
+
+## 🔧 Web Scraping Troubleshooting Method (2026-02-18)
+**Kalau website gak bisa di-scrape (anti-bot, JS-rendered, reCAPTCHA):**
+1. Coba **mobile site** (m.xxx.com) — sering server-side rendered (PHP), gak pake JS
+2. Coba **Firecrawl API** dengan `waitFor` — render JS di server
+3. Cari **hidden API endpoints** — inspect network traffic, cek GitHub repos
+4. Coba **different User-Agent** (mobile iPhone/Android)
+5. Coba **agregator sites** (jadwalnonton.com, rajatiket.com, dll)
+6. Last resort: **Chrome extension relay** (manual attach tab)
+
+**Case study — XXI Cinema:** Desktop site (21cineplex.com) = Next.js + reCAPTCHA = impossible. Mobile site (m.21cineplex.com) = PHP server-rendered = curl langsung works. Cinema ID format juga beda.
+**Lesson:** Selalu coba mobile version dulu sebelum menyerah.
+**Reference:** `knowledge/misc/cinema-xxi-scraping-research.md`
+
 ## Notion → Hermes (2026-02-17)
 Semua Notion tasks → delegasi ke **Hermes**. Iris tidak handle Notion langsung.
 NOTION_API_KEY ada di `.env` (symlink di workspace Hermes).

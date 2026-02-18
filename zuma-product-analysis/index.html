@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuma Portfolio Strategy — BCG & Siklus Hidup Produk Analysis 12 Bulan Terakhir (Mar 2025 – Feb 2026)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: #1a1a1a; padding: 2rem; }
+        .slide { background: #f9f9f9; border-radius: 12px; padding: 3rem; margin-bottom: 1.5rem; min-height: 580px; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .slide-teal { background: #002A3A; color: white; }
+        .slide-dark { background: #111827; color: white; }
+        .gradient-blob { position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: linear-gradient(135deg, #00E273 0%, rgba(0,226,115,0.1) 100%); border-radius: 50%; filter: blur(80px); z-index: 0; }
+        .content { position: relative; z-index: 1; }
+        .slide-label { position: absolute; top: 1.5rem; right: 2rem; font-size: 0.8rem; font-weight: 600; color: #999; }
+        .slide-teal .slide-label, .slide-dark .slide-label { color: rgba(255,255,255,0.4); }
+        .badge-green { background: #dcfce7; color: #16a34a; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .badge-red { background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .badge-amber { background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .badge-blue { background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .grow { color: #16a34a; font-weight: 700; }
+        .decline { color: #dc2626; font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #002A3A; color: white; padding: 0.6rem 0.875rem; text-align: left; font-size: 0.75rem; }
+        td { padding: 0.55rem 0.875rem; border-bottom: 1px solid #e5e7eb; font-size: 0.75rem; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        .ach-green { color: #16a34a; font-weight: 700; }
+        .ach-amber { color: #d97706; font-weight: 700; }
+        .ach-red { color: #dc2626; font-weight: 700; }
+        .ff-bar { height: 6px; border-radius: 3px; background: #e5e7eb; }
+        .ff-fill { height: 100%; border-radius: 3px; }
+        .footnote { font-size: 0.7rem; color: #9ca3af; margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb; }
+        .kpi-card { background: white; border-radius: 10px; padding: 1.25rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .kpi-label { font-size: 0.7rem; font-weight: 700; color: #6b7280; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.25rem; }
+        .kpi-value { font-size: 1.9rem; font-weight: 900; color: #111827; line-height: 1.1; }
+
+        /* BCG Matrix */
+        .bcg-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.5rem; }
+        .bcg-quadrant { border-radius: 8px; padding: 1rem 1.25rem; min-height: 160px; }
+
+        @media print {
+            @page { size: A4 landscape; margin: 0; }
+            html, body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .slide { page-break-after: always; break-after: page; border-radius: 0 !important; box-shadow: none !important; margin: 0 !important; padding: 2rem 2.5rem !important; min-height: 0 !important; height: 190mm !important; overflow: hidden !important; box-sizing: border-box; }
+            .slide:last-child { page-break-after: avoid; break-after: avoid; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .slide-teal { background: #002A3A !important; }
+            .slide-dark { background: #111827 !important; }
+            .gradient-blob { display: none !important; }
+            #print-btn { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="print-btn" style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:999;">
+    <button onclick="window.print()" style="background:#00E273; color:#002A3A; border:none; padding:0.6rem 1.5rem; border-radius:6px; font-weight:700; font-size:0.875rem; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3);">🖨️ Print / Save PDF (Landscape A4)</button>
+</div>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide slide-teal" style="min-height:480px;">
+    <div class="gradient-blob"></div>
+    <div class="content" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+            <div style="display:inline-block; background:#00E273; color:#002A3A; font-size:0.7rem; font-weight:700; padding:4px 12px; border-radius:4px; letter-spacing:0.08em; margin-bottom:1.5rem;">EXECUTIVE SUMMARY — PRODUCT</div>
+            <h1 style="font-size:3.2rem; font-weight:900; line-height:1.1; margin-bottom:0.75rem;">
+                Zuma Portfolio<br>
+                <span style="color:#00E273;">Strategy</span>
+            </h1>
+            <p style="font-size:1.1rem; color:rgba(255,255,255,0.7); max-width:520px; line-height:1.6;">
+                BCG Matrix — Peta Performa Produk · Siklus Hidup Produk · Top Sellers vs Slow Movers<br>
+                Stock Health · Tier Performance · 12 Bulan Terakhir Mar 2025 – Feb 2026
+            </p>
+        </div>
+        <div style="display:flex; gap:3rem; margin-top:2rem;">
+            <div>
+                <div style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">TOTAL SERIES AKTIF</div>
+                <div style="font-size:2rem; font-weight:900; color:#00E273;">25+</div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">series dengan penjualan 12 Bulan Terakhir</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">STARS (BCG v2)</div>
+                <div style="font-size:2rem; font-weight:900; color:white;">21+</div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">BLACKSERIES, Metalic, ONYX, Classic, Stripe…</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">PERINGATAN STOK KRITIS</div>
+                <div style="font-size:2rem; font-weight:900; color:#f87171;">3</div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">Luca 15 bln · Luna 16 bln · Puffy 12 bln stok</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">GRADUATED TO STAR</div>
+                <div style="font-size:2rem; font-weight:900; color:#fbbf24;">4+</div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">Merci, Zorro, WBB, Wedges → ⭐ Stars!</div>
+            </div>
+        </div>
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.15); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.5);">Data source: OpenClaw OPS DB · core.sales_with_product · core.stock_with_product</div>
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.5);">Last updated: 18 Feb 2026</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: PORTFOLIO OVERVIEW -->
+<div class="slide">
+    <div class="slide-label">02 / 11</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Portfolio Overview — Zuma Nasional</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.5rem;">artikel distribution · Gender & Tier split · Revenue contribution 12 Bulan Terakhir (Mar 2025 – Feb 2026)</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+        <!-- Left: Gender breakdown -->
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">👟 VOLUME PER GENDER (12 Bulan Terakhir Mar 2025 – Feb 2026)</div>
+            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1.25rem;">
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:3px;">
+                        <span style="font-weight:600;">MEN</span>
+                        <span style="font-weight:700;">292.340 pairs · Rp 34,71B</span>
+                    </div>
+                    <div class="ff-bar" style="height:14px;"><div class="ff-fill" style="width:43%; background:#002A3A;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:3px;">
+                        <span style="font-weight:600;">LADIES</span>
+                        <span style="font-weight:700;">191.779 pairs · Rp 26,29B</span>
+                    </div>
+                    <div class="ff-bar" style="height:14px;"><div class="ff-fill" style="width:28%; background:#ec4899;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:3px;">
+                        <span style="font-weight:600;">BABY</span>
+                        <span style="font-weight:700;">135.020 pairs · Rp 19,03B</span>
+                    </div>
+                    <div class="ff-bar" style="height:14px;"><div class="ff-fill" style="width:20%; background:#f59e0b;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:3px;">
+                        <span style="font-weight:600;">BOYS</span>
+                        <span style="font-weight:700;">33.860 pairs · Rp 4,31B</span>
+                    </div>
+                    <div class="ff-bar" style="height:14px;"><div class="ff-fill" style="width:5%; background:#6366f1;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:3px;">
+                        <span style="font-weight:600;">GIRLS</span>
+                        <span style="font-weight:700;">22.570 pairs · Rp 2,61B</span>
+                    </div>
+                    <div class="ff-bar" style="height:14px;"><div class="ff-fill" style="width:3%; background:#10b981;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:3px;">
+                        <span style="font-weight:600;">JUNIOR + KIDS</span>
+                        <span style="font-weight:700;">9.423 pairs · Rp 757M</span>
+                    </div>
+                    <div class="ff-bar" style="height:14px;"><div class="ff-fill" style="width:1%; background:#a78bfa;"></div></div>
+                </div>
+            </div>
+
+            <!-- Tier breakdown -->
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem; margin-top:0.25rem;">🏷️ REVENUE PER TIER (ALL GENDERS)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tier</th>
+                        <th style="text-align:right;">artikel</th>
+                        <th style="text-align:right;">Volume</th>
+                        <th style="text-align:right;">Revenue</th>
+                        <th style="text-align:center;">Share</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tier 1</strong> <span style="font-size:0.65rem; color:#9ca3af;">Entry</span></td>
+                        <td style="text-align:right;">52</td>
+                        <td style="text-align:right;">294.444</td>
+                        <td style="text-align:right; font-weight:700;">Rp 32,22B</td>
+                        <td style="text-align:center;" class="ach-green">36.7%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tier 2</strong> <span style="font-size:0.65rem; color:#9ca3af;">Mid</span></td>
+                        <td style="text-align:right;">56</td>
+                        <td style="text-align:right;">171.042</td>
+                        <td style="text-align:right; font-weight:700;">Rp 22,43B</td>
+                        <td style="text-align:center;" class="ach-amber">25.6%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tier 3</strong> <span style="font-size:0.65rem; color:#9ca3af;">Premium</span></td>
+                        <td style="text-align:right;">75</td>
+                        <td style="text-align:right;">130.046</td>
+                        <td style="text-align:right; font-weight:700;">Rp 21,04B</td>
+                        <td style="text-align:center;" class="ach-amber">24.0%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tier 4</strong> <span style="font-size:0.65rem; color:#9ca3af;">High</span></td>
+                        <td style="text-align:right;">150</td>
+                        <td style="text-align:right;">61.611</td>
+                        <td style="text-align:right; font-weight:700;">Rp 8,14B</td>
+                        <td style="text-align:center;" class="ach-amber">9.3%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tier 5</strong> <span style="font-size:0.65rem; color:#9ca3af;">Ultra</span></td>
+                        <td style="text-align:right;">176</td>
+                        <td style="text-align:right;">2.753</td>
+                        <td style="text-align:right;">Rp 123M</td>
+                        <td style="text-align:center; color:#9ca3af;">0.1%</td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td><strong>Tier 8</strong> <span style="font-size:0.65rem; color:#9ca3af;">Special</span></td>
+                        <td style="text-align:right;">37</td>
+                        <td style="text-align:right;">25.023</td>
+                        <td style="text-align:right; font-weight:700;">Rp 3,75B</td>
+                        <td style="text-align:center;" class="ach-amber">4.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Right: Insights -->
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">💡 PORTFOLIO INSIGHTS</div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background:#002A3A; border-radius:10px; padding:1.25rem; color:white;">
+                    <div style="font-size:0.7rem; font-weight:700; color:#00E273; margin-bottom:0.5rem;">🎯 TIER 1 DOMINATES</div>
+                    <div style="font-size:0.8rem; line-height:1.6; color:rgba(255,255,255,0.85);">
+                        Tier 1 menyumbang 36.7% revenue dengan hanya 52 artikel (aktif) — efisiensi tertinggi (Rp 619M/artikel). MEN & LADIES Tier 1 adalah backbone penjualan Zuma.
+                    </div>
+                </div>
+                <div style="background:#fffbeb; border-radius:10px; padding:1.25rem;">
+                    <div style="font-size:0.7rem; font-weight:700; color:#d97706; margin-bottom:0.5rem;">⚠️ TIER 4 & 5 — JUMLAH ARTIKEL BERLEBIH</div>
+                    <div style="font-size:0.8rem; line-height:1.6; color:#92400e;">
+                        326 artikel Tier 4+5 menghasilkan 9.4% revenue. Efisiensi per artikel (Rp 25M) vs Tier 1 (Rp 619M) = 25× lebih rendah. Kandidat pemangkasan artikel — free up planogram untuk Stars.
+                    </div>
+                </div>
+                <div style="background:#f0fdf4; border-radius:10px; padding:1.25rem;">
+                    <div style="font-size:0.7rem; font-weight:700; color:#16a34a; margin-bottom:0.5rem;">⭐ TIER 8 SPECIAL — SOLID PERFORMER</div>
+                    <div style="font-size:0.8rem; line-height:1.6; color:#15803d;">
+                        Tier 8 (37 artikel) menghasilkan 4.3% revenue = Rp 3.75B 12 Bulan Terakhir. Harga Rata-rata Rp 150K/pair. High-margin special collab — prioritaskan ketersediaan stok Tier 8.
+                    </div>
+                </div>
+                <div style="background:#dbeafe; border-radius:10px; padding:1.25rem;">
+                    <div style="font-size:0.7rem; font-weight:700; color:#2563eb; margin-bottom:0.5rem;">👶 BABY — HIGH VOLUME, STRONG REVENUE</div>
+                    <div style="font-size:0.8rem; line-height:1.6; color:#1d4ed8;">
+                        Baby memberi Rp 19,03B dari 135.020 pairs 12 Bulan Terakhir = avg Rp 141K/pair. CLASSIC BABY top seller. Velcro, Mickey, Disney Baby sangat kuat. Potensi premium baby line besar.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">artikel count = distinct kode_mix per tier/gender dengan penjualan 12 Bulan Terakhir. Revenue = total_amount 12 Bulan Terakhir (Mar 2025 – Feb 2026). Source: core.sales_with_product (is_intercompany=false).</div>
+</div>
+
+<!-- SLIDE 3: BCG MATRIX (v2 — Kecepatan Jual BCG) -->
+<div class="slide">
+    <div class="slide-label">03 / 11</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.25rem;">
+        <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin:0;">BCG Matrix v2 — Kecepatan Jual Framework</h2>
+        <div style="background:#fef3c7; border:1px solid #f59e0b; border-radius:6px; padding:4px 12px; font-size:0.68rem; font-weight:700; color:#92400e; white-space:nowrap;">⚡ NEW: Berbasis Kecepatan Jual · Feb 2026</div>
+    </div>
+    <p style="color:#6b7280; font-size:0.78rem; margin-bottom:0.75rem;"><strong>X-axis:</strong> Revenue Contribution % · <strong>Y-axis:</strong> Kecepatan Jual Ratio = avg_monthly_sales ÷ median portfolio (threshold 1.0) · X threshold: 0.5% · <span style="color:#f59e0b; font-weight:700;">[NEW]</span> = Tier 8 series</p>
+
+    <!-- Framework change note -->
+    <div style="background:#eff6ff; border:1px solid #3b82f6; border-radius:8px; padding:0.6rem 1rem; margin-bottom:0.75rem; font-size:0.72rem; color:#1d4ed8; display:flex; gap:1rem; align-items:center;">
+        <span style="font-weight:700; flex-shrink:0;">🔄 Framework Changed:</span>
+        <span>Old BCG pakai YoY growth → misleading untuk produk baru & stabil. New BCG pakai <strong>Kecepatan Jual vs median portfolio</strong> — fair untuk semua umur produk.</span>
+    </div>
+
+    <div style="position:relative; margin-bottom:0.5rem;">
+        <!-- Axis labels -->
+        <div style="display:flex; justify-content:center; font-size:0.68rem; font-weight:700; color:#6b7280; margin-bottom:0.35rem;">
+            ↑ KECEPATAN JUAL TINGGI (ratio &gt;1.0) &nbsp;=&nbsp; Jual lebih cepat dari median portfolio
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.4rem;">
+            <!-- Produk Potensial: Low Revenue + High Kecepatan Jual (top-left) -->
+            <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border:2px solid #16a34a; border-radius:10px; padding:1rem; min-height:155px;">
+                <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.5rem;">
+                    <span style="font-size:1.2rem;">❓</span>
+                    <div>
+                        <div style="font-size:0.75rem; font-weight:900; color:#15803d;">QUESTION MARKS</div>
+                        <div style="font-size:0.6rem; color:#16a34a;">Low Rev (&lt;0.5%) · High Kecepatan Jual · Scale up candidate</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.3rem; font-size:0.68rem;">
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">LADIES CLASSICEARTH</span>
+                        <span style="color:#374151;">Kecepatan Jual 0.58 · 0.43%</span>
+                    </div>
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">LADIES KIM</span>
+                        <span style="color:#374151;">Kecepatan Jual 1.21 · 0.19%</span>
+                    </div>
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">MEN CLASSICEARTH</span>
+                        <span style="color:#374151;">Kecepatan Jual 1.10 · 0.20%</span>
+                    </div>
+                    <div style="font-size:0.62rem; color:#6b7280; margin-top:0.2rem;">+ minor series (Minnie, Velcro Girls, Lotso…)</div>
+                </div>
+            </div>
+            <!-- Stars: High Revenue + High Kecepatan Jual (top-right) -->
+            <div style="background: linear-gradient(135deg, #fef9c3, #fde68a); border:2px solid #f59e0b; border-radius:10px; padding:1rem; min-height:155px;">
+                <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.5rem;">
+                    <span style="font-size:1.2rem;">⭐</span>
+                    <div>
+                        <div style="font-size:0.75rem; font-weight:900; color:#92400e;">STARS</div>
+                        <div style="font-size:0.6rem; color:#b45309;">High Rev (≥0.5%) · High Kecepatan Jual · Invest aggressively</div>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.25rem; font-size:0.65rem;">
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">MEN STRIPE</span> <span style="background:#fef3c7; font-size:0.58rem; padding:0 4px; border-radius:3px; color:#92400e;">[NEW]</span> <span style="color:#16a34a;">Kecepatan Jual 15.3</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">MEN BLACKSERIES</span> <span style="color:#16a34a;">Kecepatan Jual 9.1</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">LADIES CLASSIC</span> <span style="color:#16a34a;">Kecepatan Jual 8.6</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">MEN CLASSIC</span> <span style="color:#16a34a;">Kecepatan Jual 7.9</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">CLASSIC METALIC</span> <span style="color:#16a34a;">Kecepatan Jual 7.3</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">LADIES ELSA</span> <span style="color:#16a34a;">Kecepatan Jual 3.7</span> <span style="font-size:0.6rem; color:#f59e0b;">↑</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">BABY VELCRO</span> <span style="color:#16a34a;">Kecepatan Jual 3.3</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700;">MEN DALLAS</span> <span style="color:#16a34a;">Kecepatan Jual 2.7</span> <span style="font-size:0.6rem; color:#f59e0b;">↑</span></div>
+                    <div style="background:#fff7cd; border-radius:5px; padding:0.25rem 0.5rem; border:1px solid #fbbf24;"><span style="font-weight:700;">LADIES MERCI</span> <span style="background:#fef3c7; font-size:0.58rem; padding:0 4px; border-radius:3px; color:#92400e;">[NEW]</span> <span style="color:#16a34a;">Kecepatan Jual 1.5</span></div>
+                    <div style="background:#fff7cd; border-radius:5px; padding:0.25rem 0.5rem; border:1px solid #fbbf24;"><span style="font-weight:700;">MEN ZORRO</span> <span style="background:#fef3c7; font-size:0.58rem; padding:0 4px; border-radius:3px; color:#92400e;">[NEW]</span> <span style="color:#16a34a;">Kecepatan Jual 1.7</span></div>
+                    <div style="background:#fff7cd; border-radius:5px; padding:0.25rem 0.5rem; border:1px solid #fbbf24;"><span style="font-weight:700;">LADIES WEDGES</span> <span style="color:#16a34a;">Kecepatan Jual 2.2</span> <span style="font-size:0.6rem; color:#f59e0b;">↑</span></div>
+                    <div style="background:#fff7cd; border-radius:5px; padding:0.25rem 0.5rem; border:1px solid #fbbf24;"><span style="font-weight:700;">BABY WBB</span> <span style="color:#16a34a;">Kecepatan Jual 1.8</span> <span style="font-size:0.6rem; color:#f59e0b;">↑</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700; color:#dc6b19;">LUCA</span> <span style="color:#16a34a;">Kecepatan Jual 1.1 ⚠️Stok Berlebih</span></div>
+                    <div style="background:white; border-radius:5px; padding:0.25rem 0.5rem;"><span style="font-weight:700; color:#dc6b19;">LUNA</span> <span style="color:#16a34a;">Kecepatan Jual 1.1 ⚠️Stok Berlebih</span></div>
+                </div>
+                <div style="font-size:0.6rem; color:#b45309; margin-top:0.3rem; border-top:1px solid rgba(0,0,0,0.1); padding-top:0.25rem;">↑ = Ex-Dog/Produk Potensial yang graduate ke Star · [NEW] = Tier 8 series · ⚠️Stok Berlebih = high months-of-stock</div>
+            </div>
+        </div>
+        <!-- Kecepatan Jual threshold line -->
+        <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem;">
+            <div style="flex:1; border-top:2px dashed #d1d5db;"></div>
+            <span style="font-size:0.62rem; color:#9ca3af; white-space:nowrap; padding:0 0.5rem;">BATAS KECEPATAN JUAL = 1.0 (rata-rata portfolio)</span>
+            <div style="flex:1; border-top:2px dashed #d1d5db;"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+            <!-- Dogs: Low Revenue + Low Kecepatan Jual (bottom-left) -->
+            <div style="background: linear-gradient(135deg, #fff1f2, #fecdd3); border:2px solid #dc2626; border-radius:10px; padding:1rem; min-height:140px;">
+                <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.5rem;">
+                    <span style="font-size:1.2rem;">🐕</span>
+                    <div>
+                        <div style="font-size:0.75rem; font-weight:900; color:#dc2626;">DOGS</div>
+                        <div style="font-size:0.6rem; color:#b91c1c;">Low Rev · Low Kecepatan Jual · Review &amp; prune</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.3rem; font-size:0.68rem;">
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">VELCRO GIRLS</span><span class="decline">Kecepatan Jual 0.33</span>
+                    </div>
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">STITCH Boys/Girls</span><span class="decline">Kecepatan Jual 0.17</span>
+                    </div>
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">MINNIE BABY</span><span class="decline">Kecepatan Jual 0.37</span>
+                    </div>
+                    <div style="background:#ffe4e6; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between; border:1px solid #fca5a5;">
+                        <span style="font-weight:700; color:#7f1d1d;">OXFORD [NEW] ⚠️</span><span class="decline">Kecepatan Jual 0.14 · Sisa Stok 128 bln!</span>
+                    </div>
+                    <div style="background:#ffe4e6; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between; border:1px solid #fca5a5;">
+                        <span style="font-weight:700; color:#7f1d1d;">SUMMER [NEW] ⚠️</span><span class="decline">Kecepatan Jual 0.10 · Sisa Stok 97–120 bln!</span>
+                    </div>
+                    <div style="font-size:0.62rem; color:#6b7280; margin-top:0.2rem;">+ Iris Ladies, Lotso, ClassicEarth, Toy Story Boys, Stitch Boys/Girls…</div>
+                </div>
+            </div>
+            <!-- Cash Cows: High Revenue + Low Kecepatan Jual (bottom-right) -->
+            <div style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border:2px solid #3b82f6; border-radius:10px; padding:1rem; min-height:140px;">
+                <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.5rem;">
+                    <span style="font-size:1.2rem;">🐄</span>
+                    <div>
+                        <div style="font-size:0.75rem; font-weight:900; color:#1d4ed8;">CASH COWS</div>
+                        <div style="font-size:0.6rem; color:#2563eb;">High Rev (≥0.5%) · Low Kecepatan Jual · Protect &amp; optimize</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.3rem; font-size:0.68rem;">
+                    <div style="background:#dbeafe; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between; align-items:center; border:1px solid #93c5fd;">
+                        <span style="font-weight:700;">MEN AIRMOVE ↑</span>
+                        <span style="color:#1d4ed8;">Kecepatan Jual 0.91 · 2.40% rev · Sisa Stok 6 bulan</span>
+                    </div>
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">BOYS VELCRO</span>
+                        <span style="color:#1d4ed8;">Kecepatan Jual 0.73 · 1.05% rev</span>
+                    </div>
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">BABY BATMAN</span>
+                        <span style="color:#1d4ed8;">Kecepatan Jual 0.70 · 0.75% rev</span>
+                    </div>
+                    <div style="background:white; border-radius:5px; padding:0.3rem 0.6rem; display:flex; justify-content:space-between;">
+                        <span style="font-weight:600;">BABY DISNEY Boys</span>
+                        <span style="color:#1d4ed8;">Kecepatan Jual 0.60 · 0.54% rev</span>
+                    </div>
+                    <div style="font-size:0.62rem; color:#1d4ed8; margin-top:0.2rem; font-weight:600;">↑ AIRMOVE: Cash Cow (Kecepatan Jual 0.91)</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex; justify-content:center; font-size:0.68rem; font-weight:700; color:#6b7280; margin-top:0.35rem;">
+            LOW REVENUE SHARE ◄─────── X-axis: Revenue Contribution % ───────► HIGH REVENUE SHARE (threshold 0.5%)
+        </div>
+    </div>
+    <div class="footnote">BCG v2 (Kecepatan Jual) · X = avg_monthly_revenue share dari total portfolio. Y = avg_monthly_sales ÷ median(avg_monthly_sales portfolio). Threshold X: 0.5%, Y: 1.0. avg_monthly = avg_last_3_months dari mart.sku_portfolio (Des–Jan 2026). [NEW] = Tier 8. ⚠️ LUCA (Sisa Stok 15 bulan) &amp; LUNA (Sisa Stok 16 bulan) = Stars (Kecepatan Jual tinggi) tapi stok kritis berlebih — lihat slide 4B.</div>
+</div>
+
+<!-- SLIDE 4: DOGS & PERINGATAN STOK KRITIS (updated for BCG v2) -->
+<div class="slide">
+    <div class="slide-label">04 / 11</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.25rem;">
+        <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin:0;">🐕 Dogs &amp; Stok Kritis Alert — BCG v2</h2>
+        <div style="background:#fef3c7; border:1px solid #f59e0b; border-radius:6px; padding:4px 10px; font-size:0.65rem; font-weight:700; color:#92400e;">Updated: Kecepatan Jual Framework</div>
+    </div>
+    <p style="color:#6b7280; font-size:0.78rem; margin-bottom:1rem;">BCG v2 reclassification · Beberapa ex-Dogs kini Stars, tapi Sisa Stok (bulan) tetap jadi concern · 3 action buckets tetap relevan</p>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;">
+        <!-- Real Dogs (Low Rev + Low Kecepatan Jual) -->
+        <div style="background:#fee2e2; border:2px solid #dc2626; border-radius:10px; padding:1.25rem;">
+            <div style="font-size:0.7rem; font-weight:700; color:#dc2626; letter-spacing:0.05em; margin-bottom:0.75rem;">🐕 TRUE DOGS (BCG v2)</div>
+            <div style="font-size:0.72rem; color:#991b1b; margin-bottom:0.75rem; line-height:1.4;">Low revenue share &lt;0.5% AND Kecepatan Jual &lt;1.0. Genuine laggards — prune or exit.</div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">🐕 VELCRO GIRLS</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 0.33 · 0.47% rev · Stock: 1.668</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">🐕 STITCH Boys/Girls</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 0.17 · 0.30% rev · Stock: 1.889</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">🐕 MINNIE BABY</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 0.37 · 0.31% rev · Stock: 1.185</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">🐕 IRIS LADIES</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 0.12 · 0.15% rev · Stock: 952</div>
+                </div>
+                <div style="background:#7f1d1d; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:white;">💀 OXFORD BABY [NEW] ⚠️</div>
+                    <div style="font-size:0.68rem; color:#fca5a5;">Kecepatan Jual 0.14 · Sisa Stok 128 bulan! · Stock: 10.408</div>
+                </div>
+                <div style="background:#7f1d1d; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:white;">💀 SUMMER Men/Ladies [NEW] ⚠️</div>
+                    <div style="font-size:0.68rem; color:#fca5a5;">Kecepatan Jual 0.10 · Sisa Stok 97–120 bulan! · Stock: 12.377</div>
+                </div>
+                <div style="background:#7f1d1d; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:white;">💀 SPIDER-MAN Boys [NEW] ⚠️</div>
+                    <div style="font-size:0.68rem; color:#fca5a5;">Kecepatan Jual 0.02 · Sisa Stok 487 bulan! · Stock: 5.193</div>
+                </div>
+            </div>
+            <div style="background:#dc2626; color:white; border-radius:6px; padding:0.5rem 0.75rem; margin-top:0.75rem; font-size:0.7rem;">Stop reorder. Clearance immediate for Oxford/Summer/Spider-Man — combined 28K units!</div>
+        </div>
+
+        <!-- Stars dengan Stok Berlebih (need clearance despite good Kecepatan Jual) -->
+        <div style="background:#fff7ed; border:2px solid #f59e0b; border-radius:10px; padding:1.25rem;">
+            <div style="font-size:0.7rem; font-weight:700; color:#d97706; letter-spacing:0.05em; margin-bottom:0.75rem;">⭐⚠️ STARS — PERINGATAN STOK KRITIS</div>
+            <div style="font-size:0.72rem; color:#92400e; margin-bottom:0.75rem; line-height:1.4;">Good Kecepatan Jual (Star by BCG v2), TAPI overstock serius. Jual cepat tapi stok terlalu banyak. Perlu clearance / stop reorder.</div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border:1px solid #fed7aa;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#c2410c;">⭐ MEN LUCA (NEW: Star ↑)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 1.12 · rev 2.86% · Sisa Stok (bulan) <strong style="color:#dc2626;">15.1 bulan</strong> · Stock: 10.115</div>
+                    <div style="font-size:0.65rem; color:#dc2626; font-weight:700;">⭐ Star by Kecepatan Jual · Sisa Stok 15 bulan = clearance priority</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border:1px solid #fed7aa;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#c2410c;">⭐ LADIES LUNA (NEW: Star ↑)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 1.09 · rev 2.77% · Sisa Stok (bulan) <strong style="color:#dc2626;">16.0 bulan</strong> · Stock: 10.522</div>
+                    <div style="font-size:0.65rem; color:#dc2626; font-weight:700;">⭐ Star by Kecepatan Jual · Sisa Stok 16 bulan = clearance priority</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border:1px solid #fed7aa;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#c2410c;">⭐ LADIES PUFFY [NEW]</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 1.67 · rev 2.17% · Sisa Stok (bulan) <strong style="color:#d97706;">12.3 bulan</strong> · Stock: 12.294</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#d97706;">⭐ BABY CLASSIC</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 3.45 · rev 2.85% · Sisa Stok 8.2 bulan · Stock: 17.021</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#d97706;">⭐ MEN ONYX</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 2.68 · rev 1.93% · Sisa Stok 7.1 bulan · Stock: 11.477</div>
+                </div>
+            </div>
+            <div style="background:#f59e0b; color:white; border-radius:6px; padding:0.5rem 0.75rem; margin-top:0.75rem; font-size:0.7rem;">Star tapi overstock → stop reorder sampai Sisa Stok (bulan) &lt;4 bulan. Luca+Luna: clearance agresif!</div>
+        </div>
+
+        <!-- Upgraded series (ex-Dogs now Stars) -->
+        <div style="background:#eff6ff; border:2px solid #3b82f6; border-radius:10px; padding:1.25rem;">
+            <div style="font-size:0.7rem; font-weight:700; color:#2563eb; letter-spacing:0.05em; margin-bottom:0.75rem;">⭐ EX-DOGS → STARS (BCG v2)</div>
+            <div style="font-size:0.72rem; color:#1d4ed8; margin-bottom:0.75rem; line-height:1.4;">Series ini Kecepatan Jual di atas portfolio median — terbukti masih jual dengan baik. Mislabeled Dogs oleh framework lama.</div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border-left:3px solid #16a34a;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a;">⭐ LADIES ELSA (↑ Dog → Star)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 3.71 · rev 4.83% · Sisa Stok 3.9 · Legitimate Star!</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border-left:3px solid #16a34a;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a;">⭐ MEN DALLAS (↑ Dog → Star)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 2.70 · rev 3.44% · Sisa Stok 4.4 · Healthy!</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border-left:3px solid #16a34a;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a;">⭐ LADIES FLO (↑ Dog → Star)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 2.18 · rev 2.67% · Sisa Stok 6.9</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border-left:3px solid #16a34a;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a;">⭐ MEN SLIDE (↑ Dog → Star)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 1.85 · rev 2.43% · Sisa Stok 6.1</div>
+                </div>
+                <div style="background:white; border-radius:6px; padding:0.5rem 0.75rem; border-left:3px solid #16a34a;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a;">⭐ BOYS CLASSIC (↑ Dog → Star)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 1.16 · rev 0.71% · Sisa Stok 5.3</div>
+                </div>
+                <div style="background:#dbeafe; border-radius:6px; padding:0.5rem 0.75rem; border-left:3px solid #f59e0b;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#1e40af;">🐄 MEN AIRMOVE (↑ Dog → Cash Cow)</div>
+                    <div style="font-size:0.68rem; color:#6b7280;">Kecepatan Jual 0.91 · rev 2.40% · Sisa Stok 6.0 · Below median but meaningful revenue</div>
+                </div>
+            </div>
+            <div style="background:#3b82f6; color:white; border-radius:6px; padding:0.5rem 0.75rem; margin-top:0.75rem; font-size:0.7rem;">Elsa, Dallas, Flo, Slide = resume normal ops. Airmove = Cash Cow strategy: optimize, no new reorder.</div>
+        </div>
+    </div>
+
+    <div style="background:#002A3A; border-radius:8px; padding:1rem 1.5rem; margin-top:1rem; color:white;">
+        <div style="font-size:0.78rem; line-height:1.6; color:rgba(255,255,255,0.85);">
+            💡 <strong style="color:#00E273;">BCG v2 Key Insight:</strong> Framework baru mengungkap bahwa banyak "ex-Dogs" (Elsa, Dallas, Flo, Slide) sebenarnya masih jual kencang — they were mislabeled Dogs by old BCG framework. <strong style="color:#fbbf24;">Real problem areas</strong> bukan quadrant BCG, tapi <strong style="color:#f87171;">stok berlebih</strong>: LUCA (15 bulan), LUNA (16 bulan), OXFORD (128 bulan!), SUMMER (97–120 bulan), SPIDER-MAN (487 bulan!). Priority action: clearance untuk series stok kritis.</div>
+    </div>
+    <div class="footnote">Stock data: core.stock_with_product latest snapshot. Puffy stock 12.604 = high but volume low → candidate harvest or clearance promo. Combined Airmove+Luca+Luna exit candidates stock: ~57.8K units.</div>
+</div>
+
+<!-- SLIDE 5: Siklus Hidup Produk ANALYSIS -->
+<div class="slide">
+    <div class="slide-label">05 / 11</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Product Life Cycle — Positioning Setiap Series</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.25rem;">Siklus Hidup Produk explains BCG v2 positioning. framework Kecepatan Jual reveals true lifecycle stage — banyak ex-Dogs kini Stars.</p>
+
+    <!-- Siklus Hidup Produk Timeline -->
+    <div style="position:relative; background:white; border-radius:10px; padding:1.5rem 1.5rem 1rem; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+        <!-- Phase labels top -->
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-bottom:0.75rem;">
+            <div style="text-align:center; font-size:0.7rem; font-weight:700; color:#6b7280; border-right:1px dashed #e5e7eb; padding-bottom:0.5rem;">
+                INTRODUCTION<br><span style="font-size:0.6rem; font-weight:400;">Low vol, learning</span>
+            </div>
+            <div style="text-align:center; font-size:0.7rem; font-weight:700; color:#16a34a; border-right:1px dashed #e5e7eb; padding-bottom:0.5rem;">
+                GROWTH<br><span style="font-size:0.6rem; font-weight:400;">Rising fast, invest</span>
+            </div>
+            <div style="text-align:center; font-size:0.7rem; font-weight:700; color:#2563eb; border-right:1px dashed #e5e7eb; padding-bottom:0.5rem;">
+                MATURITY<br><span style="font-size:0.6rem; font-weight:400;">Peak vol, stabilize</span>
+            </div>
+            <div style="text-align:center; font-size:0.7rem; font-weight:700; color:#dc2626; padding-bottom:0.5rem;">
+                DECLINE<br><span style="font-size:0.6rem; font-weight:400;">Shrinking, decide</span>
+            </div>
+        </div>
+
+        <!-- Curve SVG -->
+        <div style="text-align:center; margin-bottom:0.75rem;">
+            <svg width="100%" height="80" viewBox="0 0 600 80" style="max-width:600px;">
+                <path d="M 0 75 C 50 75, 100 70, 150 55 C 200 40, 250 10, 300 8 C 350 8, 380 8, 400 15 C 440 30, 480 55, 600 75" stroke="#00E273" stroke-width="3" fill="none"/>
+                <line x1="150" y1="0" x2="150" y2="80" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="300" y1="0" x2="300" y2="80" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="450" y1="0" x2="450" y2="80" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="4,4"/>
+            </svg>
+        </div>
+
+        <!-- Products in phases (BCG v2 framework Kecepatan Jual) -->
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid #e5e7eb; padding-top:0.75rem;">
+            <!-- Introduction / Early Stars -->
+            <div style="border-right:1px dashed #e5e7eb; padding-right:0.75rem;">
+                <div style="font-size:0.65rem; color:#6b7280; margin-bottom:0.4rem;">⭐ Rising Stars [NEW T8]</div>
+                <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">LADIES MERCI ↑</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">MEN ZORRO ↑</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">LADIES PUFFY ↑</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">BABY WBB</div>
+                    <div style="font-size:0.6rem; color:#b45309; margin-top:2px;">Produk Potensial→Star (Kecepatan Jual 1.5–1.8)</div>
+                </div>
+            </div>
+            <!-- Growth Stars -->
+            <div style="border-right:1px dashed #e5e7eb; padding:0 0.75rem;">
+                <div style="font-size:0.65rem; color:#6b7280; margin-bottom:0.4rem;">⭐ Growth Stars</div>
+                <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">MEN BLACKSERIES v9</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">LADIES METALIC v7.3</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">MEN ONYX v2.7</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">LADIES ELSA v3.7 ↑</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">MEN DALLAS v2.7 ↑</div>
+                    <div style="font-size:0.6rem; color:#b45309;">↑ = ex-Dog, now Star</div>
+                </div>
+            </div>
+            <!-- Mature Stars -->
+            <div style="border-right:1px dashed #e5e7eb; padding:0 0.75rem;">
+                <div style="font-size:0.65rem; color:#6b7280; margin-bottom:0.4rem;">⭐ Mature Stars + 🐄</div>
+                <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">MEN STRIPE [NEW] v15</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">MEN CLASSIC v7.9</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">LADIES CLASSIC v8.6</div>
+                    <div style="background:#fef9c3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#92400e;">BABY VELCRO v3.3</div>
+                    <div style="background:#dbeafe; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#1d4ed8;">AIRMOVE 🐄 v0.91</div>
+                </div>
+            </div>
+            <!-- Review / Stok Kritis -->
+            <div style="padding-left:0.75rem;">
+                <div style="font-size:0.65rem; color:#6b7280; margin-bottom:0.4rem;">⚠️ Stok Kritis + 🐕 Dogs</div>
+                <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                    <div style="background:#92400e; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:700; color:white;">LUCA ⭐ Sisa Stok 15 bulan!</div>
+                    <div style="background:#92400e; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:700; color:white;">LUNA ⭐ Sisa Stok 16 bulan!</div>
+                    <div style="background:#7f1d1d; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:700; color:white;">OXFORD 🐕 Sisa Stok 128 bulan!</div>
+                    <div style="background:#7f1d1d; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:700; color:white;">SUMMER 🐕 Sisa Stok 97–120!</div>
+                    <div style="background:#fecdd3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#dc2626;">VELCRO GIRLS 🐕</div>
+                    <div style="background:#fecdd3; border-radius:4px; padding:2px 8px; font-size:0.68rem; font-weight:600; color:#dc2626;">STITCH Boys/Girls 🐕</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="background:#002A3A; border-radius:8px; padding:1rem 1.5rem; color:white;">
+        <div style="font-size:0.8rem; line-height:1.6; color:rgba(255,255,255,0.85);">
+            💡 <strong style="color:#00E273;">Key Siklus Hidup Produk insight (BCG v2):</strong> Dengan framework Kecepatan Jual, Zuma portfolio jauh lebih sehat dari yang terlihat sebelumnya. Classic/Stripe bukan "Decline" — mereka <strong style="color:#00E273;">masih Star dengan Kecepatan Jual tinggi</strong>. Ex-Dogs (Elsa, Dallas, Flo, Slide) terbukti masih jual kencang. <strong style="color:#fbbf24;">Real concern = stok berlebih</strong>: Luca (15 bulan), Luna (16 bulan), Oxford/Summer (97–128 bulan!). Transition focus: Clearance stok kritis → release OTB → reinvest ke Rising Stars (Merci, Zorro).
+        </div>
+    </div>
+    <div class="footnote">Siklus Hidup Produk phase assignment (BCG v2) berdasarkan Kecepatan Jual ratio vs median portfolio. v = rasio Kecepatan Jual. [NEW] = Tier 8. ↑ = ex-Dog/Produk Potensial graduated. Source: mart.sku_portfolio avg_last_3_months Jan 2026.</div>
+</div>
+
+<!-- SLIDE 6: TOP SELLERS VS SLOW MOVERS -->
+<div class="slide">
+    <div class="slide-label">06 / 11</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Top Sellers vs Slow Movers</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.25rem;">Volume dan revenue 12 Bulan Terakhir (Mar 2025 – Feb 2026) · BCG v2 classifications (framework Kecepatan Jual)</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+        <!-- Top Sellers -->
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#16a34a; letter-spacing:0.05em; margin-bottom:0.75rem;">✅ TOP SELLERS — Prioritas Stok & Planogram</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Series</th>
+                        <th style="text-align:right;">Pairs</th>
+                        <th style="text-align:right;">Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background:#f0fdf4;">
+                        <td style="font-weight:900; color:#16a34a;">1</td>
+                        <td><strong>MEN STRIPE</strong></td>
+                        <td style="text-align:right;">107.123</td>
+                        <td style="text-align:right; font-weight:700;">Rp 10,21B</td>
+                    </tr>
+                    <tr style="background:#fef9c3;">
+                        <td style="font-weight:900; color:#92400e;">2</td>
+                        <td><strong>MEN BLACKSERIES ⭐</strong></td>
+                        <td style="text-align:right;">57.136</td>
+                        <td style="text-align:right; font-weight:700;">Rp 5,61B</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:900;">3</td>
+                        <td><strong>LADIES CLASSIC</strong></td>
+                        <td style="text-align:right;">54.827</td>
+                        <td style="text-align:right; font-weight:700;">Rp 5,50B</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:900;">4</td>
+                        <td><strong>MEN CLASSIC</strong></td>
+                        <td style="text-align:right;">49.941</td>
+                        <td style="text-align:right; font-weight:700;">Rp 4,89B</td>
+                    </tr>
+                    <tr style="background:#fef9c3;">
+                        <td style="font-weight:900; color:#92400e;">5</td>
+                        <td><strong>LADIES CLASSIC METALIC ⭐</strong></td>
+                        <td style="text-align:right;">41.328</td>
+                        <td style="text-align:right; font-weight:700;">Rp 4,20B</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:900;">6</td>
+                        <td>BABY CLASSIC</td>
+                        <td style="text-align:right;">28.345</td>
+                        <td style="text-align:right; font-weight:700;">Rp 3,02B</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:900;">7</td>
+                        <td>LADIES ELSA ⭐</td>
+                        <td style="text-align:right;">23.353</td>
+                        <td style="text-align:right; font-weight:700;">Rp 4,03B</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:900;">8</td>
+                        <td>BABY VELCRO</td>
+                        <td style="text-align:right;">23.164</td>
+                        <td style="text-align:right; font-weight:700;">Rp 4,01B</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="background:#fef9c3; border-radius:6px; padding:0.6rem 0.875rem; margin-top:0.75rem; font-size:0.72rem; color:#92400e;">
+                ⭐ <strong>Stars (BCG v2 — high Kecepatan Jual):</strong> BLACKSERIES, Metalic, Onyx, STRIPE, Classic, ELSA, DALLAS, FLO, SLIDE — prioritas utama stok. Jangan biarkan stockout.
+            </div>
+        </div>
+
+        <!-- Slow Movers / New Bets -->
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#dc2626; letter-spacing:0.05em; margin-bottom:0.75rem;">🐕 TRUE DOGS — Low Kecepatan Jual, low revenue · Review/exit</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Series</th>
+                        <th style="text-align:right;">Pairs</th>
+                        <th style="text-align:right;">Stock</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background:#fff5f5;">
+                        <td><strong>MEN SLIDE ⭐</strong></td>
+                        <td style="text-align:right;">14.538</td>
+                        <td style="text-align:right;">7.643</td>
+                        <td><span class="badge-amber">Stop Reorder</span></td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td><strong>LADIES ELSA ⭐</strong></td>
+                        <td style="text-align:right;">23.353</td>
+                        <td style="text-align:right;">10.258</td>
+                        <td><span class="badge-amber">Stop Reorder</span></td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td><strong>LADIES FLO ⭐</strong></td>
+                        <td style="text-align:right;">17.087</td>
+                        <td style="text-align:right;">9.836</td>
+                        <td><span class="badge-amber">Stop Reorder</span></td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td><strong>BOYS CLASSIC ⭐</strong></td>
+                        <td style="text-align:right;">12.745</td>
+                        <td style="text-align:right;">5.506</td>
+                        <td><span class="badge-amber">Stop Reorder</span></td>
+                    </tr>
+                    <tr style="background:#fffbeb;">
+                        <td><strong>LADIES PUFFY ⭐</strong></td>
+                        <td style="text-align:right;">12.402</td>
+                        <td style="text-align:right;">12.717</td>
+                        <td><span class="badge-amber">Clearance</span></td>
+                    </tr>
+                    <tr style="background:#fffbeb;">
+                        <td><strong>MEN DALLAS ⭐</strong></td>
+                        <td style="text-align:right;">17.495</td>
+                        <td style="text-align:right;">7.295</td>
+                        <td><span class="badge-green">Maintain</span></td>
+                    </tr>
+                    <tr style="background:#fef2f2; border-top:2px solid #dc2626;">
+                        <td><strong style="color:#7f1d1d;">MEN AIRMOVE 🐄⚠️</strong></td>
+                        <td style="text-align:right; font-weight:700;">3.858</td>
+                        <td style="text-align:right; color:#dc2626; font-weight:700;">3.287</td>
+                        <td><span class="badge-amber">Clearance</span></td>
+                    </tr>
+                    <tr style="background:#fef2f2;">
+                        <td><strong style="color:#7f1d1d;">MEN LUCA ⭐⚠️</strong></td>
+                        <td style="text-align:right; font-weight:700;">9.081</td>
+                        <td style="text-align:right; color:#dc2626; font-weight:700;">11.035</td>
+                        <td><span class="badge-red">Exit</span></td>
+                    </tr>
+                    <tr style="background:#fef2f2;">
+                        <td><strong style="color:#7f1d1d;">LADIES LUNA ⭐⚠️</strong></td>
+                        <td style="text-align:right; font-weight:700;">8.130</td>
+                        <td style="text-align:right; color:#dc2626; font-weight:700;">11.200</td>
+                        <td><span class="badge-red">Exit</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="background:#fef2f2; border-radius:6px; padding:0.4rem 0.875rem; margin-top:0.5rem; font-size:0.65rem; color:#7f1d1d; border:1px solid #fecaca;">
+                ⚠️ BCG v2 reclassification: LUCA, LUNA = Stars by Kecepatan Jual (1.1x) tapi Sisa Stok 63–72 minggu (12 Bulan Terakhir basis) = clearance priority. AIRMOVE = Cash Cow. ⭐ = Star tapi overstock. TRUE Dogs = Oxford, Summer, Velcro Girls (Kecepatan Jual &lt;0.5).
+            </div>
+
+            <div style="font-size:0.7rem; font-weight:700; color:#16a34a; letter-spacing:0.05em; margin-bottom:0.5rem; margin-top:1rem;">⭐ GRADUATED — Produk Potensial kini Stars (BCG v2) · 12 Bulan Terakhir</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Series</th>
+                        <th style="text-align:right;">12 Bulan Terakhir Pairs</th>
+                        <th style="text-align:right;">Stock</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background:#f0fdf4;">
+                        <td><strong>LADIES MERCI</strong></td>
+                        <td style="text-align:right;">3.291</td>
+                        <td style="text-align:right;">5.985</td>
+                        <td><span class="badge-green">Invest/Scale</span></td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td><strong>MEN ZORRO</strong></td>
+                        <td style="text-align:right;">10.437</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-green">Invest/Scale</span></td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td><strong>BABY WBB</strong></td>
+                        <td style="text-align:right;">11.481</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-green">Scale</span></td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td><strong>LADIES WEDGES</strong></td>
+                        <td style="text-align:right;">14.161</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-green">Scale</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="footnote">Stock = latest snapshot dari core.stock_with_product. Pairs = quantity sold 12 Bulan Terakhir (Mar 2025 – Feb 2026). ⭐ = BCG v2 Star (high Kecepatan Jual) tapi stok kritis candidates for clearance. Merci: 12 Bulan Terakhir mungkin understate Kecepatan Jual karena baru diluncurkan 2025.</div>
+</div>
+
+<!-- SLIDE 7: STOCK HEALTH -->
+<div class="slide">
+    <div class="slide-label">07 / 11</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Stock Health — Overstocked vs Understocked</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.25rem;">Analisis stok vs run-rate penjualan · Estimasi Sisa Stok (minggu) · Data: core.stock_with_product + sales</p>
+
+    <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:1.5rem;">
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">📦 Perbandingan Stok vs Laju Penjualan — Sisa Stok (minggu)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Series</th>
+                        <th style="text-align:right;">Stock</th>
+                        <th style="text-align:right;">Laju Mingguan (12 Bulan Terakhir)</th>
+                        <th style="text-align:right;">Sisa Stok (minggu)</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Overstocked Dogs -->
+                    <tr style="background:#fff5f5;">
+                        <td>LADIES PUFFY ⭐</td>
+                        <td style="text-align:right;">12.717</td>
+                        <td style="text-align:right;">238</td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">53.3 wk</td>
+                        <td><span class="badge-red">Overstock 🔴</span></td>
+                        <td style="font-size:0.65rem; color:#dc2626;">Clearance</td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td>LADIES ELSA ⭐</td>
+                        <td style="text-align:right;">10.258</td>
+                        <td style="text-align:right;">449</td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">22.8 wk</td>
+                        <td><span class="badge-red">Overstock 🔴</span></td>
+                        <td style="font-size:0.65rem; color:#dc2626;">Stop reorder</td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td>LADIES FLO ⭐</td>
+                        <td style="text-align:right;">9.836</td>
+                        <td style="text-align:right;">329</td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">29.9 wk</td>
+                        <td><span class="badge-red">Overstock 🔴</span></td>
+                        <td style="font-size:0.65rem; color:#dc2626;">Stop reorder</td>
+                    </tr>
+                    <tr style="background:#fef2f2; border:1px solid #fecaca;">
+                        <td><strong style="color:#7f1d1d;">LADIES LUNA ⭐⚠️</strong></td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">11.200</td>
+                        <td style="text-align:right;">156</td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">72 wk!</td>
+                        <td><span class="badge-red">Critical 🔴</span></td>
+                        <td style="font-size:0.65rem; color:#dc2626;">Exit Now</td>
+                    </tr>
+                    <tr style="background:#fef2f2;">
+                        <td><strong style="color:#7f1d1d;">MEN LUCA ⭐⚠️</strong></td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">11.035</td>
+                        <td style="text-align:right;">175</td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">63 wk!</td>
+                        <td><span class="badge-red">Critical 🔴</span></td>
+                        <td style="font-size:0.65rem; color:#dc2626;">Exit Now</td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td><strong style="color:#991b1b;">MEN AIRMOVE 🐄⚠️</strong></td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">3.287</td>
+                        <td style="text-align:right;">74</td>
+                        <td style="text-align:right; font-weight:700; color:#dc2626;">44.3 wk</td>
+                        <td><span class="badge-red">Overstock 🔴</span></td>
+                        <td style="font-size:0.65rem; color:#dc2626;">Clearance</td>
+                    </tr>
+                    <tr style="background:#fffbeb;">
+                        <td>LADIES CLASSIC ⭐</td>
+                        <td style="text-align:right;">16.701</td>
+                        <td style="text-align:right;">1.054</td>
+                        <td style="text-align:right; font-weight:700; color:#d97706;">15.8 wk</td>
+                        <td><span class="badge-amber">Target Zone</span></td>
+                        <td style="font-size:0.65rem; color:#d97706;">Monitor</td>
+                    </tr>
+                    <tr style="background:#fffbeb;">
+                        <td>MEN STRIPE ⭐</td>
+                        <td style="text-align:right;">15.562</td>
+                        <td style="text-align:right;">2.060</td>
+                        <td style="text-align:right; font-weight:700; color:#d97706;">7.6 wk</td>
+                        <td><span class="badge-amber">Low Stock</span></td>
+                        <td style="font-size:0.65rem; color:#d97706;">Reorder</td>
+                    </tr>
+                    <!-- Healthy -->
+                    <tr style="background:#f0fdf4;">
+                        <td>MEN BLACKSERIES ⭐</td>
+                        <td style="text-align:right;">14.216</td>
+                        <td style="text-align:right;">1.099</td>
+                        <td style="text-align:right; font-weight:700; color:#16a34a;">12.9 wk</td>
+                        <td><span class="badge-green">Healthy ✅</span></td>
+                        <td style="font-size:0.65rem; color:#16a34a;">Maintain</td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td>LADIES METALIC ⭐</td>
+                        <td style="text-align:right;">17.195</td>
+                        <td style="text-align:right;">795</td>
+                        <td style="text-align:right; font-weight:700; color:#16a34a;">21.6 wk</td>
+                        <td><span class="badge-green">Good ✅</span></td>
+                        <td style="font-size:0.65rem; color:#16a34a;">Maintain</td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td>MEN ONYX ⭐</td>
+                        <td style="text-align:right;">11.478</td>
+                        <td style="text-align:right;">269</td>
+                        <td style="text-align:right; font-weight:700; color:#16a34a;">42.7 wk</td>
+                        <td><span class="badge-green">Well Stocked</span></td>
+                        <td style="font-size:0.65rem; color:#16a34a;">No reorder</td>
+                    </tr>
+                    <!-- Low stock -->
+                    <tr style="background:#eff6ff;">
+                        <td>LADIES MERCI ⭐🆕</td>
+                        <td style="text-align:right;">5.985</td>
+                        <td style="text-align:right;">63</td>
+                        <td style="text-align:right; font-weight:700; color:#2563eb;">95 wk*</td>
+                        <td><span class="badge-blue">New Product</span></td>
+                        <td style="font-size:0.65rem; color:#2563eb;">Check Kecepatan Jual</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="font-size:0.65rem; color:#9ca3af; margin-top:0.5rem;">*LUNA = tidak masuk top 25 sellers, estimasi dari data partial. Sisa Stok (minggu) = Stock ÷ (Pairs sold 12 Bulan Terakhir / 52 weeks)</div>
+        </div>
+
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">🎯 STOCK HEALTH MATRIX</div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background:#fee2e2; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626; margin-bottom:0.4rem;">🔴 CRITICAL OVERSTOCK</div>
+                    <div style="font-size:0.72rem; color:#991b1b; line-height:1.5;">
+                        PUFFY (53wk), FLO (30wk), ELSA (23wk) + <strong>LUNA (72wk!), LUCA (63wk!), AIRMOVE (44wk)</strong> — combined ~57K+ units. LUNA/LUCA khususnya extreme overstock — Sisa Stok 63–72 minggu (target ideal: 8–16wk). ⭐ = Star by Kecepatan Jual tapi overstock. Clearance wajib segera.
+                    </div>
+                </div>
+                <div style="background:#fffbeb; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#d97706; margin-bottom:0.4rem;">🟡 WATCH — TARGET ZONE</div>
+                    <div style="font-size:0.72rem; color:#92400e; line-height:1.5;">
+                        LADIES CLASSIC (16.7K units, 15.8 wk) = healthy level. MEN STRIPE (15.6K units, 7.6 wk) = low stock, risk stockout. MEN ONYX (11.5K, 43 wk) = well stocked. Pastikan STRIPE tidak stockout — reorder priority.
+                    </div>
+                </div>
+                <div style="background:#f0fdf4; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a; margin-bottom:0.4rem;">✅ HEALTHY STOCK — STARS</div>
+                    <div style="font-size:0.72rem; color:#15803d; line-height:1.5;">
+                        BLACKSERIES (12.9 wk), METALIC (21.6 wk), CLASSIC LADIES (15.8 wk) — stok optimal untuk Stars. Pastikan tidak ada stockout di warna-warna populer. STRIPE (7.6 wk) paling kritis — monitor weekly.
+                    </div>
+                </div>
+                <div style="background:#002A3A; border-radius:8px; padding:1rem; color:white;">
+                    <div style="font-size:0.72rem; line-height:1.6; color:rgba(255,255,255,0.85);">
+                        💡 <strong style="color:#00E273;">OTB Opportunity:</strong> Clearance overstock series (PUFFY, FLO, <strong style="color:#f87171;">AIRMOVE, LUCA, LUNA</strong>) = ~57K+ units. Airmove+Luca+Luna saja: 25.5K units, est. nilai ~Rp 5–7B. Jika sold at 40–50% discount → recovered cash ~Rp 3–3.5B untuk reinvest ke Stars. Priority clearance: LUNA (72wk), LUCA (63wk) → paling critical.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">Stock = mart.sku_portfolio (stok_global). Sisa Stok (minggu) = stok_global ÷ (pairs_l12m / 52 minggu). Target ideal: 8–16 weeks. >26wk = at risk. LUNA: 72wk, LUCA: 63wk, AIRMOVE: 44wk — ketiganya extreme overstock jauh di atas threshold 26wk. Data diupdate Feb 2026 review.</div>
+</div>
+
+<!-- SLIDE 8: TIER PERFORMANCE COMPARISON -->
+<div class="slide">
+    <div class="slide-label">08 / 11</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Tier Performance Comparison</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.25rem;">Revenue, volume, dan efisiensi artikel per tier · 12 Bulan Terakhir (Mar 2025 – Feb 2026)</p>
+
+    <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:1.5rem;">
+        <div>
+            <!-- Tier performance cards -->
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                <!-- Tier 1 -->
+                <div style="background:white; border-radius:8px; padding:0.875rem 1.125rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); border-left:5px solid #002A3A;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div>
+                            <span style="font-size:0.85rem; font-weight:700;">Tier 1 — Entry Level</span>
+                            <span style="font-size:0.65rem; color:#6b7280; margin-left:0.5rem;">52 artikel aktif</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.85rem; font-weight:700;">Rp 32,22B</div>
+                            <div style="font-size:0.65rem; color:#16a34a; font-weight:700;">36.7% share</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:1.5rem; font-size:0.72rem; color:#6b7280;">
+                        <span>294.444 pairs</span>
+                        <span>Rp 109K avg/pair</span>
+                        <span style="color:#16a34a; font-weight:700;">Rp 619M/artikel ← Best efficiency</span>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.4rem; height:8px;"><div class="ff-fill" style="width:36.7%; background:#002A3A;"></div></div>
+                </div>
+                <!-- Tier 2 -->
+                <div style="background:white; border-radius:8px; padding:0.875rem 1.125rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); border-left:5px solid #3b82f6;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div>
+                            <span style="font-size:0.85rem; font-weight:700;">Tier 2 — Mid Level</span>
+                            <span style="font-size:0.65rem; color:#6b7280; margin-left:0.5rem;">56 artikel aktif</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.85rem; font-weight:700;">Rp 22,43B</div>
+                            <div style="font-size:0.65rem; color:#3b82f6; font-weight:700;">25.6% share</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:1.5rem; font-size:0.72rem; color:#6b7280;">
+                        <span>171.042 pairs</span>
+                        <span>Rp 131K avg/pair</span>
+                        <span>Rp 400M/artikel</span>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.4rem; height:8px;"><div class="ff-fill" style="width:25.6%; background:#3b82f6;"></div></div>
+                </div>
+                <!-- Tier 3 -->
+                <div style="background:white; border-radius:8px; padding:0.875rem 1.125rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); border-left:5px solid #00E273;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div>
+                            <span style="font-size:0.85rem; font-weight:700;">Tier 3 — Premium</span>
+                            <span style="font-size:0.65rem; color:#6b7280; margin-left:0.5rem;">75 artikel aktif</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.85rem; font-weight:700;">Rp 21,04B</div>
+                            <div style="font-size:0.65rem; color:#00E273; font-weight:700;">24.0% share</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:1.5rem; font-size:0.72rem; color:#6b7280;">
+                        <span>130.046 pairs</span>
+                        <span>Rp 162K avg/pair ← Highest Harga Rata-rata Tier 1-3</span>
+                        <span>Rp 281M/artikel</span>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.4rem; height:8px;"><div class="ff-fill" style="width:24.0%; background:#00E273;"></div></div>
+                </div>
+                <!-- Tier 8 -->
+                <div style="background:white; border-radius:8px; padding:0.875rem 1.125rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); border-left:5px solid #f59e0b; border:1px solid #fde68a;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div>
+                            <span style="font-size:0.85rem; font-weight:700;">Tier 8 — Special / Collab</span>
+                            <span style="font-size:0.65rem; color:#6b7280; margin-left:0.5rem;">37 artikel aktif</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.85rem; font-weight:700;">Rp 3,75B</div>
+                            <div style="font-size:0.65rem; color:#d97706; font-weight:700;">4.3% share</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:1.5rem; font-size:0.72rem; color:#6b7280;">
+                        <span>25.023 pairs</span>
+                        <span style="color:#d97706; font-weight:700;">Rp 150K avg/pair</span>
+                        <span>Rp 101M/artikel</span>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.4rem; height:8px;"><div class="ff-fill" style="width:4.3%; background:#f59e0b;"></div></div>
+                </div>
+                <!-- Tier 4/5 -->
+                <div style="background:#f8fafc; border-radius:8px; padding:0.875rem 1.125rem; border-left:5px solid #e5e7eb;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div>
+                            <span style="font-size:0.85rem; font-weight:700; color:#9ca3af;">Tier 4+5 — High Ticket</span>
+                            <span style="font-size:0.65rem; color:#9ca3af; margin-left:0.5rem;">326 artikel</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.85rem; font-weight:700; color:#9ca3af;">Rp 8,26B</div>
+                            <div style="font-size:0.65rem; color:#dc2626; font-weight:700;">9.4% share</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:1.5rem; font-size:0.72rem; color:#9ca3af;">
+                        <span>64.364 pairs</span>
+                        <span style="color:#dc2626;">Rp 25M/artikel ← 25× lower than Tier 1</span>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.4rem; height:8px;"><div class="ff-fill" style="width:9.4%; background:#e5e7eb;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background:#002A3A; border-radius:10px; padding:1.25rem; color:white;">
+                    <div style="font-size:0.65rem; font-weight:700; color:#00E273; margin-bottom:0.5rem;">💡 TIER STRATEGY</div>
+                    <div style="font-size:0.78rem; line-height:1.7; color:rgba(255,255,255,0.85);">
+                        <strong style="color:#00E273;">Tier 1+3</strong> = Power couple. Tier 1 volume, Tier 3 margin.<br>
+                        <strong style="color:#fbbf24;">Tier 8</strong> = Premium collab. Harga Rata-rata Rp 150K, good for margin.<br>
+                        <strong style="color:#f87171;">Tier 4+5</strong> = 326 artikel → 9.4% revenue = efficiency concern. Free up planogram untuk Tier 1 Star products.
+                    </div>
+                </div>
+                <div style="background:#fffbeb; border-radius:10px; padding:1.25rem;">
+                    <div style="font-size:0.65rem; font-weight:700; color:#d97706; margin-bottom:0.5rem;">📊 artikel EFFICIENCY (Rp Revenue/artikel)</div>
+                    <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.75rem;">
+                        <div style="display:flex; justify-content:space-between;"><span>Tier 1</span><span style="font-weight:700; color:#16a34a;">Rp 619M/artikel 🥇</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Tier 3</span><span style="font-weight:700;">Rp 281M/artikel</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Tier 3</span><span style="font-weight:700;">Rp 281M/artikel</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Tier 8</span><span style="font-weight:700;">Rp 101M/artikel</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Tier 4+5</span><span style="font-weight:700; color:#dc2626;">Rp 25M/artikel 🔴</span></div>
+                    </div>
+                </div>
+                <div style="background:#f0fdf4; border-radius:10px; padding:1.25rem;">
+                    <div style="font-size:0.65rem; font-weight:700; color:#16a34a; margin-bottom:0.5rem;">🎯 RECOMMENDATION</div>
+                    <div style="font-size:0.75rem; color:#15803d; line-height:1.5;">
+                        Rationalize Tier 4+5: dari 326 artikel, aim for 50–80 "produk unggulan". Savings: planogram space, inventory cost, buying complexity. Redirect ke Tier 1 Stars (BLACKSERIES) dan Tier 8 (harga jual rata-rata tinggi).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">artikel aktif = distinct kode_mix dengan qty>0 12 Bulan Terakhir (Mar 2025 – Feb 2026). Revenue/artikel = total revenue ÷ active artikel count per tier. Harga Rata-rata = Average Selling Price per pair.</div>
+</div>
+
+<!-- SLIDE 9: FF/FA/FS FROM PRODUCT PERSPECTIVE -->
+<div class="slide">
+    <div class="slide-label">09 / 11</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">FF/FA/FS — Product Planogram Perspective</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.5rem;">Kondisi planogram nasional dan implikasinya terhadap product availability · Data: mart.ff_fa_fs_daily 18 Feb 2026</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">📊 PLANOGRAM STATUS PER BRANCH</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Branch</th>
+                        <th style="text-align:center;">Stores</th>
+                        <th style="text-align:center;">FF</th>
+                        <th style="text-align:center; width:70px;">FF Bar</th>
+                        <th style="text-align:center;">FA</th>
+                        <th style="text-align:center;">FS (wk)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Jatim</strong></td>
+                        <td style="text-align:center;">10</td>
+                        <td style="text-align:center;" class="ach-amber">56.6%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:56.6%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">69.8%</td>
+                        <td style="text-align:center;">11.9</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bali 1</strong></td>
+                        <td style="text-align:center;">6</td>
+                        <td style="text-align:center;" class="ach-amber">49.7%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:49.7%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">64.8%</td>
+                        <td style="text-align:center;">16.8</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bali 2</strong></td>
+                        <td style="text-align:center;">8</td>
+                        <td style="text-align:center;" class="ach-amber">44.7%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:44.7%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">62.5%</td>
+                        <td style="text-align:center;">16.3</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bali 3</strong></td>
+                        <td style="text-align:center;">8</td>
+                        <td style="text-align:center;" class="ach-amber">43.0%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:43.0%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">53.0%</td>
+                        <td style="text-align:center;">16.8</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jakarta</strong></td>
+                        <td style="text-align:center;">4</td>
+                        <td style="text-align:center;" class="ach-amber">47.0%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:47.0%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">56.3%</td>
+                        <td style="text-align:center;">19.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lombok</strong></td>
+                        <td style="text-align:center;">2</td>
+                        <td style="text-align:center;" class="ach-red">38.9%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:38.9%; background:#dc2626;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">44.1%</td>
+                        <td style="text-align:center;">11.4</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sumatera</strong></td>
+                        <td style="text-align:center;">2</td>
+                        <td style="text-align:center;" class="ach-red">15.7%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:15.7%; background:#dc2626;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">20.9%</td>
+                        <td style="text-align:center;">9.1</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sulawesi</strong></td>
+                        <td style="text-align:center;">1</td>
+                        <td style="text-align:center;" class="ach-red">32.3%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:32.3%; background:#dc2626;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">44.5%</td>
+                        <td style="text-align:center;">4.3</td>
+                    </tr>
+                    <tr style="background:#f9f9f9; font-weight:700;">
+                        <td>NASIONAL</td>
+                        <td style="text-align:center;">41</td>
+                        <td style="text-align:center; color:#d97706;">45.1%</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:45.1%; background:#d97706;"></div></div></td>
+                        <td style="text-align:center; color:#dc2626;">57.1%</td>
+                        <td style="text-align:center;">14.7</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">🔍 PRODUCT IMPLICATIONS FROM FF/FA</div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background:#fee2e2; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626; margin-bottom:0.4rem;">FF 45% = 55% Slots Empty Nasional</div>
+                    <div style="font-size:0.72rem; color:#991b1b; line-height:1.5;">
+                        Lebih dari separuh slot planogram kosong. Ini bukan masalah stok kehabisan — karena Sisa Stok (minggu) banyak yang >12 wk. Ini masalah <strong>distribusi & display</strong>: stok ada di gudang tapi tidak ke planogram.
+                    </div>
+                </div>
+                <div style="background:#fffbeb; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#d97706; margin-bottom:0.4rem;">FA 57% = 43% Artikel Tidak Hadir</div>
+                    <div style="font-size:0.72rem; color:#92400e; line-height:1.5;">
+                        43% artikel yang seharusnya ada di planogram tidak tersedia. Ini berarti mix produk yang salah — terlalu banyak slow-movers (Dogs) memakan slot yang seharusnya untuk Stars (BLACKSERIES, Metalic).
+                    </div>
+                </div>
+                <div style="background:#f0fdf4; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a; margin-bottom:0.4rem;">✅ SOLUTION: Product Mix Redesign</div>
+                    <div style="font-size:0.72rem; color:#15803d; line-height:1.5;">
+                        1. Remove Dogs dari planogram → free slots<br>
+                        2. Fill dengan Stars (BLACKSERIES, Metalic) + Produk Potensial (Merci, Zorro)<br>
+                        3. Result: FF naik, FA naik, dan mix lebih profitable
+                    </div>
+                </div>
+                <div style="background:#002A3A; border-radius:8px; padding:1rem; color:white;">
+                    <div style="font-size:0.72rem; line-height:1.6; color:rgba(255,255,255,0.85);">
+                        💡 <strong style="color:#00E273;">Paradox:</strong> LOMBOK FF terendah (38.9%) tapi revenue #1 nasional (Mataram). Bayangkan jika FF Lombok = 70%: estimated revenue +80% → Mataram bisa Rp 730M+ per 7 weeks. Product mix yang tepat di Lombok = massive opportunity.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">FF = Fill Factor (slot terisi/total slot planogram). FA = Fill Assortment (artikel present/total artikel). FS = Fill Stock dalam minggu coverage. Data: mart.ff_fa_fs_daily as of 18 Feb 2026.</div>
+</div>
+
+<!-- SLIDE 10: FORECAST 2026 -->
+<div class="slide">
+    <div class="slide-label">10 / 11</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Forecast 2026 by BCG v2 Quadrant</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.25rem;">Berbasis Kecepatan Jual BCG framework · Proyeksi berdasarkan Kecepatan Jual &amp; revenue share aktual · Feb 2026</p>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem;">
+        <div style="background: linear-gradient(135deg, #fef9c3, #fde68a); border:2px solid #f59e0b; border-radius:10px; padding:1.25rem; text-align:center;">
+            <div style="font-size:1.5rem; margin-bottom:0.5rem;">⭐</div>
+            <div style="font-size:0.7rem; font-weight:700; color:#92400e; margin-bottom:0.4rem;">STARS (Kecepatan Jual ≥1.0, rev ≥0.5%)</div>
+            <div style="font-size:1.6rem; font-weight:900; color:#92400e; line-height:1.1;">21 series</div>
+            <div style="font-size:0.7rem; color:#b45309; margin:0.4rem 0;">BLACKSERIES, Metalic, STRIPE, Classic, Elsa, Dallas, Flo, Slide…</div>
+            <div style="font-size:0.85rem; font-weight:700; color:#92400e;">~400K–450K pairs (70% portfolio)</div>
+            <div style="font-size:0.65rem; color:#b45309; margin-top:0.25rem;">High Kecepatan Jual = backbone penjualan · Watch Sisa Stok (bulan) untuk Luca/Luna</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border:2px solid #16a34a; border-radius:10px; padding:1.25rem; text-align:center;">
+            <div style="font-size:1.5rem; margin-bottom:0.5rem;">❓</div>
+            <div style="font-size:0.7rem; font-weight:700; color:#15803d; margin-bottom:0.4rem;">PRODUK POTENSIAL (Kecepatan Jual ≥1.0, rev &lt;0.5%)</div>
+            <div style="font-size:1.6rem; font-weight:900; color:#15803d; line-height:1.1;">4–6 series</div>
+            <div style="font-size:0.7rem; color:#16a34a; margin:0.4rem 0;">Kim Ladies, ClassicEarth Ladies/Men, Summer MEN</div>
+            <div style="font-size:0.85rem; font-weight:700; color:#15803d;">~20K–30K pairs</div>
+            <div style="font-size:0.65rem; color:#16a34a; margin-top:0.25rem;">High Kecepatan Jual, low revenue share — scale candidates</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border:2px solid #3b82f6; border-radius:10px; padding:1.25rem; text-align:center;">
+            <div style="font-size:1.5rem; margin-bottom:0.5rem;">🐄</div>
+            <div style="font-size:0.7rem; font-weight:700; color:#1d4ed8; margin-bottom:0.4rem;">CASH COWS (Kecepatan Jual &lt;1.0, rev ≥0.5%)</div>
+            <div style="font-size:1.6rem; font-weight:900; color:#1d4ed8; line-height:1.1;">5 series</div>
+            <div style="font-size:0.7rem; color:#2563eb; margin:0.4rem 0;">AIRMOVE, Velcro Boys, Batman Baby, Disney Boys, Mickey Baby</div>
+            <div style="font-size:0.85rem; font-weight:700; color:#1d4ed8;">~80K–100K pairs</div>
+            <div style="font-size:0.65rem; color:#2563eb; margin-top:0.25rem;">Below median Kecepatan Jual but meaningful revenue · Optimize</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #fff1f2, #fecdd3); border:2px solid #dc2626; border-radius:10px; padding:1.25rem; text-align:center;">
+            <div style="font-size:1.5rem; margin-bottom:0.5rem;">🐕</div>
+            <div style="font-size:0.7rem; font-weight:700; color:#dc2626; margin-bottom:0.4rem;">DOGS (Kecepatan Jual &lt;1.0, rev &lt;0.5%)</div>
+            <div style="font-size:1.6rem; font-weight:900; color:#dc2626; line-height:1.1;">25+ series</div>
+            <div style="font-size:0.7rem; color:#b91c1c; margin:0.4rem 0;">Velcro Girls, Stitch Boys/Girls, Oxford, Summer, Iris…</div>
+            <div style="font-size:0.85rem; font-weight:700; color:#dc2626;">~50K–70K pairs</div>
+            <div style="font-size:0.65rem; color:#b91c1c; margin-top:0.25rem;">Low Kecepatan Jual + low revenue · Prune to free up planogram</div>
+        </div>
+    </div>
+
+    <div style="background:#002A3A; border-radius:10px; padding:1.5rem; color:white; text-align:center; margin-bottom:1rem;">
+        <div style="font-size:0.7rem; font-weight:700; color:#00E273; margin-bottom:0.5rem; letter-spacing:0.05em;">📊 TOTAL FORECAST 2026</div>
+        <div style="font-size:2rem; font-weight:900; color:white;">~550K – 650K pairs</div>
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.7); margin-top:0.25rem;">(Base scenario: ~600K) — 21 Stars series (BCG v2) driving 70%+ of volume</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
+        <div style="background:#dcfce7; border-radius:8px; padding:1rem;">
+            <div style="font-size:0.7rem; font-weight:700; color:#16a34a; margin-bottom:0.4rem;">📈 BULL CASE: +15% Revenue</div>
+            <div style="font-size:0.75rem; color:#15803d; line-height:1.5;">FF mencapai 70% nationwide + Stars stocks fully available + Merci/Zorro bet works → Rp 12–13B/month by Q4</div>
+        </div>
+        <div style="background:#fef3c7; border-radius:8px; padding:1rem;">
+            <div style="font-size:0.7rem; font-weight:700; color:#d97706; margin-bottom:0.4rem;">➡️ BASE CASE: Flat to +5%</div>
+            <div style="font-size:0.75rem; color:#92400e; line-height:1.5;">Stars compensate Dogs decline. Classic/Stripe stabilize. FF improvement partial. Annual ~Rp 85–90B total.</div>
+        </div>
+        <div style="background:#fee2e2; border-radius:8px; padding:1rem;">
+            <div style="font-size:0.7rem; font-weight:700; color:#dc2626; margin-bottom:0.4rem;">📉 BEAR CASE: −10% Revenue</div>
+            <div style="font-size:0.75rem; color:#991b1b; line-height:1.5;">Classic/Stripe collapse faster, FF tetap rendah, Merci/Zorro tidak berkembang, Bali tidak recovery → pressure besar.</div>
+        </div>
+    </div>
+    <div class="footnote">Forecast menggunakan 12 Bulan Terakhir (Mar 2025–Feb 2026) run-rate × annualization. 12 Bulan Terakhir baseline = ~685K pairs (excl. intercompany). Tidak termasuk intercompany transactions.</div>
+</div>
+
+<!-- SLIDE 11: STRATEGY PER BCG QUADRANT -->
+<div class="slide slide-dark" style="min-height:480px;">
+    <div class="slide-label">11 / 11</div>
+    <div class="gradient-blob" style="opacity:0.3;"></div>
+    <div class="content">
+        <div style="display:inline-block; background:#00E273; color:#002A3A; font-size:0.7rem; font-weight:700; padding:4px 12px; border-radius:4px; letter-spacing:0.08em; margin-bottom:1.5rem;">PRODUCT STRATEGY — Q1/Q2 2026</div>
+        <h2 style="font-size:1.8rem; font-weight:900; color:white; margin-bottom:1.5rem;">Strategi per Kuadran BCG v2 (Kecepatan Jual Framework)</h2>
+
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem;">
+            <div style="background:rgba(255,255,255,0.05); border:1px solid #f59e0b; border-radius:10px; padding:1.25rem;">
+                <div style="font-size:1.25rem; margin-bottom:0.4rem;">⭐</div>
+                <div style="font-size:0.65rem; font-weight:700; color:#fbbf24; margin-bottom:0.5rem; letter-spacing:0.08em;">STARS — BUILD (21 series)</div>
+                <div style="font-size:0.78rem; font-weight:700; color:white; margin-bottom:0.5rem;">BLACKSERIES · Metalic · STRIPE · Classic · ELSA · DALLAS · FLO · SLIDE · MERCI · ZORRO · WBB</div>
+                <div style="font-size:0.72rem; color:rgba(255,255,255,0.7); line-height:1.6;">
+                    <strong>BCG v2 insight:</strong> Banyak ex-Dogs (Elsa, Dallas, Flo, Slide) kini Stars berdasarkan Kecepatan Jual. Jangan exit — optimize stok &amp; planogram. Untuk LUCA/LUNA: clearance Sisa Stok (bulan) tinggi, tapi jangan discontinue.
+                </div>
+                <div style="margin-top:0.875rem; background:rgba(251,191,36,0.15); border-radius:6px; padding:0.5rem 0.75rem; font-size:0.68rem; color:#fbbf24; font-weight:700;">
+                    KPI: Stars coverage &gt;85% stores · Luca/Luna Sisa Stok (bulan) &lt;6 bulan via clearance
+                </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05); border:1px solid #16a34a; border-radius:10px; padding:1.25rem;">
+                <div style="font-size:1.25rem; margin-bottom:0.4rem;">❓</div>
+                <div style="font-size:0.65rem; font-weight:700; color:#4ade80; margin-bottom:0.5rem; letter-spacing:0.08em;">PRODUK POTENSIAL — PILIHAN</div>
+                <div style="font-size:0.78rem; font-weight:700; color:white; margin-bottom:0.5rem;">Merci · Zorro · Wedges · WBB</div>
+                <div style="font-size:0.72rem; color:rgba(255,255,255,0.7); line-height:1.6;">
+                    Invest in Merci (clear winner). Untuk Zorro & Wedges: test dengan 3–5 artikel tambahan, evaluate sellthrough di Q2 sebelum full investment.
+                </div>
+                <div style="margin-top:0.875rem; background:rgba(74,222,128,0.1); border-radius:6px; padding:0.5rem 0.75rem; font-size:0.68rem; color:#4ade80; font-weight:700;">
+                    KPI: Merci +50% growth by Q2, Zorro sellthrough &gt;70%
+                </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05); border:1px solid #3b82f6; border-radius:10px; padding:1.25rem;">
+                <div style="font-size:1.25rem; margin-bottom:0.4rem;">🐄</div>
+                <div style="font-size:0.65rem; font-weight:700; color:#60a5fa; margin-bottom:0.5rem; letter-spacing:0.08em;">CASH COWS — OPTIMIZE</div>
+                <div style="font-size:0.78rem; font-weight:700; color:white; margin-bottom:0.5rem;">AIRMOVE · Velcro Boys · Batman Baby · Disney Boys · Mickey Baby</div>
+                <div style="font-size:0.72rem; color:rgba(255,255,255,0.7); line-height:1.6;">
+                    Revenue share bagus tapi Kecepatan Jual di bawah median (&lt;1.0). <strong>AIRMOVE</strong>: kini Cash Cow (Kecepatan Jual 0.91) — stop reorder &amp; habiskan stok existing.
+                </div>
+                <div style="margin-top:0.875rem; background:rgba(96,165,250,0.1); border-radius:6px; padding:0.5rem 0.75rem; font-size:0.68rem; color:#60a5fa; font-weight:700;">
+                    KPI: No new PO untuk Cash Cows · Maintain revenue via existing stock
+                </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05); border:1px solid #dc2626; border-radius:10px; padding:1.25rem;">
+                <div style="font-size:1.25rem; margin-bottom:0.4rem;">🐕</div>
+                <div style="font-size:0.65rem; font-weight:700; color:#f87171; margin-bottom:0.5rem; letter-spacing:0.08em;">DOGS — PRUNE (True laggards)</div>
+                <div style="font-size:0.78rem; font-weight:700; color:white; margin-bottom:0.5rem;">Velcro Girls · Stitch Boys/Girls · Oxford · Summer · Iris · LOTSO · Toy Story Boys</div>
+                <div style="font-size:0.72rem; color:rgba(255,255,255,0.7); line-height:1.6;">
+                    <strong>True Dogs (BCG v2):</strong> Low Kecepatan Jual (&lt;1.0) + low revenue (&lt;0.5%). <strong style="color:#fca5a5;">Oxford/Summer/Spider-Man</strong> = Sisa Stok 97–487 bulan! Priority exit. Stop reorder semua Dogs. Freed-up planogram slots → isi dengan Stars.
+                </div>
+                <div style="margin-top:0.875rem; background:rgba(248,113,113,0.1); border-radius:6px; padding:0.5rem 0.75rem; font-size:0.68rem; color:#f87171; font-weight:700;">
+                    KPI: Zero reorder Dogs by Q2 · Oxford/Summer/Spider-Man clearance by Q2 · free ~30K units OTB
+                </div>
+            </div>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:1.25rem; display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.4);">
+                Data source: OpenClaw OPS DB · core.sales_with_product · core.stock_with_product · mart.ff_fa_fs_daily
+            </div>
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.4);">Last updated: 18 Februari 2026 · Generated by OpenClaw AI</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

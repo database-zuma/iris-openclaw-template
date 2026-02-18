@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuma National Performance — Jan–Feb 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: #1a1a1a; padding: 2rem; }
+        .slide { background: #f9f9f9; border-radius: 12px; padding: 3rem; margin-bottom: 1.5rem; min-height: 580px; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .slide-teal { background: #002A3A; color: white; }
+        .slide-dark { background: #111827; color: white; }
+        .gradient-blob { position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: linear-gradient(135deg, #00E273 0%, rgba(0,226,115,0.1) 100%); border-radius: 50%; filter: blur(80px); z-index: 0; }
+        .content { position: relative; z-index: 1; }
+        .slide-label { position: absolute; top: 1.5rem; right: 2rem; font-size: 0.8rem; font-weight: 600; color: #999; }
+        .slide-teal .slide-label, .slide-dark .slide-label { color: rgba(255,255,255,0.4); }
+        .badge-green { background: #dcfce7; color: #16a34a; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .badge-red { background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .badge-amber { background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .badge-blue { background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; }
+        .grow { color: #16a34a; font-weight: 700; }
+        .decline { color: #dc2626; font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #002A3A; color: white; padding: 0.6rem 0.875rem; text-align: left; font-size: 0.75rem; }
+        td { padding: 0.55rem 0.875rem; border-bottom: 1px solid #e5e7eb; font-size: 0.75rem; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        .ach-green { color: #16a34a; font-weight: 700; }
+        .ach-amber { color: #d97706; font-weight: 700; }
+        .ach-red { color: #dc2626; font-weight: 700; }
+        .ff-bar { height: 6px; border-radius: 3px; background: #e5e7eb; }
+        .ff-fill { height: 100%; border-radius: 3px; }
+        .footnote { font-size: 0.7rem; color: #9ca3af; margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb; }
+        .kpi-card { background: white; border-radius: 10px; padding: 1.25rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .kpi-label { font-size: 0.7rem; font-weight: 700; color: #6b7280; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.25rem; }
+        .kpi-value { font-size: 1.9rem; font-weight: 900; color: #111827; line-height: 1.1; }
+        .kpi-sub { font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; }
+        .bar-chart-container { display: flex; align-items: flex-end; gap: 4px; height: 120px; }
+        .bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; }
+        .bar { border-radius: 3px 3px 0 0; min-height: 4px; transition: all 0.3s; }
+        .bar-label { font-size: 0.5rem; color: #6b7280; margin-top: 3px; text-align: center; writing-mode: vertical-rl; transform: rotate(180deg); height: 28px; }
+
+        @media print {
+            @page { size: A4 landscape; margin: 0; }
+            html, body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .slide { page-break-after: always; break-after: page; border-radius: 0 !important; box-shadow: none !important; margin: 0 !important; padding: 2rem 2.5rem !important; min-height: 0 !important; height: 190mm !important; overflow: hidden !important; box-sizing: border-box; }
+            .slide:last-child { page-break-after: avoid; break-after: avoid; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .slide-teal { background: #002A3A !important; }
+            .slide-dark { background: #111827 !important; }
+            .gradient-blob { display: none !important; }
+            #print-btn { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="print-btn" style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:999;">
+    <button onclick="window.print()" style="background:#00E273; color:#002A3A; border:none; padding:0.6rem 1.5rem; border-radius:6px; font-weight:700; font-size:0.875rem; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3);">🖨️ Print / Save PDF (Landscape A4)</button>
+</div>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide slide-teal" style="min-height:480px;">
+    <div class="gradient-blob"></div>
+    <div class="content" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+            <div style="display:inline-block; background:#00E273; color:#002A3A; font-size:0.7rem; font-weight:700; padding:4px 12px; border-radius:4px; letter-spacing:0.08em; margin-bottom:1.5rem;">EXECUTIVE SUMMARY — NATIONAL</div>
+            <h1 style="font-size:3.2rem; font-weight:900; line-height:1.1; margin-bottom:0.75rem;">
+                Zuma Performance<br>
+                <span style="color:#00E273;">Analysis</span>
+            </h1>
+            <p style="font-size:1.1rem; color:rgba(255,255,255,0.7); max-width:520px; line-height:1.6;">
+                Sales Overview Nasional — Januari s/d 18 Februari 2026.<br>
+                Revenue trend, branch comparison, channel mix, dan planogram health.
+            </p>
+        </div>
+        <div style="display:flex; gap:3rem; margin-top:2rem;">
+            <div>
+                <div style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">TOTAL REVENUE YTD</div>
+                <div style="font-size:2rem; font-weight:900; color:#00E273;">Rp 10,48B</div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">113.556 pasang</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">STORES AKTIF</div>
+                <div style="font-size:2rem; font-weight:900; color:white;">41</div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">7 branches</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">JANUARI YoY</div>
+                <div style="font-size:2rem; font-weight:900; color:#00E273;">+12.5%</div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">vs Jan 2025</div>
+            </div>
+        </div>
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.15); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.5);">Data source: OpenClaw OPS DB · mart.ff_fa_fs_daily · core.sales_with_product</div>
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.5);">Last updated: 18 Feb 2026</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: NATIONAL KPI SCORECARD -->
+<div class="slide">
+    <div class="slide-label">02 / 08</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">National KPI Scorecard</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.5rem;">Periode: 1 Jan – 18 Feb 2026 · Data: core.sales_with_product (is_intercompany=false)</p>
+
+    <!-- Row 1: Big KPIs -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.25rem;">
+        <div class="kpi-card" style="border-left:4px solid #00E273;">
+            <div class="kpi-label">Revenue YTD</div>
+            <div class="kpi-value">Rp 10,48B</div>
+            <div class="kpi-sub">Jan: 6,62B + MTD Feb: 3,86B</div>
+        </div>
+        <div class="kpi-card" style="border-left:4px solid #3b82f6;">
+            <div class="kpi-label">Volume YTD</div>
+            <div class="kpi-value">113.556</div>
+            <div class="kpi-sub">pairs sold (excl. intercompany)</div>
+        </div>
+        <div class="kpi-card" style="border-left:4px solid #16a34a;">
+            <div class="kpi-label">Januari YoY Revenue</div>
+            <div class="kpi-value grow">+12.5%</div>
+            <div class="kpi-sub">Jan 2026: Rp 6,62B vs Rp 5,88B</div>
+        </div>
+        <div class="kpi-card" style="border-left:4px solid #f59e0b;">
+            <div class="kpi-label">Avg Revenue/Store/Bulan</div>
+            <div class="kpi-value">Rp 161M</div>
+            <div class="kpi-sub">41 stores, Jan 2026</div>
+        </div>
+    </div>
+
+    <!-- Row 2: Branch achievement summary -->
+    <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:1.5rem;">
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">📊 BRANCH ACHIEVEMENT VS TARGET (Jan–MTD Feb 2026)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Branch</th>
+                        <th style="text-align:right;">Actual</th>
+                        <th style="text-align:right;">Target</th>
+                        <th style="text-align:center;">Ach%</th>
+                        <th style="text-align:center;">YoY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Bali</strong></td>
+                        <td style="text-align:right;">Rp 4,19B</td>
+                        <td style="text-align:right;">Rp 7,64B</td>
+                        <td style="text-align:center;" class="ach-red">54.9% 🔴</td>
+                        <td style="text-align:center;" class="decline">−22.0%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jatim</strong></td>
+                        <td style="text-align:right;">Rp 1,26B</td>
+                        <td style="text-align:right;">Rp 1,52B</td>
+                        <td style="text-align:center;" class="ach-amber">82.7% 🟡</td>
+                        <td style="text-align:center;" class="grow">+4.9%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lombok ⭐</strong></td>
+                        <td style="text-align:right;">Rp 0,65B</td>
+                        <td style="text-align:right;">Rp 0,71B</td>
+                        <td style="text-align:center;" class="ach-green">92.1% 🟢</td>
+                        <td style="text-align:center;" class="grow">+36.7%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jakarta</strong></td>
+                        <td style="text-align:right;">Rp 0,24B</td>
+                        <td style="text-align:right;">Rp 0,46B</td>
+                        <td style="text-align:center;" class="ach-red">53.0% 🔴</td>
+                        <td style="text-align:center;" class="decline">−56.9%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sulawesi</strong></td>
+                        <td style="text-align:right;">Rp 0,09B</td>
+                        <td style="text-align:right;">Rp 0,15B</td>
+                        <td style="text-align:center;" class="ach-red">61.4% 🔴</td>
+                        <td style="text-align:center;" class="decline">−2.1%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sumatra</strong></td>
+                        <td style="text-align:right;">Rp 0,08B</td>
+                        <td style="text-align:right;">Rp 0,29B</td>
+                        <td style="text-align:center;" class="ach-red">29.3% 🔴</td>
+                        <td style="text-align:center;" class="grow">+71.7%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Batam</strong></td>
+                        <td style="text-align:right;">Rp 0,06B</td>
+                        <td style="text-align:right;">—</td>
+                        <td style="text-align:center; color:#9ca3af;">—</td>
+                        <td style="text-align:center;" class="grow">+9.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">🎯 KEY INSIGHTS</div>
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                <div style="background:#dcfce7; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#15803d;">✅ Lombok — Best Performer</div>
+                    <div style="font-size:0.7rem; color:#166534; margin-top:2px;">92.1% achievement, +36.7% YoY. Mataram = #1 store nasional.</div>
+                </div>
+                <div style="background:#dcfce7; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#15803d;">✅ Jatim — On Track</div>
+                    <div style="font-size:0.7rem; color:#166534; margin-top:2px;">82.7% ach, +4.9% YoY growth. Momentum positif.</div>
+                </div>
+                <div style="background:#fee2e2; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">⚠️ Bali — Revenue Paling Besar, Ach Rendah</div>
+                    <div style="font-size:0.7rem; color:#991b1b; margin-top:2px;">55% ach, -22% YoY. Needs urgent review — dominasi 40% revenue nasional.</div>
+                </div>
+                <div style="background:#fee2e2; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">⚠️ Jakarta — Drop Tajam</div>
+                    <div style="font-size:0.7rem; color:#991b1b; margin-top:2px;">−56.9% YoY. Perlu investigasi: kompetitor, foot traffic, atau stok?</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">Target dari portal.store_monthly_target (Jan+Feb 2026). Feb data adalah MTD per 18 Feb 2026 — belum full month. YoY = Jan–18 Feb 2026 vs Jan–28 Feb 2025 (pro-rata).</div>
+</div>
+
+<!-- SLIDE 3: MONTHLY REVENUE TREND -->
+<div class="slide">
+    <div class="slide-label">03 / 08</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Monthly Revenue Trend — 14 Bulan</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.5rem;">Januari 2025 – Februari 2026 (MTD) · Rp miliar · Sumber: core.sales_with_product</p>
+
+    <!-- Bar chart -->
+    <div style="background:white; border-radius:10px; padding:1.5rem; margin-bottom:1.25rem;">
+        <div style="display:flex; align-items:flex-end; gap:6px; height:160px; padding-bottom:8px; position:relative;">
+            <!-- Y-axis labels -->
+            <div style="position:absolute; left:0; top:0; height:160px; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:8px;">
+                <span style="font-size:0.6rem; color:#9ca3af;">9B</span>
+                <span style="font-size:0.6rem; color:#9ca3af;">6B</span>
+                <span style="font-size:0.6rem; color:#9ca3af;">3B</span>
+                <span style="font-size:0.6rem; color:#9ca3af;">0</span>
+            </div>
+            <!-- Bars — max = 9.03B, scale to 150px -->
+            <div style="display:flex; align-items:flex-end; gap:4px; height:150px; margin-left:24px; flex:1;">
+                <!-- Jan 2025: 5.88B = 65% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">5,9</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:65%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Jan<br>25</div>
+                </div>
+                <!-- Feb 2025: 5.37B = 59% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">5,4</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:59%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Feb<br>25</div>
+                </div>
+                <!-- Mar 2025: 9.03B = 100% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">9,0</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:100%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Mar<br>25</div>
+                </div>
+                <!-- Apr 2025: 7.85B = 87% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">7,8</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:87%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Apr<br>25</div>
+                </div>
+                <!-- May 2025: 6.08B = 67% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">6,1</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:67%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Mei<br>25</div>
+                </div>
+                <!-- Jun 2025: 6.08B = 67% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">6,1</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:67%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Jun<br>25</div>
+                </div>
+                <!-- Jul 2025: 6.86B = 76% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">6,9</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:76%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Jul<br>25</div>
+                </div>
+                <!-- Aug 2025: 6.97B = 77% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">7,0</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:77%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Agu<br>25</div>
+                </div>
+                <!-- Sep 2025: 7.67B = 85% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">7,7</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:85%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Sep<br>25</div>
+                </div>
+                <!-- Oct 2025: 7.19B = 80% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">7,2</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:80%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Okt<br>25</div>
+                </div>
+                <!-- Nov 2025: 8.99B = 99.5% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">9,0</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:99%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Nov<br>25</div>
+                </div>
+                <!-- Dec 2025: 9.02B = 99.8% -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#6b7280; margin-bottom:2px;">9,0</div>
+                    <div style="width:100%; background:#3b82f6; border-radius:3px 3px 0 0; height:100%;"></div>
+                    <div style="font-size:0.5rem; color:#9ca3af; margin-top:3px; text-align:center;">Des<br>25</div>
+                </div>
+                <!-- Jan 2026: 6.62B = 73% — highlight -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#00E273; margin-bottom:2px; font-weight:700;">6,6</div>
+                    <div style="width:100%; background:#00E273; border-radius:3px 3px 0 0; height:73%;"></div>
+                    <div style="font-size:0.5rem; color:#00E273; margin-top:3px; text-align:center; font-weight:700;">Jan<br>26</div>
+                </div>
+                <!-- Feb 2026: 3.86B MTD = 43% — partial -->
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;">
+                    <div style="font-size:0.55rem; color:#f59e0b; margin-bottom:2px; font-weight:700;">3,9*</div>
+                    <div style="width:100%; background:#f59e0b; border-radius:3px 3px 0 0; height:43%; border:2px dashed #d97706;"></div>
+                    <div style="font-size:0.5rem; color:#f59e0b; margin-top:3px; text-align:center; font-weight:700;">Feb<br>26*</div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex; gap:1rem; margin-top:0.5rem; font-size:0.65rem; color:#6b7280;">
+            <span>■ <span style="color:#3b82f6;">2025</span></span>
+            <span>■ <span style="color:#00E273;">Jan 2026</span></span>
+            <span>⬚ <span style="color:#f59e0b;">Feb 2026 (MTD 18 Feb)*</span></span>
+        </div>
+    </div>
+
+    <!-- Seasonal insight -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
+        <div style="background:#002A3A; border-radius:8px; padding:1rem; color:white;">
+            <div style="font-size:0.65rem; font-weight:700; color:#00E273; margin-bottom:0.4rem;">📈 PEAK SEASON</div>
+            <div style="font-size:0.9rem; font-weight:700;">Mar, Nov, Des</div>
+            <div style="font-size:0.7rem; color:rgba(255,255,255,0.6); margin-top:2px;">9.0B – pola lebaran + year-end. Stok & planogram harus ready H-45.</div>
+        </div>
+        <div style="background:#dcfce7; border-radius:8px; padding:1rem;">
+            <div style="font-size:0.65rem; font-weight:700; color:#16a34a; margin-bottom:0.4rem;">✅ JAN 2026 VS JAN 2025</div>
+            <div style="font-size:0.9rem; font-weight:700; color:#15803d;">+12.5% Revenue</div>
+            <div style="font-size:0.7rem; color:#166534; margin-top:2px;">6,62B vs 5,88B — momentum awal tahun positif.</div>
+        </div>
+        <div style="background:#fffbeb; border-radius:8px; padding:1rem;">
+            <div style="font-size:0.65rem; font-weight:700; color:#d97706; margin-bottom:0.4rem;">⚠️ NEXT PEAK: MARET</div>
+            <div style="font-size:0.9rem; font-weight:700; color:#92400e;">Lebaran H-45 = ~20 Feb</div>
+            <div style="font-size:0.7rem; color:#92400e; margin-top:2px;">Stok dan planogram untuk Lebaran harus sudah siap sekarang. FF target ≥70% per toko.</div>
+        </div>
+    </div>
+    <div class="footnote">*Feb 2026 adalah data MTD per 18 Feb 2026. Run-rate Feb proyeksi full-month ~6.6B (setara Jan 2026). Sumber: core.sales_with_product.</div>
+</div>
+
+<!-- SLIDE 4: BRANCH COMPARISON RANKING -->
+<div class="slide">
+    <div class="slide-label">04 / 08</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Branch Revenue Ranking</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.25rem;">Peringkat cabang berdasarkan revenue YTD Jan–18 Feb 2026 · Target = Jan + Feb 2026</p>
+
+    <div style="display:grid; grid-template-columns:1.8fr 1fr; gap:1.5rem;">
+        <div>
+            <!-- Branch bars -->
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                <!-- Bali -->
+                <div style="background:white; border-radius:8px; padding:0.75rem 1rem; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <span style="font-size:0.7rem; font-weight:900; color:white; background:#002A3A; border-radius:4px; padding:1px 6px;">#1</span>
+                            <span style="font-size:0.85rem; font-weight:700;">Bali</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span style="font-size:0.85rem; font-weight:700;">Rp 4,19B</span>
+                            <span class="badge-red">54.9%</span>
+                            <span class="decline" style="font-size:0.75rem;">−22.0%</span>
+                        </div>
+                    </div>
+                    <div class="ff-bar"><div class="ff-fill" style="width:54.9%; background:#dc2626;"></div></div>
+                    <div style="font-size:0.65rem; color:#9ca3af; margin-top:2px;">Target: Rp 7,64B · 22 stores (Bali 1/2/3)</div>
+                </div>
+                <!-- Jatim -->
+                <div style="background:white; border-radius:8px; padding:0.75rem 1rem; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <span style="font-size:0.7rem; font-weight:900; color:white; background:#002A3A; border-radius:4px; padding:1px 6px;">#2</span>
+                            <span style="font-size:0.85rem; font-weight:700;">Jawa Timur</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span style="font-size:0.85rem; font-weight:700;">Rp 1,26B</span>
+                            <span class="badge-amber">82.7%</span>
+                            <span class="grow" style="font-size:0.75rem;">+4.9%</span>
+                        </div>
+                    </div>
+                    <div class="ff-bar"><div class="ff-fill" style="width:82.7%; background:#f59e0b;"></div></div>
+                    <div style="font-size:0.65rem; color:#9ca3af; margin-top:2px;">Target: Rp 1,52B · 10 stores</div>
+                </div>
+                <!-- Lombok -->
+                <div style="background:white; border-radius:8px; padding:0.75rem 1rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); border:1px solid #00E273;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <span style="font-size:0.7rem; font-weight:900; color:white; background:#002A3A; border-radius:4px; padding:1px 6px;">#3</span>
+                            <span style="font-size:0.85rem; font-weight:700;">Lombok</span>
+                            <span style="font-size:0.6rem; background:#00E273; color:#002A3A; font-weight:700; padding:1px 6px; border-radius:4px;">⭐ BEST</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span style="font-size:0.85rem; font-weight:700;">Rp 0,65B</span>
+                            <span class="badge-green">92.1%</span>
+                            <span class="grow" style="font-size:0.75rem;">+36.7%</span>
+                        </div>
+                    </div>
+                    <div class="ff-bar"><div class="ff-fill" style="width:92.1%; background:#16a34a;"></div></div>
+                    <div style="font-size:0.65rem; color:#9ca3af; margin-top:2px;">Target: Rp 0,71B · 2 stores · Mataram = #1 store nasional</div>
+                </div>
+                <!-- Jakarta -->
+                <div style="background:white; border-radius:8px; padding:0.75rem 1rem; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <span style="font-size:0.7rem; font-weight:900; color:white; background:#002A3A; border-radius:4px; padding:1px 6px;">#4</span>
+                            <span style="font-size:0.85rem; font-weight:700;">Jakarta</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span style="font-size:0.85rem; font-weight:700;">Rp 0,24B</span>
+                            <span class="badge-red">53.0%</span>
+                            <span class="decline" style="font-size:0.75rem;">−56.9%</span>
+                        </div>
+                    </div>
+                    <div class="ff-bar"><div class="ff-fill" style="width:53.0%; background:#dc2626;"></div></div>
+                    <div style="font-size:0.65rem; color:#9ca3af; margin-top:2px;">Target: Rp 0,46B · 4 stores · Drop signifikan dari 2025</div>
+                </div>
+                <!-- Smaller branches -->
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem;">
+                    <div style="background:white; border-radius:8px; padding:0.6rem 0.75rem; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+                        <div style="font-size:0.7rem; font-weight:700;">Sulawesi</div>
+                        <div style="font-size:0.8rem; font-weight:700;">Rp 90,9M</div>
+                        <div style="font-size:0.65rem;" class="ach-red">61.4% ach</div>
+                        <div style="font-size:0.65rem;" class="decline">−2.1% YoY</div>
+                    </div>
+                    <div style="background:white; border-radius:8px; padding:0.6rem 0.75rem; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+                        <div style="font-size:0.7rem; font-weight:700;">Sumatra</div>
+                        <div style="font-size:0.8rem; font-weight:700;">Rp 83,8M</div>
+                        <div style="font-size:0.65rem;" class="ach-red">29.3% ach</div>
+                        <div style="font-size:0.65rem;" class="grow">+71.7% YoY</div>
+                    </div>
+                    <div style="background:white; border-radius:8px; padding:0.6rem 0.75rem; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+                        <div style="font-size:0.7rem; font-weight:700;">Batam</div>
+                        <div style="font-size:0.8rem; font-weight:700;">Rp 59,9M</div>
+                        <div style="font-size:0.65rem; color:#9ca3af;">No target set</div>
+                        <div style="font-size:0.65rem;" class="grow">+9.3% YoY</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">🥧 REVENUE SHARE PER BRANCH</div>
+            <!-- Simple visual distribution -->
+            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1rem;">
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:2px;"><span>Bali</span><span style="font-weight:700;">63.7%</span></div>
+                    <div class="ff-bar" style="height:12px;"><div class="ff-fill" style="width:63.7%; background:#002A3A;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:2px;"><span>Jatim</span><span style="font-weight:700;">19.1%</span></div>
+                    <div class="ff-bar" style="height:12px;"><div class="ff-fill" style="width:19.1%; background:#00E273;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:2px;"><span>Lombok</span><span style="font-weight:700;">9.9%</span></div>
+                    <div class="ff-bar" style="height:12px;"><div class="ff-fill" style="width:9.9%; background:#3b82f6;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:2px;"><span>Jakarta</span><span style="font-weight:700;">3.7%</span></div>
+                    <div class="ff-bar" style="height:12px;"><div class="ff-fill" style="width:3.7%; background:#f59e0b;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:2px;"><span>Others</span><span style="font-weight:700;">3.6%</span></div>
+                    <div class="ff-bar" style="height:12px;"><div class="ff-fill" style="width:3.6%; background:#9ca3af;"></div></div>
+                </div>
+            </div>
+            <div style="background:#002A3A; border-radius:8px; padding:1rem; color:white;">
+                <div style="font-size:0.65rem; font-weight:700; color:#00E273; margin-bottom:0.5rem;">📊 STRATEGIC OBSERVATION</div>
+                <div style="font-size:0.72rem; line-height:1.6; color:rgba(255,255,255,0.85);">
+                    Bali mendominasi 64% revenue — risiko konsentrasi tinggi. Lombok tumbuh 36.7% dengan hanya 2 toko. Potensi ekspansi Lombok (3rd store?) perlu dievaluasi Q2.
+                </div>
+            </div>
+            <div style="background:#fffbeb; border-radius:8px; padding:0.75rem; margin-top:0.75rem;">
+                <div style="font-size:0.65rem; font-weight:700; color:#d97706; margin-bottom:0.3rem;">🎯 ACHIEVEMENT GAP</div>
+                <div style="font-size:0.72rem; color:#92400e; line-height:1.5;">5 dari 6 branches di bawah 90% ach. Focus area: Bali (gap terbesar Rp 3,44B) dan Jakarta (fundamental issue).</div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">Revenue share dihitung dari total branch revenue (excl. Konsinyasi & null-branch). YoY menggunakan same-period Jan-Feb 2025.</div>
+</div>
+
+<!-- SLIDE 5: CHANNEL BREAKDOWN -->
+<div class="slide">
+    <div class="slide-label">05 / 08</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Channel Breakdown</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.5rem;">Segmentasi revenue berdasarkan store_category · Jan–18 Feb 2026</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">📊 REVENUE PER CHANNEL</div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <!-- Retail -->
+                <div style="background:white; border-radius:10px; padding:1.25rem 1.5rem; box-shadow:0 2px 8px rgba(0,0,0,0.06); border-left:4px solid #002A3A;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em;">RETAIL</div>
+                            <div style="font-size:1.5rem; font-weight:900; color:#111827;">Rp 6,43B</div>
+                            <div style="font-size:0.75rem; color:#6b7280;">78.701 pasang · Rp 81.700/pair avg</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:1.2rem; font-weight:900; color:#002A3A;">61.3%</div>
+                            <div style="font-size:0.65rem; color:#9ca3af;">revenue share</div>
+                        </div>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.75rem; height:8px;"><div class="ff-fill" style="width:61.3%; background:#002A3A;"></div></div>
+                </div>
+                <!-- Event -->
+                <div style="background:white; border-radius:10px; padding:1.25rem 1.5rem; box-shadow:0 2px 8px rgba(0,0,0,0.06); border-left:4px solid #00E273;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em;">EVENT</div>
+                            <div style="font-size:1.5rem; font-weight:900; color:#111827;">Rp 136,7M</div>
+                            <div style="font-size:0.75rem; color:#6b7280;">1.326 pasang · Pop-up & event sales</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:1.2rem; font-weight:900; color:#16a34a;">1.3%</div>
+                            <div style="font-size:0.65rem; color:#9ca3af;">revenue share</div>
+                        </div>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.75rem; height:8px;"><div class="ff-fill" style="width:1.3%; background:#00E273;"></div></div>
+                </div>
+                <!-- Non-Retail -->
+                <div style="background:white; border-radius:10px; padding:1.25rem 1.5rem; box-shadow:0 2px 8px rgba(0,0,0,0.06); border-left:4px solid #f59e0b;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em;">NON-RETAIL</div>
+                            <div style="font-size:1.5rem; font-weight:900; color:#111827;">Rp 110,7M</div>
+                            <div style="font-size:0.75rem; color:#6b7280;">1.011 pasang · Distributor / wholesale</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:1.2rem; font-weight:900; color:#d97706;">1.0%</div>
+                            <div style="font-size:0.65rem; color:#9ca3af;">revenue share</div>
+                        </div>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.75rem; height:8px;"><div class="ff-fill" style="width:1.0%; background:#f59e0b;"></div></div>
+                </div>
+                <!-- Unmapped -->
+                <div style="background:#f8fafc; border-radius:10px; padding:1.25rem 1.5rem; border-left:4px solid #e5e7eb;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.05em;">UNMAPPED / CHANNEL TBD</div>
+                            <div style="font-size:1.5rem; font-weight:900; color:#9ca3af;">Rp 3,81B</div>
+                            <div style="font-size:0.75rem; color:#9ca3af;">32.537 pasang · store_category = NULL</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:1.2rem; font-weight:900; color:#9ca3af;">36.3%</div>
+                            <div style="font-size:0.65rem; color:#9ca3af;">unclassified</div>
+                        </div>
+                    </div>
+                    <div class="ff-bar" style="margin-top:0.75rem; height:8px;"><div class="ff-fill" style="width:36.3%; background:#e5e7eb;"></div></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">💡 CHANNEL INSIGHTS</div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background:#fffbeb; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#d97706; margin-bottom:0.4rem;">⚠️ Data Quality Alert</div>
+                    <div style="font-size:0.72rem; color:#92400e; line-height:1.5;">36.3% revenue (Rp 3,81B) belum terklasifikasi channel-nya. Ini kemungkinan mencakup konsinyasi, online, atau stores yang belum dimapping. Perlu data cleanup di portal.</div>
+                </div>
+                <div style="background:#002A3A; border-radius:8px; padding:1rem; color:white;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#00E273; margin-bottom:0.4rem;">📊 Retail Dominates</div>
+                    <div style="font-size:0.72rem; color:rgba(255,255,255,0.85); line-height:1.5;">Dari channel yang terklasifikasi: Retail = 95.8%, Non-Retail = 1.7%, Event = 2.1%. Model bisnis Zuma masih sangat physical retail-centric.</div>
+                </div>
+                <div style="background:#dbeafe; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#2563eb; margin-bottom:0.4rem;">🛒 Online Channel?</div>
+                    <div style="font-size:0.72rem; color:#1d4ed8; line-height:1.5;">Branch "Online" di DB hanya Rp 149.000 YTD — practically zero. Perlu konfirmasi: apakah online channel sudah ditutup, dikonsolidasi ke entitas lain, atau datanya belum masuk sistem?</div>
+                </div>
+                <div style="background:#f0fdf4; border-radius:8px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#16a34a; margin-bottom:0.4rem;">🎪 Event Channel</div>
+                    <div style="font-size:0.72rem; color:#15803d; line-height:1.5;">Event sales Rp 136.7M (1.326 pasang) dalam 7 minggu — equivalent ~Rp 19.5M/minggu. Potensi untuk lebaran events perlu diaktifkan.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">Source: core.sales_with_product · store_category field · Periode Jan–18 Feb 2026 · Total incl. unclassified = Rp 10,48B</div>
+</div>
+
+<!-- SLIDE 6: FF/FA/FS NATIONAL SUMMARY -->
+<div class="slide">
+    <div class="slide-label">06 / 08</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Planogram Health — FF / FA / FS Nasional</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.5rem;">Data: 18 Februari 2026 · 41 stores · Target: FF ≥70% · FA ≥90% · Sumber: mart.ff_fa_fs_daily</p>
+
+    <!-- National summary cards -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem;">
+        <div style="background:#002A3A; border-radius:10px; padding:1.25rem 1.5rem; color:white; text-align:center;">
+            <div style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:0.5rem;">FILL FACTOR (FF) NASIONAL</div>
+            <div style="font-size:3rem; font-weight:900; color:#f59e0b;">45.1%</div>
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.6); margin-top:0.25rem;">Target: ≥70% · Gap: −24.9pp 🔴</div>
+            <div class="ff-bar" style="margin-top:0.75rem; background:rgba(255,255,255,0.2);"><div class="ff-fill" style="width:45.1%; background:#f59e0b;"></div></div>
+        </div>
+        <div style="background:#002A3A; border-radius:10px; padding:1.25rem 1.5rem; color:white; text-align:center;">
+            <div style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:0.5rem;">FILL ASSORTMENT (FA) NASIONAL</div>
+            <div style="font-size:3rem; font-weight:900; color:#dc2626;">57.1%</div>
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.6); margin-top:0.25rem;">Target: ≥90% · Gap: −32.9pp 🔴</div>
+            <div class="ff-bar" style="margin-top:0.75rem; background:rgba(255,255,255,0.2);"><div class="ff-fill" style="width:57.1%; background:#dc2626;"></div></div>
+        </div>
+        <div style="background:#002A3A; border-radius:10px; padding:1.25rem 1.5rem; color:white; text-align:center;">
+            <div style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:0.5rem;">FILL STOCK (FS) NASIONAL</div>
+            <div style="font-size:3rem; font-weight:900; color:#00E273;">14.7</div>
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.6); margin-top:0.25rem;">minggu coverage rata-rata · 41 stores</div>
+            <div class="ff-bar" style="margin-top:0.75rem; background:rgba(255,255,255,0.2);"><div class="ff-fill" style="width:70%; background:#00E273;"></div></div>
+        </div>
+    </div>
+
+    <!-- Per-branch FF/FA/FS table -->
+    <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:1.5rem;">
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">📊 FF / FA / FS PER BRANCH</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Branch</th>
+                        <th style="text-align:center;">Stores</th>
+                        <th style="text-align:center;">FF</th>
+                        <th style="text-align:center; width:80px;">FF Bar</th>
+                        <th style="text-align:center;">FA</th>
+                        <th style="text-align:center;">FS (wk)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Jatim</strong></td>
+                        <td style="text-align:center;">10</td>
+                        <td style="text-align:center;" class="ach-amber">56.6% 🟡</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:56.6%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">69.8%</td>
+                        <td style="text-align:center;">11.9</td>
+                        <td><span class="badge-amber">FF low</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bali 1</strong></td>
+                        <td style="text-align:center;">6</td>
+                        <td style="text-align:center;" class="ach-amber">49.7% 🟡</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:49.7%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">64.8%</td>
+                        <td style="text-align:center;">16.8</td>
+                        <td><span class="badge-red">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bali 2</strong></td>
+                        <td style="text-align:center;">8</td>
+                        <td style="text-align:center;" class="ach-amber">44.7% 🟡</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:44.7%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">62.5%</td>
+                        <td style="text-align:center;">16.3</td>
+                        <td><span class="badge-red">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bali 3</strong></td>
+                        <td style="text-align:center;">8</td>
+                        <td style="text-align:center;" class="ach-amber">43.0% 🟡</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:43.0%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">53.0%</td>
+                        <td style="text-align:center;">16.8</td>
+                        <td><span class="badge-red">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jakarta</strong></td>
+                        <td style="text-align:center;">4</td>
+                        <td style="text-align:center;" class="ach-amber">47.0% 🟡</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:47.0%; background:#f59e0b;"></div></div></td>
+                        <td style="text-align:center;" class="ach-amber">56.3%</td>
+                        <td style="text-align:center;">19.0</td>
+                        <td><span class="badge-red">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lombok</strong></td>
+                        <td style="text-align:center;">2</td>
+                        <td style="text-align:center;" class="ach-red">38.9% 🔴</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:38.9%; background:#dc2626;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">44.1%</td>
+                        <td style="text-align:center;">11.4</td>
+                        <td><span class="badge-red">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sumatera</strong></td>
+                        <td style="text-align:center;">2</td>
+                        <td style="text-align:center;" class="ach-red">15.7% 🔴</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:15.7%; background:#dc2626;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">20.9%</td>
+                        <td style="text-align:center;">9.1</td>
+                        <td><span class="badge-red">Very Low</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sulawesi</strong></td>
+                        <td style="text-align:center;">1</td>
+                        <td style="text-align:center;" class="ach-red">32.3% 🔴</td>
+                        <td><div class="ff-bar"><div class="ff-fill" style="width:32.3%; background:#dc2626;"></div></div></td>
+                        <td style="text-align:center;" class="ach-red">44.5%</td>
+                        <td style="text-align:center;">4.3</td>
+                        <td><span class="badge-red">Low Stock!</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div style="font-size:0.7rem; font-weight:700; color:#6b7280; letter-spacing:0.05em; margin-bottom:0.75rem;">🎯 ACTION PRIORITY</div>
+            <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                <div style="background:#fee2e2; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">#1 SUMATERA — FF 15.7%</div>
+                    <div style="font-size:0.7rem; color:#991b1b; margin-top:2px;">FF terendah nasional. Kirim stok Tier 1–2 segera. FS hanya 9.1 minggu.</div>
+                </div>
+                <div style="background:#fee2e2; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#dc2626;">#2 SULAWESI — FS 4.3 minggu</div>
+                    <div style="font-size:0.7rem; color:#991b1b; margin-top:2px;">Stock kritis. Hanya 4 minggu tersisa. Emergency replenishment needed.</div>
+                </div>
+                <div style="background:#fffbeb; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#d97706;">#3 BALI (22 stores)</div>
+                    <div style="font-size:0.7rem; color:#92400e; margin-top:2px;">FF 43–50%, FA 53–65%. Gap besar pre-Lebaran. Audit planogram semua stores Bali.</div>
+                </div>
+                <div style="background:#fffbeb; border-radius:8px; padding:0.75rem 1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#d97706;">#4 LOMBOK</div>
+                    <div style="font-size:0.7rem; color:#92400e; margin-top:2px;">FF 38.9% padahal revenue #1 & #4 secara nasional. Revenue potential lebih besar jika FF naik ke 70%.</div>
+                </div>
+                <div style="background:#002A3A; border-radius:8px; padding:0.75rem 1rem; color:white; margin-top:0.25rem;">
+                    <div style="font-size:0.72rem; line-height:1.5; color:rgba(255,255,255,0.85);">
+                        💡 <strong style="color:#00E273;">Estimasi Revenue Loss dari FF Gap:</strong> Jika FF dinaikkan dari 45% ke 70%, potensi revenue tambahan ~+55% per slot. Pada revenue nasional Rp 6.62B/bulan, ini setara ±Rp 3.6B potensi yang belum terrealisasi.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">FF = slot terisi / total slot planogram. FA = artikel present / total artikel assortment. FS = weeks of stock coverage. Data: mart.ff_fa_fs_daily as of 18 Feb 2026.</div>
+</div>
+
+<!-- SLIDE 7: TOP STORES -->
+<div class="slide">
+    <div class="slide-label">07 / 08</div>
+    <h2 style="font-size:1.6rem; font-weight:900; color:#002A3A; margin-bottom:0.25rem;">Top Stores — Performers Nasional</h2>
+    <p style="color:#6b7280; font-size:0.8rem; margin-bottom:1.25rem;">12 toko terbaik berdasarkan revenue YTD Jan–18 Feb 2026 · Sumber: core.sales_with_product</p>
+
+    <div style="display:grid; grid-template-columns:1.8fr 1fr; gap:1.5rem;">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align:center; width:32px;">#</th>
+                        <th>Store</th>
+                        <th>Branch</th>
+                        <th style="text-align:right;">Pairs</th>
+                        <th style="text-align:right;">Revenue</th>
+                        <th style="text-align:right;">Avg/Pair</th>
+                        <th style="text-align:center;">Share</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background:#f0fdf4;">
+                        <td style="text-align:center; font-weight:900; color:#16a34a;">1</td>
+                        <td><strong>Zuma Mataram</strong> ⭐</td>
+                        <td><span class="badge-blue">Lombok</span></td>
+                        <td style="text-align:right;">6.074</td>
+                        <td style="text-align:right; font-weight:700;">Rp 406,8M</td>
+                        <td style="text-align:right;">Rp 67.0K</td>
+                        <td style="text-align:center; font-size:0.7rem;">6.2%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">2</td>
+                        <td>Zuma Tabanan</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">4.174</td>
+                        <td style="text-align:right; font-weight:700;">Rp 328,8M</td>
+                        <td style="text-align:right;">Rp 78.8K</td>
+                        <td style="text-align:center; font-size:0.7rem;">5.0%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">3</td>
+                        <td>Zuma Living World</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">2.999</td>
+                        <td style="text-align:right; font-weight:700;">Rp 259,3M</td>
+                        <td style="text-align:right;">Rp 86.5K</td>
+                        <td style="text-align:center; font-size:0.7rem;">3.9%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900; color:#16a34a;">4</td>
+                        <td>Zuma Epicentrum</td>
+                        <td><span class="badge-blue">Lombok</span></td>
+                        <td style="text-align:right;">3.143</td>
+                        <td style="text-align:right; font-weight:700;">Rp 244,0M</td>
+                        <td style="text-align:right;">Rp 77.6K</td>
+                        <td style="text-align:center; font-size:0.7rem;">3.7%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">5</td>
+                        <td>Zuma Klungkung</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">3.625</td>
+                        <td style="text-align:right; font-weight:700;">Rp 240,5M</td>
+                        <td style="text-align:right;">Rp 66.3K</td>
+                        <td style="text-align:center; font-size:0.7rem;">3.7%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">6</td>
+                        <td>Zuma Gianyar</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">3.425</td>
+                        <td style="text-align:right; font-weight:700;">Rp 240,4M</td>
+                        <td style="text-align:right;">Rp 70.2K</td>
+                        <td style="text-align:center; font-size:0.7rem;">3.7%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">7</td>
+                        <td>Zuma Mall Bali Galeria</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">2.133</td>
+                        <td style="text-align:right; font-weight:700;">Rp 201,4M</td>
+                        <td style="text-align:right;">Rp 94.4K</td>
+                        <td style="text-align:center; font-size:0.7rem;">3.1%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">8</td>
+                        <td>Zuma Tunjungan Plaza</td>
+                        <td><span style="background:#fce7f3; color:#be185d; padding:2px 8px; border-radius:999px; font-size:0.7rem; font-weight:700;">Jatim</span></td>
+                        <td style="text-align:right;">2.062</td>
+                        <td style="text-align:right; font-weight:700;">Rp 199,8M</td>
+                        <td style="text-align:right;">Rp 96.9K</td>
+                        <td style="text-align:center; font-size:0.7rem;">3.0%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">9</td>
+                        <td>Zuma Karangasem</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">2.497</td>
+                        <td style="text-align:right; font-weight:700;">Rp 177,4M</td>
+                        <td style="text-align:right;">Rp 71.0K</td>
+                        <td style="text-align:center; font-size:0.7rem;">2.7%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">10</td>
+                        <td>Zuma Panjer</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">2.308</td>
+                        <td style="text-align:right; font-weight:700;">Rp 165,7M</td>
+                        <td style="text-align:right;">Rp 71.8K</td>
+                        <td style="text-align:center; font-size:0.7rem;">2.5%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">11</td>
+                        <td>Zuma Singaraja</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">2.148</td>
+                        <td style="text-align:right; font-weight:700;">Rp 162,9M</td>
+                        <td style="text-align:right;">Rp 75.8K</td>
+                        <td style="text-align:center; font-size:0.7rem;">2.5%</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900;">12</td>
+                        <td>Zuma Level 21</td>
+                        <td><span class="badge-amber">Bali</span></td>
+                        <td style="text-align:right;">1.686</td>
+                        <td style="text-align:right; font-weight:700;">Rp 153,9M</td>
+                        <td style="text-align:right;">Rp 91.3K</td>
+                        <td style="text-align:center; font-size:0.7rem;">2.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background:#f0fdf4; border-radius:10px; padding:1rem 1.25rem;">
+                    <div style="font-size:0.65rem; font-weight:700; color:#16a34a; letter-spacing:0.05em; margin-bottom:0.5rem;">⭐ SURPRISE LEADER</div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#15803d;">Mataram #1 Nasional</div>
+                    <div style="font-size:0.72rem; color:#15803d; margin-top:4px; line-height:1.5;">Rp 406.8M, 6.074 pairs — mengalahkan semua toko Bali yang lebih established. Dua toko Lombok masuk top 5 nasional.</div>
+                </div>
+                <div style="background:#fffbeb; border-radius:10px; padding:1rem 1.25rem;">
+                    <div style="font-size:0.65rem; font-weight:700; color:#d97706; letter-spacing:0.05em; margin-bottom:0.5rem;">📊 BALI DOMINATES TOP 10</div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#92400e;">8 dari 12 = Bali</div>
+                    <div style="font-size:0.72rem; color:#92400e; margin-top:4px; line-height:1.5;">Meski achievement rendah, Bali masih mendominasi volume absolut. Issue bukan pada per-store performance tapi target yang terlalu tinggi atau jumlah stores.</div>
+                </div>
+                <div style="background:#002A3A; border-radius:10px; padding:1rem 1.25rem; color:white;">
+                    <div style="font-size:0.65rem; font-weight:700; color:#00E273; letter-spacing:0.05em; margin-bottom:0.5rem;">💡 AVG REVENUE/PAIR</div>
+                    <div style="font-size:0.85rem; font-weight:700; color:white;">Rp 67K – Rp 97K</div>
+                    <div style="font-size:0.72rem; color:rgba(255,255,255,0.7); margin-top:4px; line-height:1.5;">
+                        Tunjungan Plaza & MBG paling tinggi (Rp 94–97K) → mix Tier lebih tinggi.<br>
+                        Mataram & Klungkung lebih rendah (Rp 66–67K) → volume-driven.
+                    </div>
+                </div>
+                <div style="background:#fee2e2; border-radius:10px; padding:1rem 1.25rem;">
+                    <div style="font-size:0.65rem; font-weight:700; color:#dc2626; letter-spacing:0.05em; margin-bottom:0.5rem;">⚠️ YANG PERLU DIPERHATIKAN</div>
+                    <div style="font-size:0.72rem; color:#991b1b; line-height:1.5;">Mataram sudah #1 dengan FF 38.9% — bayangkan jika FF naik ke 70%. Estimated additional revenue: +60% atau +Rp 244M/7 weeks.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">Ranking berdasarkan revenue YTD Jan–18 Feb 2026. Revenue share = % dari total branch-mapped revenue. Avg/pair = revenue/qty.</div>
+</div>
+
+<!-- SLIDE 8: ACTION ITEMS -->
+<div class="slide slide-dark" style="min-height:480px;">
+    <div class="slide-label">08 / 08</div>
+    <div class="gradient-blob" style="opacity:0.3;"></div>
+    <div class="content">
+        <div style="display:inline-block; background:#00E273; color:#002A3A; font-size:0.7rem; font-weight:700; padding:4px 12px; border-radius:4px; letter-spacing:0.08em; margin-bottom:1.5rem;">STRATEGIC ACTIONS — Q1 2026</div>
+        <h2 style="font-size:1.8rem; font-weight:900; color:white; margin-bottom:1.5rem;">3 Prioritas Utama</h2>
+
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-bottom:2rem;">
+            <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,226,115,0.3); border-radius:10px; padding:1.5rem;">
+                <div style="font-size:2rem; margin-bottom:0.5rem;">🔴</div>
+                <div style="font-size:0.65rem; font-weight:700; color:#00E273; margin-bottom:0.5rem; letter-spacing:0.08em;">URGENT — PLANOGRAM</div>
+                <h3 style="font-size:1rem; font-weight:700; color:white; margin-bottom:0.75rem;">Fix FF/FA Nationwide</h3>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.7); line-height:1.6;">
+                    National FF 45.1% — jauh di bawah target 70%. Sumatera (FF 15.7%) dan Sulawesi (FS 4.3 wk) butuh immediate action. Lombok FF 38.9% padahal revenue #1–#5.
+                </div>
+                <div style="margin-top:1rem; font-size:0.7rem; color:#00E273; font-weight:700;">KPI: FF ≥70% seluruh stores by end of Maret</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,226,115,0.3); border-radius:10px; padding:1.5rem;">
+                <div style="font-size:2rem; margin-bottom:0.5rem;">📈</div>
+                <div style="font-size:0.65rem; font-weight:700; color:#00E273; margin-bottom:0.5rem; letter-spacing:0.08em;">GROWTH — LOMBOK</div>
+                <h3 style="font-size:1rem; font-weight:700; color:white; margin-bottom:0.75rem;">Expand Lombok Presence</h3>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.7); line-height:1.6;">
+                    2 toko Lombok = #1 dan #4 nasional dengan +36.7% YoY. Market yang underserved. Evaluasi 3rd store di Lombok (Praya? Selong?). Pastikan stok cukup untuk 2 toko yang ada.
+                </div>
+                <div style="margin-top:1rem; font-size:0.7rem; color:#00E273; font-weight:700;">KPI: Lombok revenue +50% by Q2 2026</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,226,115,0.3); border-radius:10px; padding:1.5rem;">
+                <div style="font-size:2rem; margin-bottom:0.5rem;">🔍</div>
+                <div style="font-size:0.65rem; font-weight:700; color:#00E273; margin-bottom:0.5rem; letter-spacing:0.08em;">INVESTIGATE — JAKARTA</div>
+                <h3 style="font-size:1rem; font-weight:700; color:white; margin-bottom:0.75rem;">Root Cause Jakarta Drop</h3>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.7); line-height:1.6;">
+                    Jakarta −56.9% YoY adalah drop terbesar secara relatif. 4 stores, achievement 53%. Perlu investigation: foot traffic, kompetitor, stok/planogram, atau pricing? Data lokasi per store belum tersedia di deck ini.
+                </div>
+                <div style="margin-top:1rem; font-size:0.7rem; color:#00E273; font-weight:700;">KPI: Jakarta recovery ke ≥70% ach by Q2</div>
+            </div>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:1.25rem; display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.4);">
+                Data source: OpenClaw OPS DB · Queries: core.sales_with_product, mart.ff_fa_fs_daily, portal.store_monthly_target
+            </div>
+            <div style="font-size:0.75rem; color:rgba(255,255,255,0.4);">Last updated: 18 Februari 2026 · Generated by OpenClaw AI</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

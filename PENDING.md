@@ -140,7 +140,69 @@
 - **Who:** Iris coordinate with Wayan, then reach out to Tim SI PIC
 - **Timeline:** TBD (coordinate with Wayan)
 
-### 6. Official WhatsApp API Setup
+### 6. Install PicoClaw di VPS — SPG Agent
+- **Purpose:** Bikin lightweight agent di VPS untuk follow-up SPG (Stock Opname + Product Knowledge)
+- **Why PicoClaw:** Enteng, VPS gak ngelag (8GB RAM, 2 CPU)
+- **Use case:**
+  - Follow up SPG soal stock opname (reminder, status check)
+  - Sarana SPG nanya product knowledge (series, tier, harga, material)
+- **Steps:**
+  - [ ] Install PicoClaw di VPS
+  - [ ] Setup agent khusus SPG
+  - [ ] Connect ke WhatsApp (SPG group atau individual)
+  - [ ] Load product knowledge dari DB/skills
+  - [ ] Test end-to-end
+- **Who:** Wayan (install) + Iris (setup agent config)
+- **Priority:** Medium
+- **Timeline:** This month
+
+### 7. Skill Graph (replace Skill.md)
+- **Purpose:** Explore skill graph sebagai pengganti flat SKILL.md — more structured, interconnected
+- **Steps:**
+  - [ ] Research skill graph format/tools
+  - [ ] Compare vs current SKILL.md approach
+  - [ ] Prototype untuk 1 skill (e.g., RO Request)
+- **Who:** Iris + Wayan
+- **Timeline:** This month
+
+### 8. `/done` Command in OpenCode/Claude Code
+- **Purpose:** Command `/done` yang auto-summarize session dan save ke Obsidian
+- **Steps:**
+  - [ ] Build custom command/plugin for OpenCode + Claude Code
+  - [ ] Auto-generate summary (what was done, decisions, files changed)
+  - [ ] Save output ke Obsidian vault di Mac mini
+- **Who:** Daedalus (build) + Wayan (review)
+- **Timeline:** This month
+
+### 9. Setup Obsidian di Mac Mini
+- **Purpose:** Knowledge base / second brain untuk Zuma + personal
+- **Steps:**
+  - [ ] Install Obsidian di Mac mini
+  - [ ] Setup vault structure
+  - [ ] Integrate dengan `/done` command output
+  - [ ] Sync strategy (iCloud / Git / local only?)
+- **Who:** Wayan (install) + Iris (setup vault)
+- **Timeline:** This month
+
+### 10. Bandingin PicoClaw vs Nanobot
+- **Purpose:** Compare lightweight agent frameworks buat VPS deployment
+- **Steps:**
+  - [ ] Research Nanobot (GitHub)
+  - [ ] Compare: resource usage, features, VPS-friendliness
+  - [ ] Decide mana yang dipake buat SPG agent
+- **Who:** Hermes (research) + Wayan (decide)
+- **Timeline:** This month
+
+### 11. Explore Pinchtab — Browser Control for AI Agents
+- **Purpose:** Browser control tool for AI agents (GitHub repo)
+- **Steps:**
+  - [ ] Hermes riset repo (in progress)
+  - [ ] Evaluate: cocok buat Iris/OpenClaw atau gak
+  - [ ] Setup kalau worth it
+- **Who:** Iris + Wayan
+- **Timeline:** This month
+
+### 11. Official WhatsApp API Setup
 - **Purpose:** Migrate Iris to official WhatsApp Business API (dedicated number)
 - **Current:** Using personal WhatsApp (relay-based)
 - **Target:** Official API for reliability, scalability, business features
