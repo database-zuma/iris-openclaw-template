@@ -102,7 +102,25 @@
 - **Who:** Iris
 - **Timeline:** TBD (lower priority until Finance data available)
 
-### 6. Finance Role Data — COGS / Gross Margin from Accurate
+### 6. Finance — Rekonsiliasi Data Pajak (Bu Aulia)
+
+#### A. Rekon Ringkasan Penjualan vs Invoice Pajak
+- **Requester:** Bu Aulia (Finance Manager)
+- **Purpose:** Rekonsiliasi antara ringkasan penjualan vs invoice-invoice pajak
+- **Status:** Pending — perlu koordinasi format & sumber data dengan Bu Aulia
+- **Who:** Iris + Bu Aulia
+- **Timeline:** TBD
+
+#### B. Rekon Ringkasan Pembelian (PDF → GSheet)
+- **Requester:** Bu Aulia (Finance Manager)
+- **Purpose:** Konversi PDF ringkasan pembelian ke format tabel Google Sheets
+- **Status:** Pending — perlu sample PDF dari Bu Aulia
+- **Who:** Iris + Bu Aulia
+- **Timeline:** TBD
+
+---
+
+### 7. Finance Role Data — COGS / Gross Margin from Accurate
 - **Blocker:** No COGS/margin data in DB — Finance deck (Contribution Margin) can't be built yet
 - **Action:** Coordinate with Wayan when Accurate margin data becomes available
 - **Impact:** Unlocks Finance role deck + proper profitability analysis
