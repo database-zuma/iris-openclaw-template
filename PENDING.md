@@ -221,6 +221,28 @@
 - **Priority:** Medium (not urgent, but good to plan ahead)
 - **Timeline:** Q1 2026
 
+### 16. Nanobot untuk SO Level 1 — SPG/B Random Check
+- **Purpose:** Random check untuk SPG/B via WhatsApp — minta foto bukti barang, verifikasi fisik
+- **Agent:** Nanobot (lightweight, Python)
+- **Features:**
+  - Kirim request random ke SPG/B (scheduled atau manual trigger)
+  - SPG/B reply dengan foto barang + kondisi
+  - Auto-verify (cek timestamp, lokasi, kondisi barang)
+  - Report ke Tim SI/Inventory Control
+- **Integration:** Connect ke data SO Level 1 (physical count vs system)
+- **Who:** Wayan (setup) + Iris (config agent)
+- **Priority:** Medium
+- **Timeline:** After Nanobot SPG agent (#8) selesai
+
+### 15. MCP Excalidraw — Flowchart/Architecture Diagrams
+- **Purpose:** Visual flowchart/diagram maker via MCP for architecture documentation
+- **Use case:** Docker multi-agent architecture diagrams, workflow documentation
+- **Reference:** Cari MCP server Excalidraw atau integrasi serupa
+- **Status:** Research needed
+- **Who:** Iris research → Wayan review
+- **Priority:** Low-Medium
+- **Timeline:** TBD (after Docker agents setup)
+
 ---
 
 ## 📝 Notes

@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Eos - Visual Agent (Gemini 3 Pro)
+  eos:
+    build: ./openclaw-agent
+    container_name: eos-agent
+    ports:
+      - "18791:18791"
+    volumes:
+      - /Users/database-zuma/.openclaw/workspace-eos:/workspace
+      - /Users/database-zuma/.openclaw/workspace/.env:/workspace/.env:ro
+    environment:
+      - OPENCLAW_PORT=18791
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_API_KEY=${GEMINI_API_KEY}
+    networks:
+      - openclaw-agents
+    restart: unless-stopped
+
+  # Codex - Coding Agent (Kimi K2.5) - enable later
+  # codex:
+  #   build: ./openclaw-agent
+  #   container_name: codex-agent
+  #   ports:
+  #     - "18792:18792"
+  #   volumes:
+  #     - /Users/database-zuma/.openclaw/workspace-codex:/workspace
+  #   environment:
+  #     - OPENCLAW_PORT=18792
+  #   networks:
+  #     - openclaw-agents
+
+  # Argus - Data Agent (Gemini 2.5 Pro) - enable later
+  # argus:
+  #   build: ./openclaw-agent
+  #   container_name: argus-agent
+  #   ports:
+  #     - "18793:18793"
+  #   volumes:
+  #     - /Users/database-zuma/.openclaw/workspace-argus:/workspace
+  #   environment:
+  #     - OPENCLAW_PORT=18793
+  #   networks:
+  #     - openclaw-agents
+
+networks:
+  openclaw-agents:
+    driver: bridge

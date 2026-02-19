@@ -6,7 +6,7 @@
 
 ## 📋 Pending Tasks
 
-- [ ] **Obsidian** — Wayan install manual, skip automated install
+- [x] **Obsidian** — ✅ Installed (Wayan 19 Feb). mcp-obsidian v0.7.5 ready di `~/homebrew/bin/mcp-obsidian`. Vault: `~/.openclaw/obsidian-vault/`. Perlu configure sebagai MCP server di OpenClaw agar Iris bisa akses.
 - [ ] **Sosialisasi SO L1+L2 dengan Pak Ali** — sedang dikoordinasikan (Wayan lagi ngobrol 2026-02-19 pagi)
 
 ---

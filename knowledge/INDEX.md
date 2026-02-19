@@ -4,6 +4,7 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-20** | [Multi-Agent Architecture — Production (Eos Live)](ai-agents/2026-02-20_multi-agent-architecture-production.md) | #multi-agent #nanobot #openclaw #architecture #production | Hybrid OpenClaw (Iris) + Nanobot (Eos) with filesystem bridge communication
 - **2026-02-19** | [Botasaurus — All-in-One Web Scraping Framework](dev-tools/2026-02-19_github_botasaurus.md) | #web-scraping #python #anti-bot #cloudflare-bypass #automation | GitHub Research
 - **2026-02-19** | [Voicebox — Open-Source Voice Synthesis Studio](dev-tools/2026-02-19_github_voicebox.md) | #tts #voice-cloning #local-ai #qwen3-tts #openclaw-integration #apple-silicon | GitHub research
 - **2026-02-19** | [Docker Multi-Agent Architecture](ai-agents/2026-02-19_docker-multi-agent-architecture.md) | #docker #multi-agent #orchestration #isolation #kimi-k2 #gemini-flash #openclaw #a2a-protocol | Research for Iris/OpenClaw multi-worker setup on Mac mini M4
