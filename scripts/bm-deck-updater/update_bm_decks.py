@@ -149,13 +149,14 @@ def update_branch(branch_key, dry_run=False):
     conn = get_connection(DB_URL)
 
     print("  📊 Querying revenue per store...")
-    revenue_rows = get_store_revenue(conn, stores, year)
+    revenue_rows = get_store_revenue(conn, stores, year, month)
 
     print("  🎯 Querying targets...")
     target_rows = get_store_targets(conn, stores, year)
 
     print("  📐 Querying FF/FA/FS...")
-    ff_rows = get_ff_fa_fs(conn, stores)
+    ff_store_map = cfg.get("ff_store_map", None)
+    ff_rows = get_ff_fa_fs(conn, stores, ff_store_map)
 
     print("  📦 Querying BCG series data...")
     bcg_rows = get_bcg_series(conn, stores, year)

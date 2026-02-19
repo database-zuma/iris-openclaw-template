@@ -7,6 +7,7 @@
 ## 📋 Pending Tasks
 
 - [ ] **Obsidian** — Wayan install manual, skip automated install
+- [ ] **Sosialisasi SO L1+L2 dengan Pak Ali** — sedang dikoordinasikan (Wayan lagi ngobrol 2026-02-19 pagi)
 
 ---
 
@@ -14,4 +15,4 @@
 
 - **Email:** Last check —
 - **Calendar:** Next 24-48h —
-- **Weather:** —
+- **Weather:** Checked 14:35 (+28°C)

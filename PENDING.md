@@ -8,6 +8,24 @@
 
 ## 🔥 Urgent (This Week)
 
+### 0. SO Fixation — Tools, SOP & Sosialisasi (Main Priority Februari)
+**PIC:** Pak Ali (main), Wayan/CI (support)
+- [ ] **Fixsasi tools** SO L1 & L2
+- [ ] **Finalisasi SOP** SO L1 & L2
+- [ ] **Sosialisasi ke branch** — target **minggu depan (23-28 Feb)**
+  - ⚠️ Belum ada jadwal → **HARUS ngobrol Pak Ali ASAP** untuk schedule sosialisasi
+  - Remind: bikin schedule sosialisasi SO L1+L2 dengan Pak Ali
+
+### 0b. Validasi Target 3 Pilar — Per Departemen (Main Priority Februari)
+**PIC:** Masing-masing dept (bukan CI)
+- [ ] Scheduling sesi validasi per dept — Wayan/CI yang atur jadwalnya
+- [ ] Koordinasi kapan tiap dept bisa validasi 3 pillar mereka
+
+### 0c. RO Flow — End-to-End Review
+**PIC:** Wayan + Mas Wayan → validasi ke Pak Ali (perwakilan branch)
+- [ ] Review alur RO end-to-end (belum selesai ditelaah)
+- [ ] Schedule sesi validasi dengan Pak Ali
+
 ### 1. Create SO L2 SKILL.md (retroactive documentation)
 - **Status:** Script LIVE ✅, skill doc MISSING ⚠️
 - **Location:** `zuma-business-skills/ops/zuma-inventory-control/zuma-so-l2-skills/SKILL.md`
@@ -144,6 +162,51 @@
 - **Detail:** `knowledge/ai-agents/picoclaw-vs-nanobot.md`
 - **Next:** Install Nanobot di VPS → lihat item #9 (PicoClaw di VPS = ganti ke Nanobot)
 
+### 14. Deep Dive: Multi-OpenClaw Docker Architecture
+- **Purpose:** Implement isolated Docker containers per worker agent — solve rate limit, cost, stability issues
+- **Context:** Idea dari Wayan 2026-02-19. Research sudah ada di `knowledge/ai-agents/2026-02-19_docker-multi-agent-architecture.md`
+- **Concept:**
+  - Iris (Sonnet) = orchestrator only
+  - Tiap worker = 1 Docker container = 1 standalone OpenClaw instance (cheap model: Kimi K2.5 / Gemini Flash)
+  - Komunikasi via HTTP REST atau Redis Streams
+  - API key isolation → rate limit independence
+- **Solves:** Issue 2 (multi-spawn rate limit) + Issue 3 (token cost) + Issue 4 (non-Anthropic breakdown)
+- **Reference:** `github.com/docker/compose-for-agents` (official Docker A2A examples)
+- **Steps:**
+  - [ ] Wayan deep dive doc: `knowledge/ai-agents/2026-02-19_docker-multi-agent-architecture.md`
+  - [ ] Decide: Docker Compose vs full Kubernetes vs simple process isolation
+  - [ ] Design container spec: model per container, API key strategy, health check
+  - [ ] Prototype: 1 Iris orchestrator + 1 worker container (Gemini Flash)
+  - [ ] Test communication pattern (REST vs Redis)
+  - [ ] Rollout ke semua worker agents
+- **Who:** Wayan (infra decision) + Iris/Daedalus (implementation)
+
+### 14b. Docker Multi-Agent — Setup Checklist
+- **Depends on:** #14 (architecture decision)
+- **Agent lineup confirmed:**
+  | Agent | Role | Model |
+  |-------|------|-------|
+  | Iris 🌸 | Orchestrator + QC | Claude Sonnet |
+  | Codex 📖 | Coding & Builder | Kimi K2.5 |
+  | Eos 🌅 | Visual + Design + Image Gen | Gemini 3 Pro |
+  | Argus 👁️ | Data Analysis + Deep Research | Gemini 2.5 Pro |
+- **Design:** All agents = OpenClaw (MIT, multi-instance ok). Each = Iris clone, focused scope, unique SOUL.md (Greek mythology personality). Each can spawn own junior sub-agents.
+- **Communication:** Telegram bots (recommended) or HTTP REST
+- **Steps:**
+  - [ ] Install **Colima** di Mac mini (Wayan — Docker engine, ARM-native, lightweight)
+  - [ ] Buat **3 Telegram bots** via @BotFather: @codex_bot, @eos_bot, @argus_bot
+  - [ ] Dapetin **Kimi K2.5 API key** (untuk Codex — cek apakah sudah ada di .env)
+  - [ ] Verifikasi Gemini 2.5 Pro tersedia via existing `GEMINI_API_KEY`
+  - [ ] Iris setup **Docker Compose** config (4 services, 4 ports)
+  - [ ] Clone OpenClaw config per container + tulis SOUL.md per agent
+  - [ ] Test komunikasi Iris → Codex → result back
+  - [ ] Rollout Eos + Argus
+- **Who:** Wayan (Colima install + BotFather + API keys) + Iris (Docker Compose + config)
+- **Priority:** Medium-High
+- **Timeline:** Q1 2026
+- **Priority:** Medium-High (architectural improvement)
+- **Timeline:** Q1 2026
+
 ### 13. Official WhatsApp API Setup
 - **Purpose:** Migrate Iris to official WhatsApp Business API (dedicated number)
 - **Current:** Using personal WhatsApp (relay-based)
@@ -168,3 +231,22 @@
 - **Review frequency:** Weekly (clean up completed tasks, reprioritize)
 
 **Reminder:** When tasks move from PENDING → HEARTBEAT (becomes urgent), remove from PENDING to avoid duplication.
+
+---
+
+## iSeller Data Upload ke DB
+
+**Priority:** Medium
+**Source:** GDrive → `0. OPENCLAW/2. data/iSeller/`
+**Link:** https://drive.google.com/drive/folders/14nxceAcTie9IO-UGZPu7SZa8x5HynELT
+
+**Steps:**
+1. Download file iSeller dari GDrive folder `2. data > iseller` ke Mac Mini
+2. Inspect kolom — tanggal hanya ada di **row pertama per struk** (nomor struk = group key)
+3. **Forward fill** kolom tanggal: group by nomor struk → fill down ke rows berikutnya
+4. Buat schema baru `raw.iseller` di PostgreSQL VPS
+5. Upload data yang sudah di-process
+
+**Notes:**
+- Contoh: Struk #40-1889 = 4 rows (3 SKU + 1 shop bag) — tanggal cuma row 1, harus di-ffill ke rows 2-4
+- Ini data penting — setelah ada iSeller, data transaksi bisa ditampilkan ke user

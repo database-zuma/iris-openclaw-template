@@ -13,6 +13,7 @@
 | Context7 | `@upstash/context7-mcp` | `/Users/database-zuma/homebrew/bin/context7-mcp` | ✅ INSTALLED | ⚠️ API key needed |
 | Figma MCP | `figma-developer-mcp` | `/Users/database-zuma/homebrew/bin/figma-developer-mcp` | ✅ INSTALLED | ⚠️ Figma API key needed |
 | NotebookLM MCP | `notebooklm-mcp-cli` v0.3.3 | `~/.local/bin/notebooklm-mcp` | ✅ INSTALLED | ⚠️ Google auth needed (`nlm login`) |
+| Obsidian MCP | `@mauricio.wolff/mcp-obsidian` | `/Users/database-zuma/homebrew/bin/mcp-obsidian` | ✅ INSTALLED | No auth needed |
 
 ---
 
@@ -271,6 +272,56 @@ nlm skill install openclaw
 
 ---
 
+## 5. Obsidian MCP (mcp-obsidian) ✅
+
+**Repo:** https://github.com/bitbonsai/mcp-obsidian  
+**Package:** `@mauricio.wolff/mcp-obsidian` (npm global)  
+**Binary:** `/Users/database-zuma/homebrew/bin/mcp-obsidian`  
+**Stars:** 496+ | By bitbonsai (Mauricio Wolff) | v0.7.5
+
+### What it does
+Universal AI bridge for Obsidian vaults. Read/write/search notes, manage tags, frontmatter, batch operations. Works directly on vault files — **no Obsidian app required**.
+
+### Auth / API Keys
+- **No auth required** — runs locally on vault directory
+
+### Vault Location
+`~/.openclaw/obsidian-vault/` — Folders: Daily/, Projects/, Templates/, Attachments/
+
+### Run / Verify
+```bash
+mcp-obsidian /Users/database-zuma/.openclaw/obsidian-vault
+```
+
+### mcporter Config (OpenClaw)
+Already configured via `mcporter config add`:
+```bash
+mcporter list obsidian                              # Check health
+mcporter call obsidian.list_directory               # List vault
+mcporter call obsidian.read_note path=Welcome.md    # Read note
+mcporter call obsidian.write_note path=test.md content="Hello"  # Write
+mcporter call obsidian.search_notes query="keyword" # Search
+```
+
+### OpenCode Config
+Already in `~/.config/opencode/opencode.json`:
+```json
+{
+  "obsidian": {
+    "type": "local",
+    "command": [
+      "/Users/database-zuma/homebrew/bin/mcp-obsidian",
+      "/Users/database-zuma/.openclaw/obsidian-vault"
+    ]
+  }
+}
+```
+
+### Tools (13 total)
+read_note, write_note, patch_note, list_directory, delete_note, search_notes, move_note, read_multiple_notes, update_frontmatter, get_notes_info, get_frontmatter, manage_tags, get_vault_stats
+
+---
+
 ## OpenClaw / Claude Code MCP Config (All Servers)
 
 Combined config block for `~/.claude/mcp.json` or equivalent OpenClaw config:
@@ -292,6 +343,10 @@ Combined config block for `~/.claude/mcp.json` or equivalent OpenClaw config:
     },
     "notebooklm-mcp": {
       "command": "/Users/database-zuma/.local/bin/notebooklm-mcp"
+    },
+    "obsidian": {
+      "command": "/Users/database-zuma/homebrew/bin/mcp-obsidian",
+      "args": ["/Users/database-zuma/.openclaw/obsidian-vault"]
     }
   }
 }
@@ -331,4 +386,7 @@ npm install -g figma-developer-mcp
 uv tool upgrade notebooklm-mcp-cli
 # or force reinstall:
 uv tool install --force notebooklm-mcp-cli
+
+# obsidian
+npm install -g @mauricio.wolff/mcp-obsidian
 ```

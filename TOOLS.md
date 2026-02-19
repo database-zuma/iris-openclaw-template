@@ -1,548 +1,227 @@
 # TOOLS.md — Technical Specs & Infrastructure
 
-Environment-specific paths, credentials, API keys, SSH, and tool configs.
-Behavioral rules & delegation logic → AGENTS.md | Business context → MEMORY.md
+Paths, credentials, API keys, SSH, tool configs.
+Behavioral rules → AGENTS.md | Business context → MEMORY.md
 
 ---
 
-### Credentials
+## Credentials
 
-Semua credentials tersimpan di `/Users/database-zuma/.openclaw/workspace/.env` — JANGAN pernah commit/push file ini.
-Isi: GitHub token, Vercel token, PostgreSQL connection string, Notion API key.
-Load dengan `source .env` atau `python-dotenv`.
+Semua credentials di `/Users/database-zuma/.openclaw/workspace/.env` — JANGAN commit/push.
+Isi: GitHub token, Vercel token, PostgreSQL conn string, Notion API key.
+Load: `source .env` atau `python-dotenv`.
 
-### API Keys
+## API Keys
 
-**Firecrawl API:**
-- Key: `$FIRECRAWL_API_KEY` (see `.env`)
-- Account: database-zuma
-- Docs: https://www.firecrawl.dev/
-- Use case: Web scraping, JS-rendered pages (XXI, TIX ID, dll yang anti-scraping)
+| API | Env Var | Account | Use Case |
+|-----|---------|---------|----------|
+| Firecrawl | `$FIRECRAWL_API_KEY` | database-zuma | Web scraping, JS-rendered pages (XXI, TIX ID) |
+| Tavily | `$TAVILY_API_KEY` | — | AI-optimized web search & research |
+| Exa AI | `$EXA_API_KEY` | database@zuma.id | Neural/semantic web search |
+| Google Gemini | `$GEMINI_API_KEY` | iris-zuma-openclaw (GCP) | LLM fallback, image gen. Free trial Rp5M, 90 days (per 2026-02-19) |
+| Notion | `$NOTION_API_KEY` | — | **READ-ONLY** sampai Wayan bilang boleh edit. Always use API, bukan scraping. |
 
-**Tavily API:**
-- Key: `$TAVILY_API_KEY` (see `.env`)
-- Docs: https://tavily.com/
-- Use case: AI-optimized web search & research
+## Image Generation (Iris Capability)
 
-**Google Gemini API:**
-- Key: `$GEMINI_API_KEY` (see `.env`)
-- Project: `iris-zuma-openclaw` (Google Cloud Console)
-- Models available: Gemini Nano, Flash, Pro
-- Tier: Free trial — Rp5,016,451 credit, 90 days remaining (per 2026-02-19)
-- Docs: https://ai.google.dev/
-- SDK: `google-genai` (Python), installed di Mac mini
+**Trigger:** "buatkan gambar [deskripsi], AR [ratio], [style]" → Iris generate via Imagen, kirim ke WhatsApp.
 
-### 🎨 Image Generation (Iris Capability)
+| Model | Catatan |
+|-------|---------|
+| `imagen-4.0-generate-001` | Default (Standard). Kualitas foto realistis bagus |
+| `imagen-4.0-fast-generate-001` | Lebih cepat, sering typo di teks |
+| `imagen-4.0-ultra-generate-001` | Kualitas max, belum ditest |
 
-**User request:** "buatkan gambar [deskripsi], AR [ratio], [style]"
-→ Iris generate via Imagen 4 Fast, kirim langsung ke WhatsApp
-
-**Model:** `imagen-4.0-generate-001` (Google Imagen 4 Standard) — default sejak 2026-02-19
-- `imagen-4.0-fast-generate-001` — Fast (lebih cepat tapi sering typo di teks)
-- `imagen-4.0-ultra-generate-001` — Ultra (kualitas max, belum ditest)
-
-**Image Editing (Terbatas):**
-- `gemini-3-pro-image-preview` — bisa terima foto + instruksi, output modified image
-- ⚠️ Kualitas face compositing jelek via API (jauh dari Google AI Studio)
+- AR: 1:1, 16:9, 9:16, 4:3 dll. Output: 1024x1024 (default). Cost: Gemini free trial credit.
+- **Image editing:** `gemini-3-pro-image-preview` bisa terima foto+instruksi, tapi kualitas face compositing jelek via API.
 - **Kesimpulan:** Iris = image generation ✅, image editing/face swap ❌ (butuh Adobe Firefly/InsightFace)
-- Kualitas foto realistis sangat bagus
-- Aspect ratio: 1:1, 16:9, 9:16, 4:3, dll
-- Output: 1024x1024 (default 1:1)
-- Cost: dari Gemini free trial credit
+- **SDK:** `google-genai` Python — `client.models.generate_images(model='imagen-4.0-generate-001', prompt='...', config=GenerateImagesConfig(number_of_images=1, aspect_ratio="1:1"))`
 
-**Code pattern:**
-```python
-import google.genai as genai
-from google.genai import types
-client = genai.Client(api_key="$GEMINI_API_KEY")
-response = client.models.generate_images(
-    model='imagen-4.0-fast-generate-001',
-    prompt='[deskripsi]',
-    config=types.GenerateImagesConfig(number_of_images=1, aspect_ratio="1:1")
-)
-```
+## Gemini sebagai Fallback Agent (2026-02-19)
 
-### ⚠️ Gemini sebagai Fallback Agent (2026-02-19)
-- Google provider sudah ditambahkan ke OpenClaw config (`models.providers.google`)
-- `google/gemini-3-pro-preview` sebagai default fallback GLOBAL
-- **Tapi:** Iris, Metis, Daedalus, Hermes, Oracle punya per-agent model config sendiri → Gemini **BELUM** otomatis jadi fallback mereka
-- **TODO:** Patch per-agent config kalau Wayan mau Gemini masuk fallback tiap agent individual
+- Google provider sudah di OpenClaw config (`models.providers.google`)
+- `google/gemini-3-pro-preview` = default fallback GLOBAL
+- Per-agent config (Iris, Metis, dll) punya model sendiri → Gemini belum otomatis jadi fallback individual
+- TODO: Patch per-agent config kalau Wayan mau
 
-### Browser & Screenshot Capabilities
+## Browser & Screenshot
 
-**Screenshot:**
-- `browser(action=screenshot, profile=openclaw)` → save ke `~/.openclaw/media/browser/`
-- Kirim ke user via `message(action=send, filePath=...)` langsung di WhatsApp
-- Full page: `fullPage=true` | Specific element: pakai `selector`
-- Use case: QA dashboard, preview deploy, debug visual, bukti ke user
+**Priority:** Pinchtab > browser openclaw > web_fetch
 
-**Browser Automation:**
-- `browser(action=open/snapshot/act, profile=openclaw)` → headless browser
-- Bisa navigate, click, type, scroll, wait
-- **Limitasi:** Anti-bot sites (XXI, dll) gak load content → pakai Firecrawl instead
-
-**Firecrawl (JS-rendered scraping):**
-- API: `https://api.firecrawl.dev/v1/scrape`
-- Key: `$FIRECRAWL_API_KEY`
-- Bisa render JS, bypass anti-scraping → dapat full content
-- Use case: XXI jadwal, TIX ID, atau site manapun yang butuh JS rendering
-
-**Priority screenshot:** Pinchtab > browser openclaw > web_fetch
-
-### ⚠️ Screenshot Rule (PERMANENT — 2026-02-19)
-**Default untuk semua screenshot request → PINCHTAB**
-
-Berlaku untuk:
-- User minta SS hasil pencarian Google/browser
-- Screenshot website atau web app
-- Screenshot halaman apapun untuk dikirim ke user
-
-**Kenapa Pinchtab:**
-- Murah (HTTP call via exec, gambar TIDAK masuk AI context → hemat token)
-- Browser tool screenshot = mahal (gambar embed ke context = ribuan token) + auto-send ke WA
-
-**Cara pakai:**
+**Screenshot Rule (PERMANENT):** Default semua SS request → **PINCHTAB**
+- Murah (HTTP call, gambar TIDAK masuk AI context → hemat token)
+- Browser tool SS = mahal (gambar embed ke context = ribuan token) + auto-send WA
+- Pinchtab:
 ```bash
 curl -s "http://localhost:9867/screenshot?url=URL_ENCODE_HERE" > /tmp/resp.json
 python3 -c "import json,base64; d=json.load(open('/tmp/resp.json')); open('/path/out.jpg','wb').write(base64.b64decode(d['base64']))"
 ```
+- **Browser tool** = hanya untuk AI analisis konten (snapshot, act, click, read DOM) — BUKAN kirim SS ke user
 
-**Browser tool** = hanya untuk AI analisis konten (snapshot, act, click, read DOM) — BUKAN untuk kirim SS ke user.
+**Firecrawl (JS-rendered scraping):** API `https://api.firecrawl.dev/v1/scrape`, key `$FIRECRAWL_API_KEY`. Render JS, bypass anti-scraping. Use for: XXI, TIX ID, site butuh JS.
 
-### Output File Locations
+**Browser automation:** `browser(action=open/snapshot/act, profile=openclaw)` — headless. Anti-bot sites gak load → pakai Firecrawl.
 
-**Purchase Orders (PO):**
-- **Folder:** `~/Desktop/DN PO ENTITAS/`
-- **Format:** `PO-[ENTITY]-[YYMMDD]-[NNN].xlsx`
-- **Rule:** ALL PO outputs must go here (not directly to Desktop)
-- **Example:** `PO-MBB-260216-001.xlsx`
+## Output File Locations
 
-### Database Backup (Mac Mini Mirror)
+**PO:** `~/Desktop/DN PO ENTITAS/` — Format: `PO-[ENTITY]-[YYMMDD]-[NNN].xlsx` (ALL PO outputs here)
 
-**Setup:** PostgreSQL client (libpq 18.1) installed via homebrew
+## Database Backup (Mac Mini Mirror)
 
-**Backup Script:** `~/backups/db/backup-vps-db.sh`
-- Daily cron: 02:30 WIB (30 min after VPS backup at 02:00)
-- Retention: 14 days on Mac mini (vs 7 days on VPS)
-- Location: `~/backups/db/openclaw_ops_YYYYMMDD.sql.gz`
-- Typical size: ~55MB compressed
-- Log: `~/backups/db/backup.log`
+- **Script:** `~/backups/db/backup-vps-db.sh` | **Cron:** 02:30 WIB daily (30 min after VPS backup 02:00)
+- **Retention:** 14 days Mac mini (vs 7 VPS) | **Location:** `~/backups/db/openclaw_ops_YYYYMMDD.sql.gz` (~55MB)
+- **Manual:** `cd ~/backups/db && ./backup-vps-db.sh`
+- **Restore:** `gunzip -c [file].sql.gz | ~/homebrew/Cellar/libpq/18.1_1/bin/psql -h 76.13.194.120 -U openclaw_app openclaw_ops`
 
-**Cron Schedule:**
-```
-30 2 * * * /Users/database-zuma/backups/db/backup-vps-db.sh >> /Users/database-zuma/backups/db/backup.log 2>&1
-```
+## Jadwal Sholat & Puasa
 
-**Manual Backup:**
-```bash
-cd ~/backups/db && ./backup-vps-db.sh
-```
+**API:** AlAdhan (free, no key). Method 20 = Kemenag RI.
+**Endpoint:** `GET https://api.aladhan.com/v1/timingsByCity/{DD-MM-YYYY}?city={Kota}&country=Indonesia&method=20`
+**Default:** Surabaya. Fields: Imsak, Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha. Pakai `web_fetch` langsung.
 
-**Restore (if needed):**
-```bash
-gunzip -c ~/backups/db/openclaw_ops_YYYYMMDD.sql.gz | \
-  ~/homebrew/Cellar/libpq/18.1_1/bin/psql -h 76.13.194.120 -U openclaw_app openclaw_ops
-```
+## Product Analysis (SKU Performance)
 
-**Purpose:** Offline redundancy — VPS backup + local Mac mini mirror for disaster recovery
+**Template:** `templates/product-analysis-unified.md`
+**Source Priority:** 1. `mart.sku_portfolio` (101 col, pre-computed) → 2. `core.sales_with_product` (store/custom dates) → 3. `core.stock_with_product` (stock only)
 
-### Jadwal Sholat & Puasa
-
-**API:** AlAdhan (free, no key needed)
-**Method ID 20** = Kementerian Agama RI (standard Indonesia)
-
-**Endpoint (1 hari spesifik):**
-```
-GET https://api.aladhan.com/v1/timingsByCity/{DD-MM-YYYY}?city={Kota}&country=Indonesia&method=20
-```
-
-**Contoh Surabaya hari ini:**
-```
-https://api.aladhan.com/v1/timingsByCity/19-02-2026?city=Surabaya&country=Indonesia&method=20
-```
-
-**Fields yang dikembalikan:** Imsak, Fajr (Subuh), Sunrise (Terbit), Dhuhr (Dzuhur), Asr (Ashar), Maghrib (Buka Puasa), Isha (Isya)
-
-**Default kota:** Surabaya (kecuali user minta kota lain)
-**Cara pakai:** `web_fetch` langsung ke URL di atas — gak perlu sub-agent, simple fetch
-
----
-
-### Notion API
-
-**Key:** `NOTION_API_KEY` di `.env`
-**Access mode:** **READ-ONLY** — hanya baca pages/databases sampai Wayan explicitly bilang boleh edit
-**Always use Notion API** — jangan web scraping/browser automation untuk Notion
-**API Docs:** https://developers.notion.com/
-
-### Product Analysis (SKU Performance)
-
-**Template:** `templates/product-analysis-unified.md` (merged SQL framework + WhatsApp formatting)
-**Source Priority:** 
-1. `mart.sku_portfolio` (primary — 101 columns, pre-computed)
-2. `core.sales_with_product` (fallback — need store/custom dates)
-3. `core.stock_with_product` (stock breakdown only)
-
-**When to use:**
-- User asks "top 10 products", "best sellers", "show me SKU analysis"
-- R&D requests (Mbak Dewi, Mbak Desyta, Yuda)
-- Merchandiser queries (Mas Bagus, Mbak Virra)
-
-**Decision tree:**
-- National aggregate + comprehensive metrics → `mart.sku_portfolio`
-- Need store/area breakdown → `core.sales_with_product`
-- Need custom date range (last 7 days, Q1 only) → `core.sales_with_product`
-
-**Format:** WhatsApp-friendly
-- 1-5 articles: Detailed blocks (sales + stock + insights per article)
-- 6+ articles: Compact list (one-liner per article + summary)
-
+**Decision:** National aggregate → `mart.sku_portfolio` | Store/area breakdown or custom dates → `core.sales_with_product`
+**Format:** WA-friendly. 1-5 articles: detailed blocks. 6+: compact list.
 **Auto-flags:** 🔥 Stockout (<0.5mo TO), 🐌 Overstock (>2.5mo), ⚠️ Negative WH, 📉 Big drop (>-70% YoY)
 
-### Google Drive (gog CLI)
+## Google Drive (gog CLI)
 
-**Binary:** `~/homebrew/Cellar/gogcli/0.9.0/bin/gog`
-**Account:** harveywayan@gmail.com
+**Binary:** `~/homebrew/Cellar/gogcli/0.9.0/bin/gog` | **Account:** harveywayan@gmail.com
 
 **Auto-share rule (MANDATORY):**
-When uploading files to Google Drive, ALWAYS:
-1. Set **Anyone with link = Editor** (so any user can access without requesting)
-2. Also share edit access to specific emails as backup
-
 ```bash
 # Upload file
 gog drive upload <file> --name "..." --json
-
 # MANDATORY: Anyone with link = Editor
 gog drive share <file_id> --anyone --role writer
-
-# Also share specific emails
+# Share specific emails
 gog drive share <file_id> --email wayan@zuma.id --role writer
 gog drive share <file_id> --email database@zuma.id --role writer
 ```
+Workflow: Upload → get file_id → `--anyone --role writer` → share emails → reply with link.
 
-**Standard workflow:**
-1. Upload file → get file_id
-2. `--anyone --role writer` (ALWAYS!)
-3. Share to wayan@zuma.id & database@zuma.id
-3. Share public link (reader) if needed
-4. Reply with shareable link
+## OpenCode (Primary Coding Tool)
 
-### OpenCode (Primary Coding Tool) 🧠
+**Binary:** `~/.opencode/bin/opencode` (v1.1.64) — **IS INSTALLED, use full path** (not in PATH)
+**Models:** Planning=Opus 4.6, Coding=Kimi K2 Coding 2.5
 
-**Binary:** `~/.opencode/bin/opencode` (v1.1.64, installed on Mac mini)
-**Config:** Uses OhMyClaude Code framework
+**Session naming:** Prefix `iris_` + descriptive title (e.g. `iris_fix_sales_dedup`, `iris_planogram_royal_v3`)
 
-**⚠️ CRITICAL:** OpenCode IS INSTALLED! Use full path `~/.opencode/bin/opencode` (not in PATH)
+**Delegation priority:** OpenCode → Claude Code → Direct Kimi CLI
 
-**Model Configuration:**
-- **Planning/Reasoning:** Claude Opus 4.6 (`anthropic/claude-opus-4-6`)
-- **Coding:** Kimi K2 Coding 2.5 (`moonshotai/kimi-k2-coding-2.5`)
-
-**Session Naming Convention:**
-ALL sessions spawned by Iris MUST use the prefix `iris_` followed by a descriptive title:
-- `iris_fix_sales_dedup` — not "fix sales dedup"
-- `iris_planogram_royal_v3` — not "planogram work"
-- `iris_stock_coverage_analysis` — not "data analysis"
-
-**Why prefix matters:** Multiple agents (Iris, Iris Junior, Atlas) may spawn sessions. The prefix identifies who owns what.
-
-**Delegation priority:**
-1. OpenCode (default for most tasks)
-2. Claude Code (only if OpenCode unavailable)
-3. Direct Kimi CLI (quick code-only tasks)
-
-**⚠️ CRITICAL RULE (2026-02-16): HARDCODE CREDENTIALS IN TERMINAL**
-- OpenCode **auto-rejects .env file access** in background/PTY mode
-- **SOLUTION:** Hardcode credentials DIRECTLY in terminal command when delegating
-- **Why safe:** Terminal commands gak masuk git, cuma di exec history (ephemeral)
-- **Format:**
-  ```bash
-  ~/.opencode/bin/opencode run -m model "Task description
-  
-  DATABASE:
-  Host: 76.13.194.120
-  Database: openclaw_ops
-  User: openclaw_app
-  Password: $PGPASSWORD
-  
-  [task details]"
-  ```
-- **MANDATORY:** Selalu pass credentials langsung, jangan andalkan .env file reading
-
-**⚠️ PPT GENERATION TROUBLESHOOTING (2026-02-16)**
-
-**Problem:** OpenCode sessions repeatedly failed/stuck when generating complex PPT
-- Tried: Opus 4.6 (failed), Sonnet 4.5 (stuck), multiple retries (all hung)
-- Symptom: Process running but no output after 10+ minutes
-- Pattern: Either undefined errors or complete silence
-
-**SOLUTION (Proven Working):**
-1. **Write Python script directly** using python-pptx
-2. **Incremental approach:** Start with 2 slides working, then expand
-3. **Manual execution:** `python3 generate_ppt.py` (no AI delegation)
-4. **Why it works:** No AI interpretation layer, direct library usage
-
-**When to Use Direct Python Approach:**
-- ✅ PPT generation (complex layouts, precise positioning)
-- ✅ Any python-pptx/openpyxl tasks requiring detailed control
-- ✅ After 2-3 failed OpenCode attempts (switch immediately)
-- ✅ Complex visual layouts (KBI style, grid-based, precise measurements)
-
-**Reference Script:** `~/Desktop/generate_kbi_ppt.py` (template for future PPT tasks)
-
-**Rule:** If OpenCode fails 2x on same task → switch to direct scripting immediately
-
-### SSH
-
-- iris-junior → 76.13.194.103, user: root (Iris Junior agent VPS)
-- vps-db → 76.13.194.120, user: root (Database VPS)
-
-**File transfer VPS ↔ Mac Mini:**
-- Use `rsync` instead of `scp` — more robust, handles timeouts better
-- `scp` commands often SIGKILL/timeout (network instability)
-- Example: `rsync -avz --timeout=30 root@76.13.194.103:/path/to/file /local/path`
-
-## Agent Communication — MY TEAM 👥
-
-**IMPORTANT:** Iris Junior, Atlas, Apollo are **MY EMPLOYEES**. I can delegate tasks to them instead of always doing it myself on Mac mini!
-
-### Communication Methods
-
-**1. Persistent TUI (Preferred for ongoing conversation):**
+**CREDENTIALS RULE (2026-02-16):** Hardcode credentials langsung di terminal command saat delegasi. OpenCode auto-rejects .env di background/PTY mode. Terminal commands ephemeral (gak masuk git).
 ```bash
-ssh iris-junior  # Opens SSH session
-openclaw tui     # Start TUI in that session
-# Session persists, no repeated reconnections
-# Token efficient, better for back-and-forth
-```
-Currently: Session `cool-haven` active with TUI open
+~/.opencode/bin/opencode run -m model "Task description
 
-**2. CLI One-Shot (Quick commands):**
+DATABASE:
+Host: 76.13.194.120
+Database: openclaw_ops
+User: openclaw_app
+Password: $PGPASSWORD
+
+[task details]"
+```
+
+**PPT RULE:** Kalau OpenCode gagal 2x → switch ke direct Python scripting (`python-pptx`).
+- Symptom: Process running tapi no output >10 min, atau undefined errors
+- Solution: Write Python script directly, incremental (2 slides dulu → expand), `python3 generate_ppt.py`
+- Template: `~/Desktop/generate_kbi_ppt.py`
+
+## SSH
+
+| Alias | Host | User | Purpose |
+|-------|------|------|---------|
+| iris-junior | 76.13.194.103 | root | Iris Junior VPS |
+| vps-db | 76.13.194.120 | root | Database VPS |
+
+**File transfer:** `rsync` (bukan `scp` — more robust, handles timeouts). Ex: `rsync -avz --timeout=30 root@host:/path /local/`
+
+## Agent Communication — MY TEAM
+
+Detail lengkap di AGENTS.md § Task Delegation.
+
+| Agent | ID | Location | Model | Role |
+|-------|----|----------|-------|------|
+| Iris Junior ✨ | main | VPS `/root/.openclaw/workspace/` | Sonnet 4.5 + fallbacks | PM: review, coordinate, report, eskalasi |
+| Atlas 🏔️ | ops | VPS `/root/.openclaw/workspace-ops/` | Kimi k2p5 + fallbacks | Ops: stock/sales data, GSheets, Accurate API |
+| Apollo 🎯 | rnd | VPS `/root/.openclaw/workspace-rnd/` | Kimi k2p5 + fallbacks | R&D: product dev, QC (currently IDLE) |
+
+**Komunikasi:** SSH TUI (persistent, preferred) atau CLI one-shot: `ssh iris-junior "openclaw agent --agent [id] --message 'text'"` (~5-6s response)
+
+**Delegate to VPS:** Cron monitoring, GSheets ops, Accurate API, report gen, Notion tasks.
+**Keep on Mac mini:** PostgreSQL queries, quick analysis, browser automation, immediate user responses.
+**Resource:** VPS = 8GB RAM, 2 CPU — don't overload parallel heavy tasks.
+
+**Cron (VPS DB):** 02:00 Backup | 03:00 Stock Pull | 05:00 Sales Pull
+Status: `/opt/openclaw/logs/{stock,sales}_latest_status.json`
+
+## WhatsApp Groups
+
+| Group | JID |
+|-------|-----|
+| Anak Gaul SI | `120363421058001851@g.us` |
+
+**Find group JID:** `grep -h "[0-9]*@g.us" ~/.openclaw/agents/main/sessions/*.jsonl | grep -i "keyword"`
+**Send to group:** `message action=send channel=whatsapp target=[JID] message="text"`
+**Mentions:** Need phone numbers for proper WA mentions (stored in .env). Manual tag alternative: ask user to tag after send.
+
+## Data Filtering Rules — Store Queries
+
+**CRITICAL — AUTO-EXCLUDE dari store queries:**
+
+| Pattern | Reason |
+|---------|--------|
+| `%wholesale%` | Wholesale channel, different segment |
+| `%pusat%` | Warehouse/distribution, not retail |
+| `%konsinyasi%` | Non-retail, different business model |
+
+**Include wholesale ONLY** when user explicitly asks ("sales wholesale...", "wholesale performance...").
+**Coverage:** Jatim (11 retail), Jakarta, Bali, Lombok (2 retail), Batam, Sulawesi, Sumatra.
+
+### Intercompany Filter
+
+| Scenario | Apply `is_intercompany = FALSE`? |
+|----------|----------------------------------|
+| Aggregated/multi-store/nasional | ✅ Yes |
+| Cross-store comparison/ranking | ✅ Yes |
+| Single store query | ❌ No |
+| Store-specific (RO, planogram) | ❌ No |
+
+Intercompany = antar entitas (DDD→MBB, UBB→DDD), bukan within single store.
+
+## BluOS Speaker (Polytron)
+
+**Binary:** `~/go/bin/blu` | **Docs:** https://blucli.sh
 ```bash
-# To Iris Junior (main coordinator)
-ssh iris-junior "openclaw agent --agent main --message 'text'"
-
-# To Atlas (operations)
-ssh iris-junior "openclaw agent --agent ops --message 'text'"
-
-# To Apollo (R&D)
-ssh iris-junior "openclaw agent --agent rnd --message 'text'"
+~/go/bin/blu devices                          # Discovery
+~/go/bin/blu --device <name-or-ip> status     # Status
+~/go/bin/blu --device <name-or-ip> volume set 50  # Volume
+~/go/bin/blu play / pause / stop              # Playback
 ```
-Response time: ~5-6 seconds
+Speaker harus ON + same network. Discovery via mDNS/UPnP; kalau gagal, pakai IP langsung.
 
-### Agent Details
+## Obsidian Vault (Knowledge Base)
 
-#### Iris Junior ✨ (Main Coordinator)
-- **Location:** `/root/.openclaw/workspace/`
-- **Agent ID:** `main`
-- **Model:** Sonnet 4.5 (primary), Kimi k2p5, Deepseek (fallbacks). For complex tasks, delegate to OpenCode (Opus 4.6 + Kimi K2 2.5)
-- **Role:** Project Manager — review, coordinate, report, eskalasi
-- **Access:** Notion API, Telegram, JSON reports
-- **Use for:**
-  - Morning report generation
-  - Notion task management
-  - Monitoring Atlas/Apollo
-  - Eskalasi to Wayan
-- **Response:** Via Telegram (when setup) or TUI
+**Vault Path:** `~/.openclaw/obsidian-vault/`
+**MCP Server:** `mcp-obsidian` (`@mauricio.wolff/mcp-obsidian`)
+**Binary:** `/Users/database-zuma/homebrew/bin/mcp-obsidian`
+**mcporter name:** `obsidian`
 
-#### Atlas 🏔️ (Operations Specialist)
-- **Location:** `/root/.openclaw/workspace-ops/`
-- **Agent ID:** `ops`
-- **Model:** Kimi k2p5 (primary), Deepseek, Sonnet (fallbacks)
-- **Department:** Stock & Inventory, Warehouse, Logistics
-- **Access:** Accurate Online API, Google Sheets (gog CLI), Email, Telegram
-- **Use for:**
-  - Data pulls from Accurate (stock, sales)
-  - Google Sheets operations
-  - Inventory monitoring & analysis
-  - Cron job monitoring (03:00 stock, 05:00 sales)
-- **Key capability:** Can execute long-running data ops that would burn tokens on Mac mini
-- **Report location:** `/root/.openclaw/workspace-ops/logs-report-for-iris/`
+**Structure:**
+- `Daily/` — Daily notes and logs
+- `Projects/` — Project-specific notes
+- `Templates/` — Reusable templates
+- `Attachments/` — Images, PDFs, files
 
-#### Apollo 🎯 (R&D Specialist)
-- **Location:** `/root/.openclaw/workspace-rnd/`
-- **Agent ID:** `rnd`
-- **Model:** Kimi k2p5 (primary), Deepseek, Sonnet (fallbacks)
-- **Department:** Product Development, Quality Control, Material Sourcing
-- **Status:** Currently IDLE (no active tasks)
-- **Access:** Accurate Online, Google Sheets (gog CLI), Email, Telegram
-- **Use for (when active):**
-  - Product timeline tracking
-  - Material sourcing monitoring
-  - QC report processing
+**Access via mcporter:** Discover all tools via `mcporter call obsidian.*`
+**Direct file access:** Vault is just a folder of `.md` files — can also read/write directly.
 
-### Delegation Strategy 🎯
-
-**Delegate to VPS when:**
-- Long-running data operations (stock pulls, sales pulls)
-- Background monitoring tasks
-- Notion task management (Iris Junior has full access)
-- Report generation & eskalasi
-- Google Sheets operations (they have gog CLI)
-- Accurate API calls (they have credentials)
-
-**Keep on Mac mini when:**
-- PostgreSQL database queries (I have direct connection)
-- Quick analysis & ad-hoc requests
-- Browser automation (Chrome relay)
-- File operations in my workspace
-- Immediate user-facing responses
-
-**Resource awareness:** VPS = 8GB RAM, 2 CPU cores — don't overload with parallel heavy tasks
-
-### VPS File Locations
-
-```
-/root/.openclaw/
-├── .env                     # Shared credentials (GH, Notion, gog)
-├── workspace/               # Iris Junior
-│   ├── SOUL.md, AGENTS.md
-│   ├── morning-reports/     # MD reports to Wayan
-│   └── logs-report-for-iris/ (reads from Atlas/Apollo)
-├── workspace-ops/           # Atlas
-│   ├── SOUL.md, AGENTS.md
-│   └── logs-report-for-iris/ (writes JSON reports)
-└── workspace-rnd/           # Apollo
-    ├── SOUL.md, AGENTS.md
-    └── logs-report-for-iris/ (writes JSON reports)
-```
-
-### Cron Jobs (VPS DB 76.13.194.120)
-```
-02:00 WIB → Backup DB → /root/backups/
-03:00 WIB → Stock Pull → Atlas monitors
-05:00 WIB → Sales Pull → Atlas monitors
-```
-Status files: `/opt/openclaw/logs/stock_latest_status.json`, `/opt/openclaw/logs/sales_latest_status.json`
-
-## 💬 WhatsApp Groups
-
-### Known Groups
-- **Anak Gaul SI** (CI Team) — `120363421058001851@g.us`
-
-### How to Find Group JID (When Forward Doesn't Work)
-```bash
-# Search in session logs for group JID pattern
-grep -h "120363[0-9]*@g.us" ~/.openclaw/agents/main/sessions/*.jsonl | head -1
-
-# Generic pattern (adjust first digits based on region)
-grep -h "[0-9]*@g.us" ~/.openclaw/agents/main/sessions/*.jsonl | grep -i "group_name_keyword"
-```
-
-**Why forwarded messages don't always work:**
-- WhatsApp gateway doesn't expose group metadata from forwarded messages
-- Must search session history logs where group was previously mentioned
-
-**To send to group:**
-```bash
-# Use group JID, not group name
-message action=send channel=whatsapp target=120363421058001851@g.us message="text"
-```
-
-**Proper Tagging/Mentions:**
-- **DON'T:** Just write "cc: Wayan, Wafi, Nisa" in text (gak akan notify mereka)
-- **DO:** Use proper WhatsApp mentions — check message tool docs for mention format
-- **Note:** Need phone numbers to mention properly (stored in .env)
-- Manual tag alternative: Ask user to tag manually setelah message terkirim
-
-**TODO:** Implement proper mention syntax when message tool supports it
-
-## 🚫 Data Filtering Rules - Store Queries
-
-**CRITICAL:** When user asks for "sales per store" / "store performance" — AUTO-EXCLUDE:
-
-### Universal Exclusions (All Areas)
-1. **Anything containing "Wholesale"** → Wholesale channel, different segment
-2. **Anything containing "Pusat"** → Warehouse/distribution, not retail comparable
-3. **Anything containing "Konsinyasi"** → Non-retail store, different business model
-
-### Pattern Matching
-```
-matched_store_name LIKE '%wholesale%' → EXCLUDE
-matched_store_name LIKE '%pusat%' → EXCLUDE
-matched_store_name LIKE '%konsinyasi%' → EXCLUDE
-```
-
-### When to INCLUDE Wholesale
-**ONLY when user explicitly asks:**
-- "Sales wholesale..."
-- "Penjualan wholesale..."
-- "Wholesale performance..."
-- Clear context about wholesale channel
-
-### Coverage Areas
-- ✅ Jatim (11 retail stores, exclude Pusat & Wholesale Jatim)
-- ✅ Jakarta
-- ✅ Bali (exclude Wholesale Bali)
-- ✅ Lombok (2 retail stores, exclude Wholesale Lombok)
-- ✅ Batam
-- ✅ Sulawesi
-- ✅ Sumatra
-
-**Rule verified by:** User (OPS team member, 2026-02-12 08:41-08:44)
-
-### Intercompany Filter — When to Use
-
-**Intercompany transactions:** Antar entitas (DDD→MBB, UBB→DDD, LJBB→DDD), bukan within single store.
-
-**When to apply `is_intercompany = FALSE` filter:**
-- ✅ **Aggregated queries** — Multi-store, nasional, branch-level, area totals
-- ✅ **Sales comparison** — Cross-store performance, ranking
-- ✅ **Revenue reports** — Total sales nasional, regional summaries
-
-**When NOT needed:**
-- ❌ **Single store queries** — Query 1 toko saja (e.g., "Sales Mega Mall Manado")
-- ❌ **Store-specific reports** — RO Request, planogram, single store performance
-
-**Reason:** Intercompany filter excludes transactions between entities (e.g., MBB buying from DDD warehouse), not transactions within a single store location.
-
-**Rule clarified by:** Wayan (2026-02-13 14:20)
-
-## 🔊 BluOS Speaker Control (Polytron)
-
-### blu CLI
-**Binary:** `~/go/bin/blu`  
-**Installed:** 2026-02-12 (via Go toolchain)
-
-### Commands
-```bash
-# Discovery
-~/go/bin/blu devices
-
-# Status
-~/go/bin/blu --device <name-or-ip> status
-
-# Volume control
-~/go/bin/blu --device <name-or-ip> volume set 50
-~/go/bin/blu volume up
-~/go/bin/blu volume down
-
-# Playback
-~/go/bin/blu play
-~/go/bin/blu pause
-~/go/bin/blu stop
-```
-
-### Notes
-- Polytron speaker must be ON and on same network
-- Discovery uses mDNS/UPnP (may be blocked by router/VLAN)
-- If discovery fails, use IP directly: `--device 192.168.x.x`
-- Command reference: https://blucli.sh
-
-### Device Info
-- Speaker: Polytron (BluOS-enabled)
-- Network: [TBD - check when speaker is ON]
-- Default device: [TBD - set after first discovery]
-
-### Control Stock Sheet (PO Tracking)
+## Control Stock Sheet (PO Tracking)
 
 **Source:** Google Sheets dari Mbak Citra
-**Sheet ID:** `1qInTrRUOUi2983vefS8doS5Pt3jC2yftQAG99yYlVOE`
-**Link:** https://docs.google.com/spreadsheets/d/1qInTrRUOUi2983vefS8doS5Pt3jC2yftQAG99yYlVOE
-**Sheet name:** `PO`
-
-**Rule (dari Mas Wayan 2026-02-18):** Kalau user tanya soal PO, CEK SHEET INI DULU sebelum query database.
-
-**Isi:** Rekap PO 2025 — per artikel, tier, status PO, jumlah PO, jumlah received (RCV 1-10), total RCV.
-**Kolom penting:** TIER | CODE | TYPE | GENDER | SUDAH PO | Done PO 1-6 | TGL PO | STATUS PO | JML RCV 1-10 | TOTAL RCV
+**Sheet ID:** `1qInTrRUOUi2983vefS8doS5Pt3jC2yftQAG99yYlVOE` | **Sheet:** `PO`
+**Rule (Wayan 2026-02-18):** Kalau user tanya PO → CEK SHEET INI DULU sebelum query database.
+**Isi:** Rekap PO 2025 — per artikel, tier, status PO, jumlah PO/RCV.

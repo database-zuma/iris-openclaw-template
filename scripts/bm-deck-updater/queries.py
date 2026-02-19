@@ -62,22 +62,34 @@ def get_store_targets(conn, stores, year):
         return cur.fetchall()
 
 
-def get_ff_fa_fs(conn, stores):
-    """Latest FF/FA/FS per store from mart.ff_fa_fs_daily."""
-    store_list = ", ".join(f"'{s}'" for s in stores)
+def get_ff_fa_fs(conn, stores, ff_store_map=None):
+    """Latest FF/FA/FS per store from mart.ff_fa_fs_daily.
+    ff_store_map: optional dict {revenue_store_name: ff_db_store_name}
+    Falls back to stores list if no map provided.
+    """
+    if ff_store_map:
+        ff_names = list(ff_store_map.values())
+    else:
+        ff_names = stores
+    store_list = ", ".join(f"'{s}'" for s in ff_names)
     with conn.cursor() as cur:
         cur.execute(f"""
-            SELECT DISTINCT ON (store_name)
-                store_name,
-                ff_pct,
-                fa_pct,
-                fs_pct,
-                snapshot_date
+            SELECT DISTINCT ON (LOWER(store_db_name))
+                LOWER(store_db_name) as store_db_name,
+                ff * 100 as ff_pct,
+                fa * 100 as fa_pct,
+                fs * 100 as fs_pct,
+                report_date
             FROM mart.ff_fa_fs_daily
-            WHERE LOWER(store_name) IN ({store_list})
-            ORDER BY store_name, snapshot_date DESC
+            WHERE LOWER(store_db_name) IN ({store_list})
+            ORDER BY LOWER(store_db_name), report_date DESC
         """)
-        return cur.fetchall()
+        rows = cur.fetchall()
+        # Remap back to revenue store names if map provided
+        if ff_store_map:
+            reverse_map = {v: k for k, v in ff_store_map.items()}
+            return [(reverse_map.get(r[0], r[0]),) + r[1:] for r in rows]
+        return rows
 
 
 def get_bcg_series(conn, stores, year):
