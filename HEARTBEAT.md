@@ -1,35 +1,20 @@
-# HEARTBEAT.md — Task Tracker & Periodic Checks
+# HEARTBEAT.md — Active Task Tracker
 
-**🚨🚨🚨 ATURAN HEARTBEAT — BACA SAMPAI HABIS (Wayan 20 Feb 2026):**
+**Heartbeat interval: 5 menit**
 
-**HEARTBEAT = SILENT. ZERO OUTPUT KE USER.**
+## ⚡ ATURAN HEARTBEAT (Wayan 2026-02-21 — Multi-User Per-File Tracking)
 
-Ketika heartbeat trigger:
-1. Baca file ini
-2. Cek pending tasks, email, calendar secara INTERNAL
-3. Reply HANYA text `HEARTBEAT_OK` — INI BUKAN MESSAGE KE USER, ini internal reply ke system
-4. **JANGAN PERNAH** kirim APAPUN ke WhatsApp saat heartbeat. Termasuk:
-   - ❌ "HEARTBEAT_OK ✅" 
-   - ❌ "Task tracker: ..."
-   - ❌ "No urgent items"
-   - ❌ Status update apapun
-   - ❌ Summary apapun
-5. SATU-SATUNYA exception: email urgent butuh action SEGERA, atau event <2 jam
+Mulai sekarang, task untuk multi-user **TIDAK** dicampur di file ini. Ini bisa menyebabkan race-condition jika banyak user me-request task bersamaan. 
+Semua task yang sedang berjalan wajib disimpan di file individu dalam folder `heartbeat/` (misalnya: `heartbeat/+62812345678.md`).
 
-**Kalau kamu masih kirim heartbeat report ke WA = uninstall. Final warning.**
+Setiap heartbeat (saat kamu menerima pesan sistem untuk periodic check-in):
 
----
+1. **JANGAN CEK FILE INI** untuk mencari daftar task.
+2. **LIST FOLDER `heartbeat/`**: Cek apakah ada file `.md` di dalam folder `heartbeat/`.
+3. **BACA SETIAP FILE**: Untuk setiap file yang ada, baca status task-nya.
+   - Poll sub-agent (`session_status`) atau cek `outbox/` untuk nanobot.
+   - Jika SELESAI: Deliver hasilnya via WA ke user yang bersangkutan (ambil nomor/nama grup dari nama file), lalu HAPUS/KOSONGKAN file heartbeat tersebut.
+   - Jika MASIH JALAN: Beri update jika sudah terlalu lama.
+4. **Penting**: JANGAN ngobrol ke WhatsApp jika semua sub-agent masih proses normal (jangan "halo aku lagi ngecek"). Cukup reply ke sistem `HEARTBEAT_OK`. Hanya chat user jika ada progress selesai atau error.
 
-## 📋 Pending Tasks
-
-- [ ] **Sosialisasi SO L1+L2 dengan Pak Ali** — sedang dikoordinasikan
-- [ ] **Argus: Deep Dive Ladies Wedges** — SQL analysis core.sales_with_product (PID: 12447)
-- [ ] **Eos: Redesign Ladies Wedges** — Pending data from Argus, use Canonical Template (Format 1)
-
----
-
-## 🔄 Routine Checks (rotate 2-4x daily, INTERNAL ONLY — jangan report ke user)
-
-- **Email:** Last check —
-- **Calendar:** Next 24-48h —
-- **Weather:** —
+*(File ini sekarang hanya berisi instruksi cron-job, bukan daftar task aktif)*
