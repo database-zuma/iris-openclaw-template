@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCG Matrix Analysis — Zuma Monkey Forest Ubud 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: #1a1a1a; padding: 2rem; }
+
+        .slide {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 3rem;
+            margin-bottom: 1.5rem;
+            min-height: 580px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .slide-teal  { background: #002A3A; color: white; }
+        .slide-dark  { background: #111827; color: white; }
+        .slide-green { background: linear-gradient(135deg, #00E273 0%, #00b359 100%); color: #002A3A; }
+        .slide-stars { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; }
+        .slide-cows  { background: #002A3A; color: white; }
+        .slide-qmarks { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); color: white; }
+        .slide-dogs  { background: linear-gradient(135deg, #1a0000 0%, #2d1515 100%); color: white; }
+
+        /* PRINT */
+        @media print {
+            @page { size: A4 landscape; margin: 0; }
+            html, body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .slide {
+                page-break-after: always;
+                break-after: page;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 2rem 2.5rem !important;
+                min-height: 0 !important;
+                height: 190mm !important;
+                overflow: hidden !important;
+                box-sizing: border-box;
+            }
+            .slide:last-child { page-break-after: avoid; break-after: avoid; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .slide-teal  { background: #002A3A !important; }
+            .slide-dark  { background: #111827 !important; }
+            .slide-stars { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important; }
+            .slide-cows  { background: #002A3A !important; }
+            .slide-qmarks { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%) !important; }
+            .slide-dogs  { background: linear-gradient(135deg, #1a0000 0%, #2d1515 100%) !important; }
+            .gradient-blob { display: none !important; }
+            #print-btn { display: none !important; }
+        }
+
+        /* DECORATIVE BLOB */
+        .gradient-blob {
+            position: absolute; top: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: linear-gradient(135deg, #00E273 0%, rgba(0,226,115,0.1) 100%);
+            border-radius: 50%; filter: blur(80px); z-index: 0;
+        }
+        .gradient-blob-gold {
+            position: absolute; top: -80px; right: -80px;
+            width: 350px; height: 350px;
+            background: linear-gradient(135deg, #f59e0b 0%, rgba(245,158,11,0.1) 100%);
+            border-radius: 50%; filter: blur(80px); z-index: 0;
+        }
+        .gradient-blob-red {
+            position: absolute; top: -80px; right: -80px;
+            width: 350px; height: 350px;
+            background: linear-gradient(135deg, #dc2626 0%, rgba(220,38,38,0.05) 100%);
+            border-radius: 50%; filter: blur(80px); z-index: 0;
+        }
+        .content { position: relative; z-index: 1; }
+
+        /* SLIDE LABEL */
+        .slide-label {
+            position: absolute; top: 1.5rem; right: 2rem;
+            font-size: 0.8rem; font-weight: 600; color: #999;
+        }
+        .slide-teal .slide-label,
+        .slide-dark .slide-label,
+        .slide-stars .slide-label,
+        .slide-cows .slide-label,
+        .slide-qmarks .slide-label,
+        .slide-dogs .slide-label { color: rgba(255,255,255,0.35); }
+
+        /* BADGES */
+        .badge-gold  { background: rgba(245,158,11,0.2); color: #f59e0b; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(245,158,11,0.4); }
+        .badge-green { background: #dcfce7; color: #16a34a; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+        .badge-red   { background: #fee2e2; color: #dc2626; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+        .badge-blue  { background: #dbeafe; color: #1d4ed8; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+        .badge-teal  { background: #002A3A; color: #00E273; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+        .badge-amber { background: #fef3c7; color: #d97706; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; }
+        th { background: rgba(0,226,115,0.15); color: #00E273; padding: 0.65rem 1rem; text-align: left; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; border-bottom: 2px solid rgba(0,226,115,0.3); }
+        td { padding: 0.6rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.82rem; color: rgba(255,255,255,0.85); }
+        tr:hover td { background: rgba(255,255,255,0.04); }
+        td:first-child { font-weight: 700; color: white; }
+
+        /* STAT BOX LIGHT */
+        .stat-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: #00E273;
+        }
+
+        /* SCENARIO CARD */
+        .scenario-card {
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<!-- PRINT BUTTON -->
+<div id="print-btn" style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:999;">
+    <button onclick="window.print()" style="background:#00E273; color:#002A3A; border:none; padding:0.65rem 1.5rem; border-radius:6px; font-weight:700; font-size:0.875rem; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.35);">🖨️ Print / Save PDF (Landscape A4)</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 1 — COVER
+══════════════════════════════════════════ -->
+<div class="slide slide-teal" style="min-height:580px;">
+    <div class="gradient-blob"></div>
+    <div class="content" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+            <!-- Logo + context -->
+            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:3.5rem;">
+                <div style="background:#00E273; color:#002A3A; font-weight:900; font-size:1.2rem; padding:0.45rem 1.2rem; border-radius:6px; letter-spacing:0.05em;">ZUMA</div>
+                <div style="color:rgba(255,255,255,0.45); font-size:0.85rem;">Monkey Forest Ubud · Portfolio Analysis</div>
+            </div>
+
+            <!-- Main title -->
+            <div style="margin-bottom:1rem;">
+                <div style="font-size:0.75rem; font-weight:700; color:#00E273; letter-spacing:0.15em; margin-bottom:1rem;">BCG MATRIX ANALYSIS</div>
+                <h1 style="font-size:3.75rem; font-weight:900; line-height:1.05; color:white; margin-bottom:1rem;">
+                    Zuma Monkey Forest<br>
+                    <span style="color:#00E273;">Ubud — 2026 YTD</span>
+                </h1>
+                <p style="color:rgba(255,255,255,0.55); font-size:1.05rem; font-weight:500; letter-spacing:0.02em;">
+                    Portfolio Strategy &amp; Action Plan
+                </p>
+            </div>
+        </div>
+
+        <!-- Stats bar -->
+        <div>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin-bottom:2rem;">
+                <div style="background:#002A3A; padding:1.25rem 1.5rem; text-align:center;">
+                    <div style="font-size:2rem; font-weight:900; color:#00E273;">468</div>
+                    <div style="font-size:0.78rem; color:rgba(255,255,255,0.55); margin-top:0.2rem;">Pasang Terjual</div>
+                </div>
+                <div style="background:#002A3A; padding:1.25rem 1.5rem; text-align:center;">
+                    <div style="font-size:2rem; font-weight:900; color:#00E273;">101.9 Jt</div>
+                    <div style="font-size:0.78rem; color:rgba(255,255,255,0.55); margin-top:0.2rem;">Total Revenue</div>
+                </div>
+                <div style="background:#002A3A; padding:1.25rem 1.5rem; text-align:center;">
+                    <div style="font-size:2rem; font-weight:900; color:#00E273;">23</div>
+                    <div style="font-size:0.78rem; color:rgba(255,255,255,0.55); margin-top:0.2rem;">Active Series</div>
+                </div>
+                <div style="background:#002A3A; padding:1.25rem 1.5rem; text-align:center;">
+                    <div style="font-size:2rem; font-weight:900; color:#00E273;">117</div>
+                    <div style="font-size:0.78rem; color:rgba(255,255,255,0.55); margin-top:0.2rem;">SKU Aktif</div>
+                </div>
+            </div>
+            <div style="color:rgba(255,255,255,0.25); font-size:0.75rem;">
+                Prepared by Iris · Februari 2026 · Source: POS Data Zuma Monkey Forest Ubud · Confidential
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 2 — STORE OVERVIEW
+══════════════════════════════════════════ -->
+<div class="slide" style="background:#f8fafc;">
+    <div class="slide-label" style="color:#999;">02 / 09</div>
+    <h2 style="font-size:1.8rem; font-weight:900; color:#002A3A; margin-bottom:0.4rem;">Profil Toko: Premium Tourist Destination</h2>
+    <p style="color:#6b7280; font-size:0.875rem; margin-bottom:2rem;">Zuma Monkey Forest Ubud · Data 2026 YTD</p>
+
+    <!-- 4 metric cards -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; margin-bottom:1.75rem;">
+        <div class="stat-card">
+            <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.75rem;">Total Penjualan</div>
+            <div style="font-size:2.5rem; font-weight:900; color:#002A3A; line-height:1;">468</div>
+            <div style="font-size:0.82rem; color:#6b7280; margin-top:0.35rem;">pasang</div>
+        </div>
+        <div class="stat-card" style="border-color:#e5e7eb;">
+            <div style="position:absolute; top:0; left:0; width:4px; height:100%; background:#00E273;"></div>
+            <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.75rem;">Total Revenue</div>
+            <div style="font-size:2.5rem; font-weight:900; color:#002A3A; line-height:1;">101.9</div>
+            <div style="font-size:0.82rem; color:#6b7280; margin-top:0.35rem;">Juta Rupiah</div>
+        </div>
+        <div class="stat-card" style="border-color:#e5e7eb;">
+            <div style="position:absolute; top:0; left:0; width:4px; height:100%; background:#f59e0b;"></div>
+            <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.75rem;">ASP Rata-rata</div>
+            <div style="font-size:2.5rem; font-weight:900; color:#002A3A; line-height:1;">217K</div>
+            <div style="font-size:0.82rem; color:#6b7280; margin-top:0.35rem;">per pasang</div>
+        </div>
+        <div class="stat-card" style="border-color:#e5e7eb;">
+            <div style="position:absolute; top:0; left:0; width:4px; height:100%; background:#6366f1;"></div>
+            <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.75rem;">Active Series</div>
+            <div style="font-size:2.5rem; font-weight:900; color:#002A3A; line-height:1;">23</div>
+            <div style="font-size:0.82rem; color:#6b7280; margin-top:0.35rem;">series aktif</div>
+        </div>
+    </div>
+
+    <!-- BCG distribution bar -->
+    <div style="background:white; border:1px solid #e5e7eb; border-radius:10px; padding:1.25rem 1.5rem; margin-bottom:1.5rem;">
+        <div style="font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.75rem;">Portfolio Breakdown — Volume Share</div>
+        <div style="display:flex; height:14px; border-radius:7px; overflow:hidden; margin-bottom:0.6rem;">
+            <div style="width:26.4%; background:#f59e0b;" title="Stars 26.4%"></div>
+            <div style="width:41.5%; background:#00E273;" title="Cash Cows 41.5%"></div>
+            <div style="width:25.3%; background:#6366f1;" title="QM 25.3%"></div>
+            <div style="width:6.8%; background:#ef4444;" title="Dogs 6.8%"></div>
+        </div>
+        <div style="display:flex; gap:1.5rem; font-size:0.72rem; color:#6b7280;">
+            <span><span style="color:#f59e0b; font-weight:700;">⭐ Stars</span> 26.4%</span>
+            <span><span style="color:#16a34a; font-weight:700;">🐄 Cash Cows</span> 41.5%</span>
+            <span><span style="color:#6366f1; font-weight:700;">❓ QM</span> 25.3%</span>
+            <span><span style="color:#ef4444; font-weight:700;">🐕 Dogs</span> 6.8%</span>
+        </div>
+    </div>
+
+    <!-- Key insight -->
+    <div style="background:#002A3A; border-radius:10px; padding:1.25rem 1.5rem; display:flex; align-items:flex-start; gap:1rem;">
+        <div style="font-size:1.5rem; flex-shrink:0;">💡</div>
+        <div>
+            <div style="font-size:0.72rem; font-weight:700; color:#00E273; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.35rem;">Key Insight</div>
+            <p style="color:rgba(255,255,255,0.9); font-size:0.9rem; line-height:1.6; margin:0;">
+                Zuma Monkey Forest Ubud adalah <strong style="color:#00E273;">destination store untuk wisatawan premium</strong> — terbukti dari Stars yang meski hanya <strong style="color:#00E273;">26.4% volume</strong> tapi menyumbang <strong style="color:#00E273;">43.5% revenue</strong>.
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 3 — BCG MATRIX VISUAL
+══════════════════════════════════════════ -->
+<div class="slide slide-dark">
+    <div class="slide-label">03 / 09</div>
+    <div class="content">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.25rem;">
+            <span style="background:rgba(0,226,115,0.15); color:#00E273; font-size:0.72rem; font-weight:700; padding:3px 12px; border-radius:999px; border:1px solid rgba(0,226,115,0.3);">PORTFOLIO ANALYSIS</span>
+            <span style="color:rgba(255,255,255,0.4); font-size:0.82rem;">2026 YTD · 23 Series</span>
+        </div>
+        <h2 style="font-size:1.8rem; font-weight:900; color:white; margin-bottom:1.25rem;">BCG Matrix — Posisi 23 Series</h2>
+
+        <!-- Chart image -->
+        <div style="text-align:center; margin-bottom:1.25rem;">
+            <img src="bcg_chart.png" alt="BCG Matrix Chart" style="max-width:100%; max-height:340px; object-fit:contain; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+        </div>
+
+        <!-- Quadrant summary -->
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;">
+            <div style="background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); border-radius:8px; padding:0.875rem; text-align:center;">
+                <div style="font-size:1.25rem; margin-bottom:0.35rem;">⭐</div>
+                <div style="font-weight:900; color:#f59e0b; font-size:0.95rem;">STARS</div>
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; margin-top:0.25rem;">3 series</div>
+                <div style="color:#f59e0b; font-size:0.78rem; font-weight:700; margin-top:0.2rem;">26.4% vol</div>
+                <div style="color:rgba(255,255,255,0.5); font-size:0.72rem;">43.5% revenue</div>
+            </div>
+            <div style="background:rgba(0,226,115,0.1); border:1px solid rgba(0,226,115,0.25); border-radius:8px; padding:0.875rem; text-align:center;">
+                <div style="font-size:1.25rem; margin-bottom:0.35rem;">🐄</div>
+                <div style="font-weight:900; color:#00E273; font-size:0.95rem;">CASH COWS</div>
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; margin-top:0.25rem;">4 series</div>
+                <div style="color:#00E273; font-size:0.78rem; font-weight:700; margin-top:0.2rem;">41.5% vol</div>
+                <div style="color:rgba(255,255,255,0.5); font-size:0.72rem;">29.3% revenue</div>
+            </div>
+            <div style="background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.3); border-radius:8px; padding:0.875rem; text-align:center;">
+                <div style="font-size:1.25rem; margin-bottom:0.35rem;">❓</div>
+                <div style="font-weight:900; color:#a5b4fc; font-size:0.95rem;">QUESTION MARKS</div>
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; margin-top:0.25rem;">10 series</div>
+                <div style="color:#a5b4fc; font-size:0.78rem; font-weight:700; margin-top:0.2rem;">25.3% vol</div>
+                <div style="color:rgba(255,255,255,0.5); font-size:0.72rem;">24.2% revenue</div>
+            </div>
+            <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); border-radius:8px; padding:0.875rem; text-align:center;">
+                <div style="font-size:1.25rem; margin-bottom:0.35rem;">🐕</div>
+                <div style="font-weight:900; color:#f87171; font-size:0.95rem;">DOGS</div>
+                <div style="color:rgba(255,255,255,0.6); font-size:0.72rem; margin-top:0.25rem;">6 series</div>
+                <div style="color:#f87171; font-size:0.78rem; font-weight:700; margin-top:0.2rem;">6.8% vol</div>
+                <div style="color:rgba(255,255,255,0.5); font-size:0.72rem;">3.0% revenue</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 4 — STARS
+══════════════════════════════════════════ -->
+<div class="slide slide-stars">
+    <div class="gradient-blob-gold"></div>
+    <div class="slide-label">04 / 09</div>
+    <div class="content">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+            <span style="background:rgba(245,158,11,0.2); color:#f59e0b; font-size:0.72rem; font-weight:700; padding:3px 12px; border-radius:999px; border:1px solid rgba(245,158,11,0.4);">HIGH GROWTH · HIGH SHARE</span>
+        </div>
+        <h2 style="font-size:2.25rem; font-weight:900; color:white; margin-bottom:1.75rem;">
+            ⭐ <span style="color:#f59e0b;">STARS</span> — Investasi &amp; Protect
+        </h2>
+
+        <!-- 3 product cards -->
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-bottom:1.5rem;">
+            <!-- LUCA -->
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:1.5rem; position:relative; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                <div class="badge-gold" style="margin-bottom:0.75rem; display:inline-block;">Revenue Champion</div>
+                <div style="font-size:1.3rem; font-weight:900; color:white; margin-bottom:0.2rem;">LUCA <span style="font-size:0.8rem; color:rgba(255,255,255,0.5); font-weight:400;">(Men)</span></div>
+                <div style="font-size:2rem; font-weight:900; color:#f59e0b; line-height:1; margin-bottom:0.75rem;">46 <span style="font-size:0.9rem; color:rgba(255,255,255,0.6); font-weight:400;">pc</span></div>
+                <div style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.8rem; color:rgba(255,255,255,0.7);">
+                    <div>💰 <strong style="color:white;">Rp 17.2 Juta</strong></div>
+                    <div>📊 ASP <strong style="color:#f59e0b;">Rp 374K</strong></div>
+                    <div style="color:rgba(255,255,255,0.5); font-size:0.72rem; margin-top:0.35rem;">9.8% vol · 16.9% revenue</div>
+                </div>
+            </div>
+            <!-- LUNA -->
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:1.5rem; position:relative; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                <div class="badge-gold" style="margin-bottom:0.75rem; display:inline-block;">Ladies Premium</div>
+                <div style="font-size:1.3rem; font-weight:900; color:white; margin-bottom:0.2rem;">LUNA <span style="font-size:0.8rem; color:rgba(255,255,255,0.5); font-weight:400;">(Ladies)</span></div>
+                <div style="font-size:2rem; font-weight:900; color:#f59e0b; line-height:1; margin-bottom:0.75rem;">45 <span style="font-size:0.9rem; color:rgba(255,255,255,0.6); font-weight:400;">pc</span></div>
+                <div style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.8rem; color:rgba(255,255,255,0.7);">
+                    <div>💰 <strong style="color:white;">Rp 16.8 Juta</strong></div>
+                    <div>📊 ASP <strong style="color:#f59e0b;">Rp 373K</strong></div>
+                    <div style="color:rgba(255,255,255,0.5); font-size:0.72rem; margin-top:0.35rem;">9.6% vol · 16.5% revenue</div>
+                </div>
+            </div>
+            <!-- AIRMOVE -->
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:1.5rem; position:relative; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                <div class="badge-gold" style="margin-bottom:0.75rem; display:inline-block;">ASP Tertinggi</div>
+                <div style="font-size:1.3rem; font-weight:900; color:white; margin-bottom:0.2rem;">AIRMOVE <span style="font-size:0.8rem; color:rgba(255,255,255,0.5); font-weight:400;">(Men)</span></div>
+                <div style="font-size:2rem; font-weight:900; color:#f59e0b; line-height:1; margin-bottom:0.75rem;">28 <span style="font-size:0.9rem; color:rgba(255,255,255,0.6); font-weight:400;">pc</span></div>
+                <div style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.8rem; color:rgba(255,255,255,0.7);">
+                    <div>💰 <strong style="color:white;">Rp 10.5 Juta</strong></div>
+                    <div>📊 ASP <strong style="color:#f59e0b;">Rp 375K</strong></div>
+                    <div style="color:rgba(255,255,255,0.5); font-size:0.72rem; margin-top:0.35rem;">6.0% vol · 10.3% revenue</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action plan -->
+        <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:10px; padding:1.25rem 1.5rem;">
+            <div style="font-size:0.72rem; font-weight:700; color:#f59e0b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">🎯 Action Plan</div>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem;">
+                <div style="font-size:0.8rem; color:rgba(255,255,255,0.8); display:flex; gap:0.5rem; align-items:flex-start;">
+                    <span style="color:#f59e0b; font-weight:900; flex-shrink:0;">1.</span>
+                    <span>Prioritas replenishment — jangan sampai kosong</span>
+                </div>
+                <div style="font-size:0.8rem; color:rgba(255,255,255,0.8); display:flex; gap:0.5rem; align-items:flex-start;">
+                    <span style="color:#f59e0b; font-weight:900; flex-shrink:0;">2.</span>
+                    <span>Display prime / eye-level positioning</span>
+                </div>
+                <div style="font-size:0.8rem; color:rgba(255,255,255,0.8); display:flex; gap:0.5rem; align-items:flex-start;">
+                    <span style="color:#f59e0b; font-weight:900; flex-shrink:0;">3.</span>
+                    <span>Cross-merchandise LUCA+LUNA sebagai couple set</span>
+                </div>
+                <div style="font-size:0.8rem; color:rgba(255,255,255,0.8); display:flex; gap:0.5rem; align-items:flex-start;">
+                    <span style="color:#f59e0b; font-weight:900; flex-shrink:0;">4.</span>
+                    <span><strong style="color:#f87171;">NO diskon</strong> — jaga margin premium</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 5 — CASH COWS
+══════════════════════════════════════════ -->
+<div class="slide slide-cows">
+    <div class="gradient-blob"></div>
+    <div class="slide-label">05 / 09</div>
+    <div class="content">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+            <span style="background:rgba(0,226,115,0.15); color:#00E273; font-size:0.72rem; font-weight:700; padding:3px 12px; border-radius:999px; border:1px solid rgba(0,226,115,0.3);">LOW GROWTH · HIGH SHARE</span>
+        </div>
+        <h2 style="font-size:2.25rem; font-weight:900; color:white; margin-bottom:1.5rem;">
+            🐄 <span style="color:#00E273;">CASH COWS</span> — Volume Driver, Pertahankan
+        </h2>
+
+        <!-- Table -->
+        <div style="border-radius:10px; overflow:hidden; margin-bottom:1.5rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Series</th>
+                        <th style="text-align:center;">Volume</th>
+                        <th style="text-align:center;">Vol Share</th>
+                        <th style="text-align:center;">Revenue</th>
+                        <th style="text-align:center;">ASP</th>
+                        <th>Strategi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight:700; color:#00E273;">DALLAS <span style="color:rgba(255,255,255,0.45); font-weight:400; font-size:0.72rem;">(Men)</span></td>
+                        <td style="text-align:center; font-weight:700; color:white;">81 pc</td>
+                        <td style="text-align:center;"><span style="background:rgba(0,226,115,0.2); color:#00E273; padding:2px 8px; border-radius:999px; font-size:0.72rem; font-weight:700;">17.3%</span></td>
+                        <td style="text-align:center; color:rgba(255,255,255,0.85);">Rp 14.5 Juta</td>
+                        <td style="text-align:center; color:#00E273; font-weight:700;">Rp 178K</td>
+                        <td style="color:rgba(255,255,255,0.7); font-size:0.78rem;">Volume King — stok stabil</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700; color:#00E273;">FLO <span style="color:rgba(255,255,255,0.45); font-weight:400; font-size:0.72rem;">(Ladies)</span></td>
+                        <td style="text-align:center; font-weight:700; color:white;">49 pc</td>
+                        <td style="text-align:center;"><span style="background:rgba(0,226,115,0.2); color:#00E273; padding:2px 8px; border-radius:999px; font-size:0.72rem; font-weight:700;">10.5%</span></td>
+                        <td style="text-align:center; color:rgba(255,255,255,0.85);">Rp 8.8 Juta</td>
+                        <td style="text-align:center; color:#00E273; font-weight:700;">Rp 178K</td>
+                        <td style="color:rgba(255,255,255,0.7); font-size:0.78rem;">Ladies Driver — steady</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700; color:#00E273;">CLASSIC <span style="color:rgba(255,255,255,0.45); font-weight:400; font-size:0.72rem;">(Mix)</span></td>
+                        <td style="text-align:center; font-weight:700; color:white;">34 pc</td>
+                        <td style="text-align:center;"><span style="background:rgba(0,226,115,0.15); color:#00E273; padding:2px 8px; border-radius:999px; font-size:0.72rem; font-weight:700;">7.3%</span></td>
+                        <td style="text-align:center; color:rgba(255,255,255,0.85);">Rp 3.3 Juta</td>
+                        <td style="text-align:center; color:rgba(255,255,255,0.7);">Rp 97K</td>
+                        <td style="color:rgba(255,255,255,0.7); font-size:0.78rem;">Entry Price — traffic</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700; color:#00E273;">CLASSIC METALIC <span style="color:rgba(255,255,255,0.45); font-weight:400; font-size:0.72rem;">(Ladies)</span></td>
+                        <td style="text-align:center; font-weight:700; color:white;">30 pc</td>
+                        <td style="text-align:center;"><span style="background:rgba(0,226,115,0.15); color:#00E273; padding:2px 8px; border-radius:999px; font-size:0.72rem; font-weight:700;">6.4%</span></td>
+                        <td style="text-align:center; color:rgba(255,255,255,0.85);">Rp 2.9 Juta</td>
+                        <td style="text-align:center; color:rgba(255,255,255,0.7);">Rp 99K</td>
+                        <td style="color:rgba(255,255,255,0.7); font-size:0.78rem;">Budget Ladies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Total + upsell box -->
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:1.25rem;">
+            <div style="background:rgba(0,226,115,0.1); border:1px solid rgba(0,226,115,0.2); border-radius:10px; padding:1.25rem; text-align:center;">
+                <div style="font-size:0.72rem; color:rgba(255,255,255,0.5); margin-bottom:0.35rem;">Total Cash Cows</div>
+                <div style="font-size:2.5rem; font-weight:900; color:#00E273; line-height:1;">194 pc</div>
+                <div style="font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem;">41.5% volume · Rp 29.5 Juta</div>
+            </div>
+            <div style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:10px; padding:1.25rem; display:flex; align-items:center; gap:1rem;">
+                <div style="font-size:2rem; flex-shrink:0;">🎯</div>
+                <div>
+                    <div style="font-size:0.78rem; font-weight:700; color:#f59e0b; margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.05em;">Upsell Opportunity</div>
+                    <p style="color:rgba(255,255,255,0.85); font-size:0.9rem; margin:0; line-height:1.5;">
+                        <strong style="color:white;">DALLAS/FLO → LUCA/LUNA</strong> = <strong style="color:#f59e0b;">+Rp 200K/pair (+112% ASP!)</strong>
+                    </p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.75rem; margin-top:0.3rem;">Train SAs untuk upsell saat customer handle DALLAS/FLO</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 6 — QUESTION MARKS
+══════════════════════════════════════════ -->
+<div class="slide slide-qmarks">
+    <div class="slide-label">06 / 09</div>
+    <div class="content">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+            <span style="background:rgba(99,102,241,0.2); color:#a5b4fc; font-size:0.72rem; font-weight:700; padding:3px 12px; border-radius:999px; border:1px solid rgba(99,102,241,0.3);">HIGH GROWTH · LOW SHARE</span>
+        </div>
+        <h2 style="font-size:2rem; font-weight:900; color:white; margin-bottom:1.5rem;">
+            ❓ <span style="color:#a5b4fc;">QUESTION MARKS</span> — Seleksi &amp; Nurture
+        </h2>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.25rem;">
+            <!-- High Potential -->
+            <div>
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.875rem;">
+                    <div style="width:8px; height:8px; background:#00E273; border-radius:50%;"></div>
+                    <span style="font-size:0.72rem; font-weight:700; color:#00E273; text-transform:uppercase; letter-spacing:0.1em;">High Potential — Invest</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                    <div style="background:rgba(0,226,115,0.08); border:1px solid rgba(0,226,115,0.2); border-radius:8px; padding:1rem 1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div style="font-weight:700; color:white; font-size:0.95rem;">DOVER <span style="color:rgba(255,255,255,0.45); font-size:0.75rem; font-weight:400;">(Kids)</span></div>
+                                <div style="font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem;">8 pc · ASP <strong style="color:#00E273;">Rp 346K</strong></div>
+                            </div>
+                            <span style="background:rgba(0,226,115,0.2); color:#00E273; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid rgba(0,226,115,0.3); flex-shrink:0;">Tourist Kids Premium</span>
+                        </div>
+                    </div>
+                    <div style="background:rgba(0,226,115,0.08); border:1px solid rgba(0,226,115,0.2); border-radius:8px; padding:1rem 1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div style="font-weight:700; color:white; font-size:0.95rem;">PUFFY <span style="color:rgba(255,255,255,0.45); font-size:0.75rem; font-weight:400;">(Ladies)</span></div>
+                                <div style="font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem;">25 pc · ASP <strong style="color:#00E273;">Rp 196K</strong></div>
+                            </div>
+                            <span style="background:rgba(0,226,115,0.2); color:#00E273; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid rgba(0,226,115,0.3); flex-shrink:0;">Borderline Cash Cow</span>
+                        </div>
+                    </div>
+                    <div style="background:rgba(0,226,115,0.08); border:1px solid rgba(0,226,115,0.2); border-radius:8px; padding:1rem 1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div style="font-weight:700; color:white; font-size:0.95rem;">MERCI <span style="color:rgba(255,255,255,0.45); font-size:0.75rem; font-weight:400;">(Ladies)</span></div>
+                                <div style="font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem;">19 pc · ASP <strong style="color:#00E273;">Rp 198K</strong></div>
+                            </div>
+                            <span style="background:rgba(0,226,115,0.2); color:#00E273; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid rgba(0,226,115,0.3); flex-shrink:0;">Ladies Mid-tier</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitor -->
+            <div>
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.875rem;">
+                    <div style="width:8px; height:8px; background:#f59e0b; border-radius:50%;"></div>
+                    <span style="font-size:0.72rem; font-weight:700; color:#f59e0b; text-transform:uppercase; letter-spacing:0.1em;">Monitor — Evaluate</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0.75rem 1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:rgba(255,255,255,0.85); font-size:0.875rem; font-weight:600;">ELSA <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:400;">(Ladies)</span></span>
+                            <div style="text-align:right;">
+                                <span style="color:rgba(255,255,255,0.6); font-size:0.75rem;">14 pc · </span>
+                                <span style="color:#f59e0b; font-size:0.75rem; font-weight:700;">Rp 196K ASP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0.75rem 1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:rgba(255,255,255,0.85); font-size:0.875rem; font-weight:600;">SLIDE <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:400;">(Men/Boys)</span></span>
+                            <div style="text-align:right;">
+                                <span style="color:rgba(255,255,255,0.6); font-size:0.75rem;">16 pc · </span>
+                                <span style="color:#f59e0b; font-size:0.75rem; font-weight:700;">Rp 193K ASP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0.75rem 1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:rgba(255,255,255,0.85); font-size:0.875rem; font-weight:600;">WEDGES <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:400;">(Ladies)</span></span>
+                            <div style="text-align:right;">
+                                <span style="color:rgba(255,255,255,0.6); font-size:0.75rem;">12 pc · </span>
+                                <span style="color:#f59e0b; font-size:0.75rem; font-weight:700;">Rp 195K ASP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0.75rem 1.25rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:rgba(255,255,255,0.85); font-size:0.875rem; font-weight:600;">VELCRO <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; font-weight:400;">(Kids)</span></span>
+                            <div style="text-align:right;">
+                                <span style="color:rgba(255,255,255,0.6); font-size:0.75rem;">7 pc · </span>
+                                <span style="color:#f59e0b; font-size:0.75rem; font-weight:700;">Rp 199K ASP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:0.65rem 1.25rem;">
+                        <span style="color:rgba(255,255,255,0.45); font-size:0.78rem;">+ ZORRO, IRIS, STITCH — volume sangat kecil, observe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action -->
+        <div style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem;">
+            <div style="font-size:1.25rem;">⏱️</div>
+            <p style="color:rgba(255,255,255,0.85); font-size:0.875rem; margin:0;">
+                <strong style="color:#a5b4fc;">Action:</strong> Evaluasi 3 bulan — yang belum naik = kurangi SKU &amp; alihkan shelf space ke Stars
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 7 — DOGS
+══════════════════════════════════════════ -->
+<div class="slide slide-dogs">
+    <div class="gradient-blob-red"></div>
+    <div class="slide-label">07 / 09</div>
+    <div class="content">
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+            <span style="background:rgba(239,68,68,0.2); color:#f87171; font-size:0.72rem; font-weight:700; padding:3px 12px; border-radius:999px; border:1px solid rgba(239,68,68,0.3);">LOW GROWTH · LOW SHARE</span>
+        </div>
+        <h2 style="font-size:2rem; font-weight:900; color:white; margin-bottom:1.5rem;">
+            🐕 <span style="color:#f87171;">DOGS</span> — Efisienkan &amp; Phase Out
+        </h2>
+
+        <div style="display:grid; grid-template-columns:3fr 1fr; gap:1.5rem;">
+            <!-- Dogs list -->
+            <div>
+                <div style="display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.25rem;">
+                    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(239,68,68,0.2); border-radius:8px; padding:0.875rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-weight:700; color:white; font-size:0.9rem;">BLACKSERIES</span>
+                            <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; margin-left:0.5rem;">(Men)</span>
+                        </div>
+                        <div style="display:flex; gap:1.5rem; text-align:right; font-size:0.78rem;">
+                            <span style="color:rgba(255,255,255,0.6);">15 pc</span>
+                            <span style="color:rgba(255,255,255,0.5);">ASP Rp 99K</span>
+                            <span style="color:#f87171; font-weight:700;">Rp 1.5 Juta</span>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(239,68,68,0.2); border-radius:8px; padding:0.875rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-weight:700; color:white; font-size:0.9rem;">STRIPE</span>
+                            <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; margin-left:0.5rem;">(Men)</span>
+                        </div>
+                        <div style="display:flex; gap:1.5rem; text-align:right; font-size:0.78rem;">
+                            <span style="color:rgba(255,255,255,0.6);">10 pc</span>
+                            <span style="color:rgba(255,255,255,0.5);">ASP Rp 119K</span>
+                            <span style="color:#f87171; font-weight:700;">Rp 1.2 Juta</span>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(239,68,68,0.2); border-radius:8px; padding:0.875rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-weight:700; color:white; font-size:0.9rem;">ONYX</span>
+                            <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; margin-left:0.5rem;">(Men)</span>
+                        </div>
+                        <div style="display:flex; gap:1.5rem; text-align:right; font-size:0.78rem;">
+                            <span style="color:rgba(255,255,255,0.6);">7 pc</span>
+                            <span style="color:rgba(255,255,255,0.5);">ASP Rp 119K</span>
+                            <span style="color:#f87171; font-weight:700;">Rp 833K</span>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(239,68,68,0.2); border-radius:8px; padding:0.875rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-weight:700; color:white; font-size:0.9rem;">CLASSICEARTH</span>
+                            <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; margin-left:0.5rem;">(Mix)</span>
+                        </div>
+                        <div style="display:flex; gap:1.5rem; text-align:right; font-size:0.78rem;">
+                            <span style="color:rgba(255,255,255,0.6);">6 pc</span>
+                            <span style="color:rgba(255,255,255,0.5);">ASP Rp 99K</span>
+                            <span style="color:#f87171; font-weight:700;">Rp 594K</span>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(239,68,68,0.15); border-radius:8px; padding:0.875rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-weight:700; color:white; font-size:0.9rem;">DISNEY</span>
+                            <span style="color:rgba(255,255,255,0.4); font-size:0.72rem; margin-left:0.5rem;">(Kids)</span>
+                        </div>
+                        <div style="display:flex; gap:1.5rem; text-align:right; font-size:0.78rem;">
+                            <span style="color:rgba(255,255,255,0.6);">2 pc</span>
+                            <span style="color:rgba(255,255,255,0.5);">ASP Rp 129K</span>
+                            <span style="color:#f87171; font-weight:700;">Rp 258K</span>
+                        </div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(239,68,68,0.1); border-radius:8px; padding:0.875rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-weight:700; color:rgba(255,255,255,0.6); font-size:0.9rem;">SUMMER</span>
+                            <span style="color:rgba(255,255,255,0.3); font-size:0.72rem; margin-left:0.5rem;">(Men)</span>
+                        </div>
+                        <div style="display:flex; gap:1.5rem; text-align:right; font-size:0.78rem;">
+                            <span style="color:rgba(255,255,255,0.4);">1 pc</span>
+                            <span style="color:rgba(255,255,255,0.35);">ASP Rp 99K</span>
+                            <span style="color:#f87171; font-weight:700;">Rp 99K</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action box -->
+                <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); border-radius:8px; padding:1rem 1.25rem; display:flex; align-items:center; gap:0.75rem;">
+                    <div style="font-size:1.25rem;">📦</div>
+                    <p style="color:rgba(255,255,255,0.85); font-size:0.875rem; margin:0;">
+                        <strong style="color:#f87171;">Action:</strong> Kurangi stok, bebaskan shelf space → realokasi ke <strong style="color:#f59e0b;">STARS</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Total summary -->
+            <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:10px; padding:1.5rem; text-align:center; display:flex; flex-direction:column; justify-content:center; gap:1rem;">
+                <div>
+                    <div style="font-size:0.72rem; color:rgba(255,255,255,0.45); margin-bottom:0.5rem;">Total Dogs</div>
+                    <div style="font-size:2.75rem; font-weight:900; color:#f87171; line-height:1;">41</div>
+                    <div style="font-size:0.78rem; color:rgba(255,255,255,0.5);">pasang</div>
+                </div>
+                <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:1rem;">
+                    <div style="font-size:0.72rem; color:rgba(255,255,255,0.45); margin-bottom:0.4rem;">Volume Share</div>
+                    <div style="font-size:2rem; font-weight:900; color:#f87171;">6.8%</div>
+                </div>
+                <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:1rem;">
+                    <div style="font-size:0.72rem; color:rgba(255,255,255,0.45); margin-bottom:0.4rem;">Revenue</div>
+                    <div style="font-size:1.5rem; font-weight:900; color:#f87171;">Rp 3 Jt</div>
+                    <div style="font-size:0.72rem; color:rgba(255,255,255,0.4); margin-top:0.2rem;">hanya 3% total</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 8 — ACTION PLAN
+══════════════════════════════════════════ -->
+<div class="slide" style="background:#f8fafc;">
+    <div class="slide-label" style="color:#999;">08 / 09</div>
+    <h2 style="font-size:1.8rem; font-weight:900; color:#002A3A; margin-bottom:0.4rem;">Strategic Action Plan</h2>
+    <p style="color:#6b7280; font-size:0.875rem; margin-bottom:2rem;">Zuma Monkey Forest Ubud · Prioritas Eksekusi</p>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;">
+        <!-- Immediate -->
+        <div style="border-radius:10px; overflow:hidden; border:2px solid #002A3A;">
+            <div style="background:#002A3A; padding:1rem 1.25rem; display:flex; align-items:center; gap:0.75rem;">
+                <div style="background:#00E273; color:#002A3A; font-weight:900; font-size:0.72rem; padding:3px 10px; border-radius:999px;">NOW</div>
+                <span style="font-weight:700; color:white; font-size:0.95rem;">IMMEDIATE</span>
+            </div>
+            <div style="padding:1.25rem; background:white;">
+                <div style="display:flex; flex-direction:column; gap:0.875rem;">
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#002A3A; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:#00E273; font-size:0.7rem; font-weight:900;">1</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Cek Stok Stars</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">LUCA / LUNA / AIRMOVE — pastikan tidak kosong di semua size</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#002A3A; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:#00E273; font-size:0.7rem; font-weight:900;">2</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Relokasi Shelf Space</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">Ambil space dari Dogs → tambah display Stars &amp; Cash Cows</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#002A3A; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:#00E273; font-size:0.7rem; font-weight:900;">3</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Setup Upsell Script</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">SA training: DALLAS → LUCA, FLO → LUNA</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Short Term -->
+        <div style="border-radius:10px; overflow:hidden; border:2px solid #f59e0b;">
+            <div style="background:#f59e0b; padding:1rem 1.25rem; display:flex; align-items:center; gap:0.75rem;">
+                <div style="background:#1c1917; color:#f59e0b; font-weight:900; font-size:0.72rem; padding:3px 10px; border-radius:999px;">1 BULAN</div>
+                <span style="font-weight:700; color:#1c1917; font-size:0.95rem;">SHORT TERM</span>
+            </div>
+            <div style="padding:1.25rem; background:white;">
+                <div style="display:flex; flex-direction:column; gap:0.875rem;">
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#f59e0b; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:#1c1917; font-size:0.7rem; font-weight:900;">1</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Depth AIRMOVE</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">Tambah colorways baru — ASP tertinggi, growth potential</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#f59e0b; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:#1c1917; font-size:0.7rem; font-weight:900;">2</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">DOVER Display</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">Kids premium zone — tourist families target</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#f59e0b; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:#1c1917; font-size:0.7rem; font-weight:900;">3</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Track PUFFY + MERCI</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">Evaluasi performance — layak naik ke Cash Cow?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review -->
+        <div style="border-radius:10px; overflow:hidden; border:2px solid #6366f1;">
+            <div style="background:#6366f1; padding:1rem 1.25rem; display:flex; align-items:center; gap:0.75rem;">
+                <div style="background:white; color:#6366f1; font-weight:900; font-size:0.72rem; padding:3px 10px; border-radius:999px;">3 BULAN</div>
+                <span style="font-weight:700; color:white; font-size:0.95rem;">REVIEW</span>
+            </div>
+            <div style="padding:1.25rem; background:white;">
+                <div style="display:flex; flex-direction:column; gap:0.875rem;">
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#6366f1; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:white; font-size:0.7rem; font-weight:900;">1</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Evaluasi Question Marks</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">Promote to Cash Cow atau exit strategy</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#6366f1; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:white; font-size:0.7rem; font-weight:900;">2</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Phase Out Dogs</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">Series yang tidak improve → stop replenishment</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:24px; height:24px; background:#6366f1; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                            <span style="color:white; font-size:0.7rem; font-weight:900;">3</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; color:#002A3A; font-size:0.875rem; margin-bottom:0.2rem;">Review Planogram</div>
+                            <p style="color:#6b7280; font-size:0.78rem; margin:0; line-height:1.5;">Sesuaikan layout berdasarkan hasil 3 bulan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 9 — REVENUE IMPACT (CLOSING)
+══════════════════════════════════════════ -->
+<div class="slide slide-teal" style="min-height:580px;">
+    <div class="gradient-blob"></div>
+    <div class="slide-label">09 / 09</div>
+    <div class="content" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+                <span style="background:rgba(0,226,115,0.15); color:#00E273; font-size:0.72rem; font-weight:700; padding:3px 12px; border-radius:999px; border:1px solid rgba(0,226,115,0.3);">REVENUE PROJECTION</span>
+            </div>
+            <h2 style="font-size:2.25rem; font-weight:900; color:white; margin-bottom:0.5rem;">Target ASP Uplift</h2>
+            <p style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-bottom:2.25rem;">Pure mix improvement — tanpa tambah traffic</p>
+
+            <!-- 3 scenario cards -->
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-bottom:2rem;">
+                <!-- Baseline -->
+                <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:2rem; text-align:center; position:relative; overflow:hidden;">
+                    <div style="font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem;">Baseline — Saat Ini</div>
+                    <div style="font-size:0.85rem; color:rgba(255,255,255,0.6); margin-bottom:0.5rem;">468 pc × Rp 217K</div>
+                    <div style="font-size:2.75rem; font-weight:900; color:white; line-height:1; margin-bottom:0.5rem;">Rp 101.9 Jt</div>
+                    <div style="font-size:0.78rem; color:rgba(255,255,255,0.4);">Current performance</div>
+                </div>
+                <!-- Target -->
+                <div style="background:rgba(0,226,115,0.12); border:1px solid rgba(0,226,115,0.35); border-radius:12px; padding:2rem; text-align:center; position:relative; overflow:hidden;">
+                    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, #00E273, #00b359);"></div>
+                    <div style="font-size:0.72rem; font-weight:700; color:#00E273; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem;">Target — Mix Improvement</div>
+                    <div style="font-size:0.85rem; color:rgba(255,255,255,0.6); margin-bottom:0.5rem;">468 pc × Rp 250K</div>
+                    <div style="font-size:2.75rem; font-weight:900; color:#00E273; line-height:1; margin-bottom:0.5rem;">Rp 117 Jt</div>
+                    <div style="background:rgba(0,226,115,0.2); border-radius:999px; padding:3px 12px; display:inline-block;">
+                        <span style="color:#00E273; font-weight:900; font-size:0.85rem;">+Rp 15.1 Jt (+14.8%)</span>
+                    </div>
+                </div>
+                <!-- Stretch -->
+                <div style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:2rem; text-align:center; position:relative; overflow:hidden;">
+                    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                    <div style="font-size:0.72rem; font-weight:700; color:#f59e0b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem;">Stretch — Stars Grow</div>
+                    <div style="font-size:0.85rem; color:rgba(255,255,255,0.6); margin-bottom:0.5rem;">520 pc × Rp 260K</div>
+                    <div style="font-size:2.75rem; font-weight:900; color:#f59e0b; line-height:1; margin-bottom:0.5rem;">Rp 135.2 Jt</div>
+                    <div style="background:rgba(245,158,11,0.2); border-radius:999px; padding:3px 12px; display:inline-block;">
+                        <span style="color:#f59e0b; font-weight:900; font-size:0.85rem;">+Rp 33.3 Jt (+32.7%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key message -->
+            <div style="background:rgba(0,226,115,0.08); border:1px solid rgba(0,226,115,0.2); border-radius:10px; padding:1.25rem 1.75rem; display:flex; align-items:center; gap:1rem;">
+                <div style="font-size:1.5rem; flex-shrink:0;">💡</div>
+                <p style="color:rgba(255,255,255,0.9); font-size:1rem; font-weight:600; margin:0; line-height:1.6;">
+                    Tanpa tambah traffic, <strong style="color:#00E273;">pure mix improvement</strong> bisa <strong style="color:#00E273;">+15% revenue</strong> — dengan mengoptimalkan Stars dan upsell dari Cash Cows.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:1.25rem; display:flex; justify-content:space-between; align-items:center;">
+            <div style="color:rgba(255,255,255,0.3); font-size:0.75rem;">
+                Zuma Monkey Forest Ubud · BCG Analysis Feb 2026 · Confidential
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+                <div style="background:#00E273; color:#002A3A; font-weight:900; font-size:0.85rem; padding:0.3rem 0.875rem; border-radius:5px;">ZUMA</div>
+                <span style="color:rgba(255,255,255,0.3); font-size:0.75rem;">Prepared by Iris</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

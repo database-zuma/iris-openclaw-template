@@ -4,6 +4,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-21** | [Arscontexta — Skill Graphs > SKILL.md](ai-agents/2026-02-21_twitter_arscontexta-skill-graphs.md) | #skill-graphs #knowledge-management #claude-code-plugin #second-brain #agent-architecture | Claude Code plugin for generating knowledge systems; Skill Graphs = navigable markdown networks vs monolithic SKILL.md
+- **2026-02-20** | [Gateway Pairing Issue Fix — Scope Mismatch](dev-tools/2026-02-20_gateway-pairing-fix.md) | #openclaw #gateway #pairing #troubleshooting #whatsapp #device-auth | Device scope mismatch (missing operator.read/write) → pairing required error; fix via device rotation + full scopes
 - **2026-02-20** | [Multi-Agent Architecture — Production (Eos Live)](ai-agents/2026-02-20_multi-agent-architecture-production.md) | #multi-agent #nanobot #openclaw #architecture #production | Hybrid OpenClaw (Iris) + Nanobot (Eos) with filesystem bridge communication
 - **2026-02-19** | [Botasaurus — All-in-One Web Scraping Framework](dev-tools/2026-02-19_github_botasaurus.md) | #web-scraping #python #anti-bot #cloudflare-bypass #automation | GitHub Research
 - **2026-02-19** | [Voicebox — Open-Source Voice Synthesis Studio](dev-tools/2026-02-19_github_voicebox.md) | #tts #voice-cloning #local-ai #qwen3-tts #openclaw-integration #apple-silicon | GitHub research
@@ -18,6 +20,7 @@ Auto-generated index of saved links, articles, and threads.
 ## By Topic
 
 ### AI Agents
+- [Arscontexta — Skill Graphs > SKILL.md](ai-agents/2026-02-21_twitter_arscontexta-skill-graphs.md) — Claude Code plugin: knowledge systems from conversation, Skill Graphs (wikilinked markdown networks), progressive disclosure navigation, 249 research claims, Three-Space architecture
 - [Docker Multi-Agent Architecture](ai-agents/2026-02-19_docker-multi-agent-architecture.md) — Supervisor/Worker pattern with Docker Compose, A2A protocol, isolation strategies (Docker/venv/process), cost comparison Kimi K2.5 vs Gemini Flash, Mac mini M4 resource planning, implementation roadmap for OpenClaw
 - [OpenClaw Agent "Larry" - TikTok Viral Marketing](ai-agents/2026-02-14_twitter_openclaw-larry-tiktok.md) — AI agent automation for TikTok slideshows, 500K+ views in 5 days
 
@@ -29,6 +32,7 @@ Auto-generated index of saved links, articles, and threads.
 - [Dieter Rams — Braun Design & Apple Influence](design/2026-02-14_research_dieter-rams-braun.md) — Industrial design philosophy, 10 Principles of Good Design, influence on Apple/Jonathan Ive
 
 ### Dev Tools
+- [Gateway Pairing Issue Fix — Scope Mismatch](dev-tools/2026-02-20_gateway-pairing-fix.md) — OpenClaw gateway device pairing troubleshooting, scope diagnosis, token rotation, device auth verification
 - [Voicebox — Open-Source Voice Synthesis Studio](dev-tools/2026-02-19_github_voicebox.md) — Local-first voice cloning studio (ElevenLabs alternative), powered by Qwen3-TTS, REST API, MLX-optimized for Apple Silicon
 - [Botasaurus — All-in-One Web Scraping Framework](dev-tools/2026-02-19_github_botasaurus.md) — Python scraping framework, bypass Cloudflare/Datadome/Fingerprint, Selenium-based with @browser + @request decorators, built-in Web UI, Kubernetes scaling
 - [Exa API Setup](dev-tools/exa-api-setup.md)
@@ -53,4 +57,4 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-19 (Hermes research agent)
+**Last updated:** 2026-02-21 (arscontexta Skill Graphs, Voicebox version update)

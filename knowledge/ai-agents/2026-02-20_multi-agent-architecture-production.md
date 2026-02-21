@@ -1,7 +1,7 @@
 # Multi-Agent Architecture Zuma — Production Ready
 
 **Date:** 2026-02-20  
-**Status:** ✅ Eos (Nanobot) Live — Codex & Argus Pending
+**Status:** ✅ Eos & Argus (Nanobot) Live — Codex Pending
 
 ---
 
@@ -12,9 +12,9 @@ Hybrid approach: **OpenClaw (Iris) + Nanobot (Workers)**
 | Agent | Platform | Model | Role | Status |
 |-------|----------|-------|------|--------|
 | **Iris** 🌸 | OpenClaw | Claude Sonnet | Orchestrator, QC, user comms | ✅ Live (port 18789) |
-| **Eos** 🌅 | Nanobot | Gemini 3 Flash | Visual, PPT, image gen | ✅ Live (filesystem) |
+| **Eos** 🌅 | Nanobot | Gemini 3.1 Pro | Visual, PPT, image gen | ✅ Live (filesystem) |
 | **Codex** 📖 | (Pending) | Kimi K2.5 | Coding, scripts, web apps | ⏳ TBD |
-| **Argus** 👁️ | (Pending) | Gemini 2.5 Pro | Data, SQL, research | ⏳ TBD |
+| **Argus** 👁️ | Nanobot | Gemini 2.5 Pro | Data, SQL, research | ✅ Live (filesystem) |
 
 ---
 
@@ -87,7 +87,7 @@ nanobot agent --message "buatkan PPT tentang..."
 **Name:** Eos 🌅  
 **Origin:** Dewi Fajar Yunani — bringer of light and color  
 **Platform:** Nanobot (Python, 3,761 lines)  
-**Model:** Gemini 3 Flash
+**Model:** Gemini 3.1 Pro
 
 ### Core Personality
 - **Bawa cahaya & warna.** Tiap output harus indah, estetik, visually striking.
@@ -153,33 +153,25 @@ nanobot agent --message "buatkan PPT tentang..."
 
 ---
 
-## Quick Commands
+## Quick Commands (Opsi A — Iris exec langsung)
 
-### Start Eos
+### Eos (visual/PPT) — Gemini 3.1 Pro
 ```bash
-export PATH="$HOME/.local/bin:$PATH"
-nanobot agent --workspace /Users/database-zuma/.openclaw/workspace-eos-nanobot
+NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "buatkan PPT tentang [topic], simpan di ~/.openclaw/workspace-eos-nanobot/outbox/result.html"
 ```
 
-### Send Task to Eos (from Iris)
-```python
-# Write to inbox
-json.dump(task, open('/workspace-eos-nanobot/inbox/task-001.json', 'w'))
-
-# Trigger Eos (optional, if using auto-poll)
-subprocess.run(['nanobot', 'agent', '-m', 'check inbox'])
-
-# Read result
-result = open('/workspace-eos-nanobot/outbox/result-001.html').read()
+### Argus (data/research) — Gemini 2.5 Pro
+```bash
+NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "analisa sales data Q1, simpan di ~/.openclaw/workspace-argus-nanobot/outbox/report.md"
 ```
 
 ---
 
 ## Next Steps
 
-1. ✅ **Eos:** Production ready
-2. ⏳ **Codex:** Setup with Kimi K2.5 for coding tasks
-3. ⏳ **Argus:** Setup with Gemini 2.5 Pro for data analysis
+1. ✅ **Eos:** Production ready (Gemini 3.1 Pro)
+2. ✅ **Argus:** Production ready (Gemini 2.5 Pro)
+3. ⏳ **Codex:** Setup with Kimi K2.5 for coding tasks (blocked — kimi-coding key incompatible with nanobot)
 4. ⏳ **Telegram:** Activate @eos_bot for direct access
 5. ⏳ **Auto-poll:** Build cron/loop to auto-check inbox
 

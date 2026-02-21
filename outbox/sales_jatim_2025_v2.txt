@@ -1,0 +1,17 @@
+1142 |     const provider = s.providers[providerID]
+1143 |     if (!provider) {
+1144 |       const availableProviders = Object.keys(s.providers)
+1145 |       const matches = fuzzysort.go(providerID, availableProviders, { limit: 3, threshold: -10000 })
+1146 |       const suggestions = matches.map((m) => m.target)
+1147 |       throw new ModelNotFoundError({ providerID, modelID, suggestions })
+                   ^
+ProviderModelNotFoundError: ProviderModelNotFoundError
+ data: {
+  providerID: "k2",
+  modelID: "",
+  suggestions: [],
+},
+
+      at getModel (src/provider/provider.ts:1147:13)
+
+[91m[1mError: [0mModel not found: k2/.

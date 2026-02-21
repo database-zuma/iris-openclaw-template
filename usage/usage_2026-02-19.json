@@ -1,0 +1,47 @@
+{
+  "date": "2026-02-19",
+  "generated": "2026-02-19T05:40:57.956147+07:00",
+  "timezone": "Asia/Jakarta",
+  "providers": {
+    "anthropic": {
+      "api_calls": 533,
+      "input_tokens": 1116,
+      "output_tokens": 108001,
+      "cache_read_tokens": 41371023,
+      "cache_write_tokens": 13051797,
+      "total_tokens": 54531937,
+      "cost_usd": 66.967687,
+      "sessions": 7,
+      "models": {
+        "claude-sonnet-4-6": 349,
+        "claude-opus-4-6": 181,
+        "claude-sonnet-4-5": 3
+      },
+      "agents": {
+        "iris": 519,
+        "daedalus": 14
+      }
+    },
+    "openclaw": {
+      "api_calls": 52,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_write_tokens": 0,
+      "total_tokens": 0,
+      "cost_usd": 0.0,
+      "sessions": 3,
+      "models": {
+        "delivery-mirror": 52
+      },
+      "agents": {
+        "iris": 52
+      }
+    }
+  },
+  "totals": {
+    "api_calls": 585,
+    "total_tokens": 54531937,
+    "cost_usd": 66.967687
+  }
+}

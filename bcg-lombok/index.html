@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuma Lombok — BCG Matrix Jan–Feb 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        * { font-family: 'Inter', -apple-system, sans-serif; }
+        body { background: #1a1a1a; padding: 2rem; }
+        .slide { background: #f9f9f9; border-radius: 12px; padding: 3rem; margin-bottom: 1.5rem; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .slide-teal { background: #002A3A; color: white; }
+        .slide-dark { background: #111827; color: white; }
+        .gradient-blob { position: absolute; top: -80px; right: -80px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(0,226,115,0.25) 0%, transparent 70%); border-radius: 50%; z-index: 0; pointer-events:none; }
+        .content { position: relative; z-index: 1; }
+        .slide-label { position: absolute; top: 1.5rem; right: 2rem; font-size: 0.75rem; font-weight: 600; color: #999; }
+        .slide-teal .slide-label, .slide-dark .slide-label { color: rgba(255,255,255,0.35); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #002A3A; color: white; padding: 0.55rem 0.75rem; text-align: left; font-size: 0.72rem; }
+        td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e5e7eb; font-size: 0.72rem; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        .badge { padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
+        .badge-green { background:#dcfce7; color:#16a34a; }
+        .badge-blue  { background:#dbeafe; color:#1d4ed8; }
+        .badge-amber { background:#fef3c7; color:#b45309; }
+        .badge-red   { background:#fee2e2; color:#dc2626; }
+        .badge-gray  { background:#f1f5f9; color:#64748b; }
+        .grow   { color:#16a34a; font-weight:700; }
+        .decline{ color:#dc2626; font-weight:700; }
+        .footnote { font-size:0.68rem; color:#9ca3af; margin-top:1rem; padding-top:0.75rem; border-top:1px solid #e5e7eb; }
+        .quadrant { border-radius:10px; padding:1.25rem; }
+        .q-star  { background:#f0fdf4; border:1.5px solid #86efac; }
+        .q-qmark { background:#eff6ff; border:1.5px solid #93c5fd; }
+        .q-cow   { background:#fffbeb; border:1.5px solid #fcd34d; }
+        .q-dog   { background:#fff5f5; border:1.5px solid #fca5a5; }
+        .q-new   { background:#f8fafc; border:1.5px solid #cbd5e1; }
+        .series-chip { display:inline-block; padding:0.2rem 0.55rem; border-radius:4px; font-size:0.68rem; font-weight:700; margin:0.15rem; }
+        @media print {
+            @page { size: A4 landscape; margin: 0; }
+            html, body { background: white !important; padding: 0 !important; }
+            .slide { page-break-after: always; break-after: page; border-radius:0 !important; box-shadow:none !important; margin:0 !important; padding:1.75rem 2.25rem !important; min-height:0 !important; height:190mm !important; overflow:hidden !important; box-sizing:border-box; }
+            .slide:last-child { page-break-after:avoid; }
+            * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+            .slide-teal { background:#002A3A !important; }
+            .slide-dark { background:#111827 !important; }
+            .gradient-blob { display:none !important; }
+            #print-btn { display:none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="print-btn" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;">
+    <button onclick="window.print()" style="background:#00E273;color:#002A3A;border:none;padding:0.6rem 1.5rem;border-radius:6px;font-weight:700;font-size:0.875rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);">🖨️ Print / Save PDF (Landscape A4)</button>
+</div>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide slide-teal" style="min-height:460px;">
+    <div class="gradient-blob"></div>
+    <div class="content">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:3rem;">
+            <div style="background:#00E273;color:#002A3A;font-weight:900;font-size:1.1rem;padding:0.35rem 1rem;border-radius:6px;">ZUMA</div>
+            <div style="color:rgba(255,255,255,0.45);font-size:0.8rem;">Product Strategy · Confidential</div>
+        </div>
+        <div style="font-size:0.7rem;color:#00E273;font-weight:700;letter-spacing:0.15em;margin-bottom:0.75rem;">LOMBOK BRANCH</div>
+        <h1 style="font-size:2.8rem;font-weight:900;line-height:1.1;margin-bottom:1rem;color:white;">BCG Matrix<br>Product Analysis<br><span style="font-size:1.8rem;color:rgba(255,255,255,0.7);">Jan–Feb 2026</span></h1>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;max-width:480px;line-height:1.7;">Klasifikasi portfolio produk Lombok berdasarkan volume penjualan & pertumbuhan YoY. Basis pengambilan keputusan mix produk, planogram, dan alokasi stok.</p>
+        <div style="margin-top:2.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;">
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:#00E273;">393M</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Revenue Jan 2026</div>
+            </div>
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:#00E273;">+46.3%</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">YoY Jan (vs 269M)</div>
+            </div>
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:white;">5,545</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Pairs sold Jan</div>
+            </div>
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:#fbbf24;">27</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Series aktif</div>
+            </div>
+        </div>
+        <div style="margin-top:2rem;color:rgba(255,255,255,0.22);font-size:0.68rem;">
+            Toko: Zuma Epicentrum · Zuma Mataram · Zuma Pepito Lombok &nbsp;|&nbsp; Data: core.sales_with_product · 19 Feb 2026 · Iris for Zuma Indonesia
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: BCG OVERVIEW (4 Quadrant Summary) -->
+<div class="slide">
+    <div class="slide-label">02 / 04</div>
+    <h2 style="font-size:1.5rem;font-weight:900;color:#002A3A;margin-bottom:0.2rem;">BCG Matrix — Portfolio Lombok</h2>
+    <p style="color:#6b7280;font-size:0.78rem;margin-bottom:1.25rem;">Klasifikasi 20 series (threshold volume: 90 pairs YTD Jan–Feb 2026). Garis pembatas: median volume. Sumber: Epicentrum + Mataram + Pepito.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:1rem;">
+
+        <!-- Stars -->
+        <div class="quadrant q-star">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">⭐</span>
+                    <strong style="color:#15803d;font-size:0.9rem;"> STARS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Tinggi · Tumbuh Cepat → Prioritaskan stok & planogram</div>
+                </div>
+                <span class="badge badge-green">7 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">CLASSIC +27.6% · 1,680 prs</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">BLACKSERIES +85.4% · 1,103 prs 🔥</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">STRIPE +6.9% · 607 prs</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">CLASSIC METALIC +203.6% · 252 prs 🚀</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">ELSA +32.0% · 194 prs</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">DISNEY +52.3% · 99 prs</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">DALLAS +31.1% · 97 prs</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#166534;line-height:1.5;background:rgba(22,163,74,0.08);padding:0.5rem 0.75rem;border-radius:6px;">
+                💡 BLACKSERIES +85% & CLASSIC METALIC +204% — Stars terkuat. Pastikan tidak stockout. CLASSIC masih raja volume Lombok meski growth moderat.
+            </div>
+        </div>
+
+        <!-- Cash Cows -->
+        <div class="quadrant q-cow">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">🐄</span>
+                    <strong style="color:#b45309;font-size:0.9rem;"> CASH COWS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Tinggi · Mulai Melambat → Pertahankan, jangan over-invest</div>
+                </div>
+                <span class="badge badge-amber">3 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#fef3c7;color:#b45309;">ONYX -5.4% · 122 prs</div>
+                <div class="series-chip" style="background:#fef3c7;color:#b45309;">SLIDE -15.1% · 101 prs</div>
+                <div class="series-chip" style="background:#fef3c7;color:#b45309;">FLO -15.0% · 96 prs</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#92400e;line-height:1.5;background:rgba(180,83,9,0.07);padding:0.5rem 0.75rem;border-radius:6px;">
+                ⚠️ ONYX hanya -5.4% — masih sehat dibanding nasional. SLIDE & FLO perlu dimonitor. Jangan kurangi stok terlalu agresif — masih kontribusi signifikan.
+            </div>
+        </div>
+
+        <!-- Question Marks -->
+        <div class="quadrant q-qmark">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">❓</span>
+                    <strong style="color:#1d4ed8;font-size:0.9rem;"> QUESTION MARKS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Kecil · Tumbuh Cepat → Investasi selektif, potensi jadi Star</div>
+                </div>
+                <span class="badge badge-blue">6 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">ZORRO +844.4% · 85 prs 🚀</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">WEDGES +105.6% · 74 prs</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">LUNA +85.7% · 52 prs</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">LUCA +21.7% · 56 prs</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">PUFFY +3.3% · 63 prs</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">BATMAN +15.4% · 15 prs</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#1e40af;line-height:1.5;background:rgba(29,78,216,0.07);padding:0.5rem 0.75rem;border-radius:6px;">
+                💡 ZORRO +844% dari base kecil — growth explosive, perlu dipush. WEDGES & LUNA tumbuh solid. Tambahkan slot planogram untuk ketiganya.
+            </div>
+        </div>
+
+        <!-- Dogs -->
+        <div class="quadrant q-dog">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">🐕</span>
+                    <strong style="color:#dc2626;font-size:0.9rem;"> DOGS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Kecil · Menurun → Kurangi slot, pertimbangkan phase-out</div>
+                </div>
+                <span class="badge badge-red">4 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#fee2e2;color:#dc2626;">CLASSICEARTH -51.3% · 78 prs</div>
+                <div class="series-chip" style="background:#fee2e2;color:#dc2626;">SUMMER -69.8% · 65 prs ⚠️</div>
+                <div class="series-chip" style="background:#fee2e2;color:#dc2626;">VELCRO -44.0% · 56 prs</div>
+                <div class="series-chip" style="background:#fee2e2;color:#dc2626;">TOY STORY -6.3% · 15 prs</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#991b1b;line-height:1.5;background:rgba(220,38,38,0.07);padding:0.5rem 0.75rem;border-radius:6px;">
+                🔴 SUMMER -70% drop terbesar — pertimbangkan clearance. CLASSICEARTH & VELCRO pun merosot tajam. Kurangi slot → pindahkan ke Stars & Q-Marks.
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;display:flex;gap:2rem;font-size:0.72rem;color:#64748b;">
+        <span>🆕 <strong>New (no YoY):</strong> MERCI (97 prs), STITCH (59), WBB (45), AIRMOVE (43), POOH (24), DOVER (23), SPIDER-MAN (13) — monitor 1–2 bulan lagi sebelum klasifikasi</span>
+    </div>
+</div>
+
+<!-- SLIDE 3: DETAIL TABLE -->
+<div class="slide">
+    <div class="slide-label">03 / 04</div>
+    <h2 style="font-size:1.5rem;font-weight:900;color:#002A3A;margin-bottom:0.2rem;">Detail Series — Lombok Jan–Feb 2026</h2>
+    <p style="color:#6b7280;font-size:0.78rem;margin-bottom:1rem;">Diurutkan berdasarkan volume. ⭐ Star · ❓ Q-Mark · 🐄 Cow · 🐕 Dog · 🆕 New</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        <table>
+            <thead><tr>
+                <th>Series</th>
+                <th style="text-align:right;">Vol Jan-Feb 26</th>
+                <th style="text-align:right;">Vol Jan-Feb 25</th>
+                <th style="text-align:center;">YoY</th>
+                <th>BCG</th>
+            </tr></thead>
+            <tbody>
+                <tr><td><strong>CLASSIC</strong></td><td style="text-align:right;">1,680</td><td style="text-align:right;">1,317</td><td style="text-align:center;" class="grow">+27.6%</td><td>⭐ Star</td></tr>
+                <tr><td><strong>BLACKSERIES</strong></td><td style="text-align:right;">1,103</td><td style="text-align:right;">595</td><td style="text-align:center;" class="grow">+85.4%</td><td>⭐ Star</td></tr>
+                <tr><td><strong>STRIPE</strong></td><td style="text-align:right;">607</td><td style="text-align:right;">568</td><td style="text-align:center;" class="grow">+6.9%</td><td>⭐ Star</td></tr>
+                <tr><td>CLASSIC METALIC</td><td style="text-align:right;">252</td><td style="text-align:right;">83</td><td style="text-align:center;" class="grow">+203.6%</td><td>⭐ Star</td></tr>
+                <tr><td>ELSA</td><td style="text-align:right;">194</td><td style="text-align:right;">147</td><td style="text-align:center;" class="grow">+32.0%</td><td>⭐ Star</td></tr>
+                <tr><td>MERCI</td><td style="text-align:right;">97</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>DISNEY</td><td style="text-align:right;">99</td><td style="text-align:right;">65</td><td style="text-align:center;" class="grow">+52.3%</td><td>⭐ Star</td></tr>
+                <tr><td>DALLAS</td><td style="text-align:right;">97</td><td style="text-align:right;">74</td><td style="text-align:center;" class="grow">+31.1%</td><td>⭐ Star</td></tr>
+                <tr><td>ONYX</td><td style="text-align:right;">122</td><td style="text-align:right;">129</td><td style="text-align:center;" class="decline">-5.4%</td><td>🐄 Cow</td></tr>
+                <tr><td>SLIDE</td><td style="text-align:right;">101</td><td style="text-align:right;">119</td><td style="text-align:center;" class="decline">-15.1%</td><td>🐄 Cow</td></tr>
+                <tr><td>FLO</td><td style="text-align:right;">96</td><td style="text-align:right;">113</td><td style="text-align:center;" class="decline">-15.0%</td><td>🐄 Cow</td></tr>
+                <tr><td>ZORRO</td><td style="text-align:right;">85</td><td style="text-align:right;">9</td><td style="text-align:center;" class="grow">+844.4%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>CLASSICEARTH</td><td style="text-align:right;">78</td><td style="text-align:right;">160</td><td style="text-align:center;" class="decline">-51.3%</td><td>🐕 Dog</td></tr>
+            </tbody>
+        </table>
+        <table>
+            <thead><tr>
+                <th>Series</th>
+                <th style="text-align:right;">Vol Jan-Feb 26</th>
+                <th style="text-align:right;">Vol Jan-Feb 25</th>
+                <th style="text-align:center;">YoY</th>
+                <th>BCG</th>
+            </tr></thead>
+            <tbody>
+                <tr><td>WEDGES</td><td style="text-align:right;">74</td><td style="text-align:right;">36</td><td style="text-align:center;" class="grow">+105.6%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>SUMMER</td><td style="text-align:right;">65</td><td style="text-align:right;">215</td><td style="text-align:center;" class="decline">-69.8%</td><td>🐕 Dog</td></tr>
+                <tr><td>PUFFY</td><td style="text-align:right;">63</td><td style="text-align:right;">61</td><td style="text-align:center;" class="grow">+3.3%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>STITCH</td><td style="text-align:right;">59</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>VELCRO</td><td style="text-align:right;">56</td><td style="text-align:right;">100</td><td style="text-align:center;" class="decline">-44.0%</td><td>🐕 Dog</td></tr>
+                <tr><td>LUCA</td><td style="text-align:right;">56</td><td style="text-align:right;">46</td><td style="text-align:center;" class="grow">+21.7%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>LUNA</td><td style="text-align:right;">52</td><td style="text-align:right;">28</td><td style="text-align:center;" class="grow">+85.7%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>WBB</td><td style="text-align:right;">45</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>AIRMOVE</td><td style="text-align:right;">43</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>POOH</td><td style="text-align:right;">24</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>DOVER</td><td style="text-align:right;">23</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>BATMAN</td><td style="text-align:right;">15</td><td style="text-align:right;">13</td><td style="text-align:center;" class="grow">+15.4%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>TOY STORY</td><td style="text-align:right;">15</td><td style="text-align:right;">16</td><td style="text-align:center;" class="decline">-6.3%</td><td>🐕 Dog</td></tr>
+                <tr><td>SPIDER-MAN</td><td style="text-align:right;">13</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="footnote">Volume = qty pairs terjual Jan–Feb 2026. YoY = dibandingkan Jan–Feb 2025 periode sama. Toko: Epicentrum + Mataram + Pepito Lombok (excl. wholesale). Threshold Star/Cow vs QMark/Dog = 90 pairs (median non-new series).</div>
+</div>
+
+<!-- SLIDE 4: INSIGHTS & ACTIONS -->
+<div class="slide slide-dark" style="min-height:460px;">
+    <div class="slide-label">04 / 04</div>
+    <div class="content">
+        <h2 style="font-size:1.6rem;font-weight:900;color:white;margin-bottom:0.4rem;">Key Insights & Rekomendasi Aksi</h2>
+        <p style="color:rgba(255,255,255,0.45);font-size:0.78rem;margin-bottom:1.75rem;">Lombok Jan–Feb 2026 · Revenue +46.3% YoY — Branch terkuat nasional 🏆</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div style="background:rgba(0,226,115,0.1);border:1px solid rgba(0,226,115,0.35);border-radius:10px;padding:1.25rem;">
+                <div style="color:#00E273;font-weight:700;font-size:0.85rem;margin-bottom:0.6rem;">🚀 Top Opportunities</div>
+                <div style="font-size:0.78rem;color:rgba(255,255,255,0.8);line-height:1.7;">
+                    <strong style="color:white;">1. BLACKSERIES</strong> — +85.4%, 1,103 pairs. Stars terkuat setelah CLASSIC. Jaga ketersediaan stok, pastikan display premium di semua 3 toko.<br><br>
+                    <strong style="color:white;">2. CLASSIC METALIC</strong> — +204%, 252 pairs. Growth paling eksplosif. Potensi besar di Lombok yang premium-friendly. Push lebih agresif.<br><br>
+                    <strong style="color:white;">3. ZORRO</strong> — +844% (dari base kecil 9→85 pairs). Q-Mark dengan growth signal kuat. Tambah slot planogram bulan depan, monitor konversi ke Star.
+                </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:1.25rem;">
+                <div style="color:#fbbf24;font-weight:700;font-size:0.85rem;margin-bottom:0.6rem;">⚠️ Yang Perlu Diperhatikan</div>
+                <div style="font-size:0.78rem;color:rgba(255,255,255,0.8);line-height:1.7;">
+                    <strong style="color:white;">1. SUMMER</strong> — -69.8% penurunan terbesar. Pertimbangkan promo clearance atau kurangi reorder. Stok yang tersisa = beban modal.<br><br>
+                    <strong style="color:white;">2. CLASSICEARTH & VELCRO</strong> — Turun -51% dan -44%. Kurangi slot planogram, realokasi ke Stars.<br><br>
+                    <strong style="color:white;">3. New Series monitoring</strong> — 7 series baru (MERCI, STITCH, WBB, AIRMOVE, dll) belum bisa diklasifikasikan. Review bulan April dengan data 3 bulan penuh.
+                </div>
+            </div>
+        </div>
+
+        <div style="background:rgba(0,226,115,0.08);border:1px solid rgba(0,226,115,0.25);border-radius:10px;padding:1.1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+            <div>
+                <div style="font-size:0.65rem;color:#00E273;font-weight:700;letter-spacing:0.08em;margin-bottom:0.4rem;">PLANOGRAM ACTION</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.6;">Kurangi slot Dogs (SUMMER, CLASSICEARTH, VELCRO) → tambahkan ke BLACKSERIES, CLASSIC METALIC, ZORRO, WEDGES.</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem;color:#00E273;font-weight:700;letter-spacing:0.08em;margin-bottom:0.4rem;">STOK PRIORITY</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.6;">Prioritaskan replenishment: BLACKSERIES > CLASSIC > CLASSIC METALIC > STRIPE. Jangan biarkan Stars stockout — Lombok demand kuat.</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem;color:#00E273;font-weight:700;letter-spacing:0.08em;margin-bottom:0.4rem;">NEXT REVIEW</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.6;">Review ulang April 2026 — setelah Ramadan season. Fokus: apakah ZORRO, WEDGES berhasil naik ke Star? Apakah New series mulai terbaca?</div>
+            </div>
+        </div>
+
+        <div style="margin-top:1rem;font-size:0.65rem;color:rgba(255,255,255,0.2);border-top:1px solid rgba(255,255,255,0.08);padding-top:0.75rem;">
+            Framework: BCG Growth–Share Matrix · Data: core.sales_with_product (Epicentrum + Mataram + Pepito Lombok, excl. wholesale) · Jan–Feb 2026 vs Jan–Feb 2025 · Generated 19 Feb 2026 · Iris for Zuma Indonesia
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

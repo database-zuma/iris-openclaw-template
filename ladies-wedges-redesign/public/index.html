@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ladies Wedges - Strategic Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .zuma-teal { color: #002A3A; }
+        .bg-zuma-teal { background-color: #002A3A; }
+        .zuma-green { color: #00E273; }
+        .bg-zuma-green { background-color: #00E273; }
+        .border-zuma-green { border-color: #00E273; }
+
+        .slide {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            padding: 4rem 6rem;
+            box-sizing: border-box;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 42, 58, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 42, 58, 0.05);
+            border-radius: 12px;
+        }
+
+        .nav-btn {
+            position: fixed;
+            bottom: 2rem;
+            padding: 0.75rem 1.5rem;
+            background-color: #002A3A;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            background-color: #00E273;
+            color: #002A3A;
+        }
+
+        #prevBtn { left: 2rem; }
+        #nextBtn { right: 2rem; }
+        
+        .page-indicator {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            color: #002A3A;
+            z-index: 100;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 50vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Cover -->
+    <div class="slide active bg-zuma-teal text-white justify-center items-start" id="slide-1">
+        <div class="max-w-4xl">
+            <div class="w-20 h-2 bg-zuma-green mb-8"></div>
+            <h1 class="text-6xl font-bold mb-6 leading-tight">Ladies Wedges<br>Performance & Strategic Deep Dive</h1>
+            <p class="text-2xl font-light mb-12 text-gray-300">2025 YTD Executive Summary & Argus Insights</p>
+            <div class="flex gap-12 mt-8 border-t border-gray-700 pt-8">
+                <div>
+                    <p class="text-sm text-gray-400 uppercase tracking-wider mb-1">Prepared For</p>
+                    <p class="font-semibold text-lg">Zuma Executive Board</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400 uppercase tracking-wider mb-1">Date</p>
+                    <p class="font-semibold text-lg">February 2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Exec Summary -->
+    <div class="slide" id="slide-2">
+        <div class="flex justify-between items-end mb-8 border-b-2 border-zuma-green pb-4">
+            <h2 class="text-4xl font-bold zuma-teal">Executive Summary</h2>
+            <span class="text-gray-500 font-semibold">2025 YTD Snapshot</span>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-6 mt-8">
+            <div class="glass-card p-8 border-l-4 border-zuma-green">
+                <p class="text-gray-500 text-sm font-bold uppercase tracking-wider mb-2">Total Revenue</p>
+                <h3 class="text-4xl font-bold zuma-teal mb-2">Rp 1.85B</h3>
+                <p class="text-sm text-green-600 font-semibold flex items-center">
+                    <span>↑ 24.7% MoM Growth</span>
+                </p>
+            </div>
+            <div class="glass-card p-8 border-l-4 border-zuma-green">
+                <p class="text-gray-500 text-sm font-bold uppercase tracking-wider mb-2">Total Volume</p>
+                <h3 class="text-4xl font-bold zuma-teal mb-2">10,500</h3>
+                <p class="text-sm text-gray-500">Pairs Sold</p>
+            </div>
+            <div class="glass-card p-8 border-l-4 border-zuma-green">
+                <p class="text-gray-500 text-sm font-bold uppercase tracking-wider mb-2">Average Selling Price</p>
+                <h3 class="text-4xl font-bold zuma-teal mb-2">Rp 176.190</h3>
+                <p class="text-sm text-gray-500">Premium Segment</p>
+            </div>
+            <div class="glass-card p-8 border-l-4 border-zuma-green">
+                <p class="text-gray-500 text-sm font-bold uppercase tracking-wider mb-2">Active Stores</p>
+                <h3 class="text-4xl font-bold zuma-teal mb-2">120+</h3>
+                <p class="text-sm text-gray-500">Across All Regions</p>
+            </div>
+        </div>
+
+        <div class="mt-12 glass-card p-8 bg-white">
+            <h3 class="text-xl font-bold zuma-teal mb-4">Key Takeaways</h3>
+            <ul class="list-disc pl-6 space-y-3 text-lg text-gray-700">
+                <li>Strong start to 2025 with highly positive MoM growth from January to February.</li>
+                <li>Tier 3 dominates volume (50.3%), but Bali drives the highest ASP and overall revenue.</li>
+                <li>Critical anomalies detected in size distribution and color concentration.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 3: Branch Performance -->
+    <div class="slide" id="slide-3">
+        <div class="flex justify-between items-end mb-8 border-b-2 border-zuma-green pb-4">
+            <h2 class="text-4xl font-bold zuma-teal">Regional Dominance</h2>
+            <span class="text-gray-500 font-semibold">Revenue by Branch</span>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-8 h-full">
+            <div class="col-span-2 glass-card p-6">
+                <div class="chart-container">
+                    <canvas id="branchChart"></canvas>
+                </div>
+            </div>
+            <div class="col-span-1 flex flex-col gap-6">
+                <div class="glass-card p-6 bg-zuma-teal text-white">
+                    <h3 class="text-xl font-bold mb-2">Bali Market Share</h3>
+                    <p class="text-5xl font-bold zuma-green mb-2">65%</p>
+                    <p class="text-sm text-gray-300">Of total national revenue (Rp 1.25B) originates from the Bali branch.</p>
+                </div>
+                <div class="glass-card p-6">
+                    <h3 class="text-xl font-bold zuma-teal mb-3">Strategic Insight</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Bali exhibits the highest ASP, proving the market's readiness to absorb premium pricing. Traditional retail in residential Bali areas (Tabanan, Gianyar) outperforms tourist hubs, indicating a strong local captive market.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Color Analysis -->
+    <div class="slide" id="slide-4">
+        <div class="flex justify-between items-end mb-8 border-b-2 border-zuma-green pb-4">
+            <h2 class="text-4xl font-bold zuma-teal">Color Concentration Risk</h2>
+            <span class="text-gray-500 font-semibold">Revenue Contribution by Color</span>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-12 h-full items-center">
+            <div class="glass-card p-6">
+                <div class="chart-container" style="height: 45vh;">
+                    <canvas id="colorChart"></canvas>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold zuma-teal mb-6">Over-reliance on Core Colors</h3>
+                <div class="space-y-6">
+                    <div class="border-l-4 border-zuma-green pl-4">
+                        <h4 class="text-xl font-bold text-gray-800">Chestnut & Jet Black</h4>
+                        <p class="text-gray-600 mt-1">Command >60% of total sales. These are the undisputed heroes but pose a supply chain risk if out of stock.</p>
+                    </div>
+                    <div class="border-l-4 border-red-500 pl-4">
+                        <h4 class="text-xl font-bold text-gray-800">Bold Colors Underperforming</h4>
+                        <p class="text-gray-600 mt-1">Colors like Red and Aqua Haze are failing to convert. Consider phasing out or limiting to specific Tier 1 tourist stores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Size Analysis (CRITICAL) -->
+    <div class="slide" id="slide-5">
+        <div class="flex justify-between items-end mb-8 border-b-2 border-red-500 pb-4">
+            <h2 class="text-4xl font-bold zuma-teal">CRITICAL: Size Distribution Anomaly</h2>
+            <span class="text-red-500 font-bold uppercase flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span> Action Required
+            </span>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-8 h-full">
+            <div class="col-span-2 glass-card p-6">
+                <div class="chart-container">
+                    <canvas id="sizeChart"></canvas>
+                </div>
+            </div>
+            <div class="col-span-1 flex flex-col gap-6">
+                <div class="glass-card p-6 border-t-4 border-zuma-green">
+                    <h3 class="text-lg font-bold zuma-teal mb-1">Stockout Risk</h3>
+                    <p class="text-3xl font-bold zuma-green mb-2">Sizes 38 & 39</p>
+                    <p class="text-sm text-gray-600">Sell-through rate hits 88-92%. Urgent restock required to prevent lost revenue in upcoming months.</p>
+                </div>
+                <div class="glass-card p-6 border-t-4 border-red-500 bg-red-50">
+                    <h3 class="text-lg font-bold text-red-800 mb-1">Dead Stock Alert</h3>
+                    <p class="text-3xl font-bold text-red-600 mb-2">Size 36 & 40</p>
+                    <p class="text-sm text-red-700">Extremely slow movement. Requires immediate reallocation or targeted markdown strategy.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Strategic Recommendations -->
+    <div class="slide" id="slide-6">
+        <div class="flex justify-between items-end mb-8 border-b-2 border-zuma-green pb-4">
+            <h2 class="text-4xl font-bold zuma-teal">Strategic Recommendations</h2>
+            <span class="text-gray-500 font-semibold">Argus AI Insights</span>
+        </div>
+        
+        <div class="grid gap-4">
+            <div class="glass-card p-6 flex gap-6 items-center hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 rounded-full bg-zuma-teal text-white flex items-center justify-center text-xl font-bold flex-shrink-0">1</div>
+                <div>
+                    <h3 class="text-xl font-bold zuma-teal">Capitalize on Bali's Premium Readiness</h3>
+                    <p class="text-gray-600 mt-1">Maintain higher ASP in Bali. Expand footprint in local residential areas (Tabanan, Gianyar) rather than just tourist hotspots.</p>
+                </div>
+            </div>
+            <div class="glass-card p-6 flex gap-6 items-center hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 rounded-full bg-zuma-teal text-white flex items-center justify-center text-xl font-bold flex-shrink-0">2</div>
+                <div>
+                    <h3 class="text-xl font-bold zuma-teal">Optimize Tier 3 Volume Engine</h3>
+                    <p class="text-gray-600 mt-1">Leverage Tier 3 stores for fast inventory turnover, but strictly control discounts to protect overall brand equity outside Bali.</p>
+                </div>
+            </div>
+            <div class="glass-card p-6 flex gap-6 items-center hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 rounded-full bg-zuma-teal text-white flex items-center justify-center text-xl font-bold flex-shrink-0">3</div>
+                <div>
+                    <h3 class="text-xl font-bold zuma-teal">Rationalize Color Assortment</h3>
+                    <p class="text-gray-600 mt-1">Double down on Chestnut and Jet Black production. Liquidate slow-moving bold colors and reduce future procurement of high-risk shades.</p>
+                </div>
+            </div>
+            <div class="glass-card p-6 flex gap-6 items-center border-2 border-red-400 bg-red-50">
+                <div class="w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center text-xl font-bold flex-shrink-0">4</div>
+                <div>
+                    <h3 class="text-xl font-bold text-red-800">URGENT: Size Rebalancing</h3>
+                    <p class="text-red-700 mt-1">Immediately shift production ratios to heavily favor Sizes 38 and 39. Execute flash sales for Size 36 to free up working capital.</p>
+                </div>
+            </div>
+            <div class="glass-card p-6 flex gap-6 items-center hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 rounded-full bg-zuma-teal text-white flex items-center justify-center text-xl font-bold flex-shrink-0">5</div>
+                <div>
+                    <h3 class="text-xl font-bold zuma-teal">Prepare for Seasonal Spikes</h3>
+                    <p class="text-gray-600 mt-1">With 24.7% MoM growth already observed, secure supply chain capacity now ahead of the Q2/Q3 peak seasons to prevent stockouts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <button id="prevBtn" class="nav-btn" onclick="changeSlide(-1)">
+        ← Prev
+    </button>
+    <div id="pageIndicator" class="page-indicator">1 / 6</div>
+    <button id="nextBtn" class="nav-btn" onclick="changeSlide(1)">
+        Next →
+    </button>
+
+    <script>
+        // Slide Navigation Logic
+        let currentSlide = 1;
+        const totalSlides = 6;
+
+        function updateNav() {
+            document.querySelectorAll('.slide').forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index + 1 === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            document.getElementById('prevBtn').style.display = currentSlide === 1 ? 'none' : 'flex';
+            document.getElementById('nextBtn').style.display = currentSlide === totalSlides ? 'none' : 'flex';
+            document.getElementById('pageIndicator').innerText = `${currentSlide} / ${totalSlides}`;
+            
+            // Re-render charts to ensure animation plays when slide becomes visible
+            if(currentSlide === 3) initBranchChart();
+            if(currentSlide === 4) initColorChart();
+            if(currentSlide === 5) initSizeChart();
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 1) currentSlide = 1;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            updateNav();
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        // Chart.js Default Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#475569';
+        
+        // Charts Initialization Flags
+        let branchChartInstance = null;
+        let colorChartInstance = null;
+        let sizeChartInstance = null;
+
+        function initBranchChart() {
+            if(branchChartInstance) branchChartInstance.destroy();
+            const ctx = document.getElementById('branchChart').getContext('2d');
+            branchChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Bali', 'Lombok', 'Jawa Timur', 'Jawa Tengah', 'Jabodetabek'],
+                    datasets: [{
+                        label: 'Revenue (Millions Rp)',
+                        data: [1250, 250, 180, 100, 70],
+                        backgroundColor: ['#002A3A', '#00E273', '#94a3b8', '#cbd5e1', '#e2e8f0'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function initColorChart() {
+            if(colorChartInstance) colorChartInstance.destroy();
+            const ctx = document.getElementById('colorChart').getContext('2d');
+            colorChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Chestnut', 'Jet Black', 'Navy', 'Sand', 'Others (Red/Aqua)'],
+                    datasets: [{
+                        data: [35, 25, 15, 15, 10],
+                        backgroundColor: ['#8B4513', '#1a1a1a', '#002A3A', '#C2B280', '#ef4444'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'right', labels: { padding: 20, font: { size: 14 } } }
+                    }
+                }
+            });
+        }
+
+        function initSizeChart() {
+            if(sizeChartInstance) sizeChartInstance.destroy();
+            const ctx = document.getElementById('sizeChart').getContext('2d');
+            sizeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Size 36', 'Size 37', 'Size 38', 'Size 39', 'Size 40'],
+                    datasets: [{
+                        label: 'Volume Sold (%)',
+                        data: [5, 20, 35, 30, 10],
+                        backgroundColor: [
+                            '#ef4444', // Red for 36 (Dead stock)
+                            '#94a3b8', 
+                            '#00E273', // Green for 38 (High demand)
+                            '#00E273', // Green for 39 (High demand)
+                            '#f59e0b'  // Orange for 40
+                        ],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, max: 40, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Initialize first view
+        updateNav();
+    </script>
+</body>
+</html>

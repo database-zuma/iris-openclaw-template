@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCG Matrix — Region Lombok 2026 YTD | Zuma</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+
+        body { background: #1a1a1a; padding: 2rem; }
+
+        /* ── SLIDE BASE ── */
+        .slide {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 3rem;
+            margin-bottom: 1.5rem;
+            min-height: 600px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* ── SLIDE VARIANTS ── */
+        .slide-teal  { background: #002A3A; color: white; }
+        .slide-dark  { background: #111827; color: white; }
+        .slide-light { background: #f8fafc; }
+        .slide-light-purple { background: #faf5ff; }
+        .slide-gold  { background: linear-gradient(135deg, #1a1200 0%, #2d1e00 100%); color: white; }
+        .slide-blue-dark { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); color: white; }
+        .slide-red-dark  { background: linear-gradient(135deg, #1a0000 0%, #2d1515 100%); color: white; }
+
+        /* ── PRINT / PDF (A4 Landscape) ── */
+        @media print {
+            @page { size: A4 landscape; margin: 0; }
+            html, body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .slide {
+                page-break-after: always;
+                break-after: page;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 2rem 2.5rem !important;
+                min-height: 0 !important;
+                height: 190mm !important;
+                overflow: hidden !important;
+                box-sizing: border-box;
+            }
+            .slide:last-child { page-break-after: avoid; break-after: avoid; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .slide-teal       { background: #002A3A !important; }
+            .slide-dark       { background: #111827 !important; }
+            .slide-gold       { background: #1a1200 !important; }
+            .slide-blue-dark  { background: #0f172a !important; }
+            .slide-red-dark   { background: #1a0000 !important; }
+            .gradient-blob    { display: none !important; }
+            #print-btn        { display: none !important; }
+        }
+
+        /* ── DECORATIVE BLOB ── */
+        .gradient-blob {
+            position: absolute; top: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: linear-gradient(135deg, #00E273 0%, rgba(0,226,115,0.05) 100%);
+            border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none;
+        }
+        .blob-gold {
+            position: absolute; top: -80px; right: -80px;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(251,191,36,0.25) 0%, transparent 70%);
+            z-index: 0; pointer-events: none;
+        }
+        .blob-blue {
+            position: absolute; top: -80px; right: -80px;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+            z-index: 0; pointer-events: none;
+        }
+        .blob-red {
+            position: absolute; top: -80px; right: -80px;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(239,68,68,0.2) 0%, transparent 70%);
+            z-index: 0; pointer-events: none;
+        }
+        .content { position: relative; z-index: 1; }
+
+        /* ── SLIDE LABEL ── */
+        .slide-label {
+            position: absolute; top: 1.5rem; right: 2rem;
+            font-size: 0.8rem; font-weight: 600;
+        }
+        .slide .slide-label                { color: #aaa; }
+        .slide-teal .slide-label,
+        .slide-dark .slide-label,
+        .slide-gold .slide-label,
+        .slide-blue-dark .slide-label,
+        .slide-red-dark .slide-label       { color: rgba(255,255,255,0.35); }
+        .slide-light .slide-label,
+        .slide-light-purple .slide-label   { color: #94a3b8; }
+
+        /* ── TYPOGRAPHY ── */
+        .big-number { font-size: 3rem; font-weight: 900; line-height: 1; }
+
+        /* ── STAT CARDS ── */
+        .metric-card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            text-align: center;
+        }
+        .metric-card-light {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            text-align: center;
+        }
+
+        /* ── PROGRESS BAR ── */
+        .pbar-wrap { background: rgba(255,255,255,0.1); border-radius: 999px; height: 10px; overflow: hidden; }
+        .pbar-wrap-light { background: #e5e7eb; border-radius: 999px; height: 10px; overflow: hidden; }
+        .pbar-fill { height: 100%; border-radius: 999px; }
+
+        /* ── BADGES ── */
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+        .badge-gold    { background: #fef3c7; color: #92400e; }
+        .badge-green   { background: #d1fae5; color: #065f46; }
+        .badge-blue    { background: #dbeafe; color: #1e40af; }
+        .badge-red     { background: #fee2e2; color: #991b1b; }
+        .badge-dark    { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); }
+
+        /* ── QUADRANT CARD ── */
+        .q-card {
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .q-gold   { background: linear-gradient(135deg, #78350f, #92400e); border: 1px solid #b45309; }
+        .q-green  { background: linear-gradient(135deg, #064e3b, #065f46); border: 1px solid #059669; }
+        .q-blue   { background: linear-gradient(135deg, #1e3a5f, #1e40af); border: 1px solid #3b82f6; }
+        .q-red    { background: linear-gradient(135deg, #7f1d1d, #991b1b); border: 1px solid #dc2626; }
+
+        /* 2x2 BCG Grid */
+        .bcg-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        /* ── TABLE ── */
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #002A3A; color: white;
+            padding: 0.6rem 0.875rem;
+            text-align: left; font-size: 0.8rem; font-weight: 700;
+        }
+        td { padding: 0.55rem 0.875rem; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        tr:hover td { background: #f0fdf4; }
+
+        .dark-table th { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
+        .dark-table td { border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+        .dark-table tr:nth-child(even) td { background: rgba(255,255,255,0.04); }
+        .dark-table tr:hover td { background: rgba(255,255,255,0.08); }
+
+        /* ── ACTION ITEM ── */
+        .action-item {
+            display: flex; align-items: flex-start; gap: 0.6rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.5;
+        }
+        .action-item:last-child { border-bottom: none; }
+        .action-item-light {
+            display: flex; align-items: flex-start; gap: 0.6rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            color: #374151;
+            line-height: 1.5;
+        }
+        .action-item-light:last-child { border-bottom: none; }
+
+        /* ── CALLOUT ── */
+        .callout-teal {
+            background: rgba(0,226,115,0.1);
+            border: 1px solid rgba(0,226,115,0.3);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+        }
+        .callout-gold {
+            background: rgba(251,191,36,0.12);
+            border: 1px solid rgba(251,191,36,0.35);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+        }
+        .callout-red-soft {
+            background: #fef2f2;
+            border: 1.5px solid #fecaca;
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+        }
+        .callout-teal-light {
+            background: #e6f7f2;
+            border-left: 4px solid #00b359;
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* ── SECTION LABEL ── */
+        .section-label {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; margin-bottom: 0.75rem;
+        }
+
+        /* ── STORE HEADER BAR ── */
+        .store-bar {
+            border-radius: 8px; padding: 0.6rem 1.25rem;
+            font-weight: 700; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* checkbox style */
+        .cb { color: #00E273; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+        .cb-light { color: #059669; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+<!-- PRINT BUTTON -->
+<div id="print-btn" style="text-align:right; margin-bottom:1rem;">
+    <button onclick="window.print()"
+        style="background:#00E273;color:#002A3A;border:none;padding:0.6rem 1.5rem;border-radius:6px;font-weight:700;font-size:0.875rem;cursor:pointer;">
+        🖨️ Print / Save PDF (Landscape A4)
+    </button>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 1 — COVER
+══════════════════════════════════════════ -->
+<div class="slide slide-teal">
+    <div class="gradient-blob"></div>
+    <div class="content">
+        <!-- Logo -->
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2.5rem;">
+            <div style="background:#00E273;color:#002A3A;font-weight:900;font-size:1.25rem;padding:0.45rem 1.25rem;border-radius:6px;letter-spacing:0.05em;">ZUMA</div>
+            <div style="color:rgba(255,255,255,0.45);font-size:0.85rem;">Region Lombok · Internal Review</div>
+        </div>
+
+        <!-- Main Title -->
+        <div style="margin-bottom:2rem;">
+            <div style="font-size:0.8rem;font-weight:700;color:#00E273;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;">BCG Matrix Analysis · 2026 YTD</div>
+            <h1 style="font-size:3.2rem;font-weight:900;line-height:1.08;margin-bottom:0.75rem;">
+                Peta Produk<br>
+                <span style="color:#00E273;">Region Lombok</span>
+            </h1>
+            <p style="color:rgba(255,255,255,0.55);font-size:0.95rem;">
+                Zuma Epicentrum &amp; Zuma Mataram — Analisis posisi produk untuk action nyata di toko
+            </p>
+        </div>
+
+        <!-- 4 Metric Cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem;">
+            <div class="metric-card">
+                <div style="font-size:1.75rem;font-weight:900;color:#00E273;">4.983</div>
+                <div style="font-size:0.72rem;color:rgba(255,255,255,0.55);margin-top:0.3rem;">pasang terjual<br>Region Total</div>
+            </div>
+            <div class="metric-card">
+                <div style="font-size:1.75rem;font-weight:900;color:#00E273;">635,9 Jt</div>
+                <div style="font-size:0.72rem;color:rgba(255,255,255,0.55);margin-top:0.3rem;">Total Revenue<br>YTD 2026</div>
+            </div>
+            <div class="metric-card">
+                <div style="font-size:1.75rem;font-weight:900;color:#fbbf24;">Rp 137.919</div>
+                <div style="font-size:0.72rem;color:rgba(255,255,255,0.55);margin-top:0.3rem;">Avg ASP<br>Epicentrum</div>
+            </div>
+            <div class="metric-card">
+                <div style="font-size:1.75rem;font-weight:900;color:#fbbf24;">Rp 122.126</div>
+                <div style="font-size:0.72rem;color:rgba(255,255,255,0.55);margin-top:0.3rem;">Avg ASP<br>Mataram</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+            <div style="color:rgba(255,255,255,0.35);font-size:0.8rem;">
+                Disusun untuk: <strong style="color:rgba(255,255,255,0.6);">Area Supervisor &amp; Store Team</strong>
+            </div>
+            <div style="color:rgba(255,255,255,0.35);font-size:0.8rem;">Februari 2026</div>
+        </div>
+    </div>
+    <div class="slide-label">01 / 11</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 2 — APA ITU BCG MATRIX?
+══════════════════════════════════════════ -->
+<div class="slide slide-light">
+    <div class="slide-label">02 / 11</div>
+
+    <div style="text-align:center;margin-bottom:1.75rem;">
+        <h2 style="font-size:1.9rem;font-weight:900;color:#002A3A;">Mengenal BCG Matrix — Peta Produk Kita</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin-top:0.4rem;">Cara mudah melihat produk mana yang perlu digas, dijaga, atau dikurangi</p>
+    </div>
+
+    <!-- 4 Quadrant boxes -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+
+        <!-- BINTANG -->
+        <div style="background:linear-gradient(135deg,#78350f,#92400e);border-radius:12px;padding:1.5rem;color:white;border:1px solid #b45309;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">⭐</div>
+            <div style="font-size:1.1rem;font-weight:900;color:#fbbf24;margin-bottom:0.25rem;">BINTANG <span style="font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.5);">(Stars)</span></div>
+            <div style="font-size:0.85rem;font-weight:700;color:#fde68a;margin-bottom:0.5rem;">Laku BANYAK + Harga TINGGI</div>
+            <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.6;">
+                → Produk terbaik kita.<br>
+                <strong style="color:#fbbf24;">Jaga stok, tampilkan di depan!</strong>
+            </div>
+            <div style="margin-top:0.75rem;">
+                <span class="badge" style="background:rgba(251,191,36,0.2);color:#fbbf24;">Volume tinggi</span>
+                <span class="badge" style="background:rgba(251,191,36,0.2);color:#fbbf24;margin-left:4px;">ASP tinggi</span>
+            </div>
+        </div>
+
+        <!-- MESIN UANG -->
+        <div style="background:linear-gradient(135deg,#064e3b,#065f46);border-radius:12px;padding:1.5rem;color:white;border:1px solid #059669;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">💰</div>
+            <div style="font-size:1.1rem;font-weight:900;color:#34d399;margin-bottom:0.25rem;">MESIN UANG <span style="font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.5);">(Cash Cows)</span></div>
+            <div style="font-size:0.85rem;font-weight:700;color:#a7f3d0;margin-bottom:0.5rem;">Laku BANYAK + Harga TERJANGKAU</div>
+            <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.6;">
+                → Tulang punggung penjualan.<br>
+                <strong style="color:#34d399;">Jangan sampai kosong!</strong>
+            </div>
+            <div style="margin-top:0.75rem;">
+                <span class="badge" style="background:rgba(52,211,153,0.2);color:#34d399;">Volume tinggi</span>
+                <span class="badge" style="background:rgba(52,211,153,0.2);color:#34d399;margin-left:4px;">ASP terjangkau</span>
+            </div>
+        </div>
+
+        <!-- POTENSIAL -->
+        <div style="background:linear-gradient(135deg,#1e3a5f,#1e40af);border-radius:12px;padding:1.5rem;color:white;border:1px solid #3b82f6;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">❓</div>
+            <div style="font-size:1.1rem;font-weight:900;color:#93c5fd;margin-bottom:0.25rem;">POTENSIAL <span style="font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.5);">(Question Marks)</span></div>
+            <div style="font-size:0.85rem;font-weight:700;color:#bfdbfe;margin-bottom:0.5rem;">Laku SEDIKIT + Harga TINGGI</div>
+            <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.6;">
+                → Bisa jadi bintang kalau dipush.<br>
+                <strong style="color:#93c5fd;">Perlu effort lebih!</strong>
+            </div>
+            <div style="margin-top:0.75rem;">
+                <span class="badge" style="background:rgba(147,197,253,0.2);color:#93c5fd;">Volume rendah</span>
+                <span class="badge" style="background:rgba(147,197,253,0.2);color:#93c5fd;margin-left:4px;">ASP tinggi</span>
+            </div>
+        </div>
+
+        <!-- LEMAH -->
+        <div style="background:linear-gradient(135deg,#7f1d1d,#991b1b);border-radius:12px;padding:1.5rem;color:white;border:1px solid #dc2626;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">⚠️</div>
+            <div style="font-size:1.1rem;font-weight:900;color:#fca5a5;margin-bottom:0.25rem;">LEMAH <span style="font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.5);">(Dogs)</span></div>
+            <div style="font-size:0.85rem;font-weight:700;color:#fecaca;margin-bottom:0.5rem;">Laku SEDIKIT + Harga TERJANGKAU</div>
+            <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.6;">
+                → Review stok, kurangi display space.<br>
+                <strong style="color:#fca5a5;">Evaluasi dan efisienkan!</strong>
+            </div>
+            <div style="margin-top:0.75rem;">
+                <span class="badge" style="background:rgba(252,165,165,0.2);color:#fca5a5;">Volume rendah</span>
+                <span class="badge" style="background:rgba(252,165,165,0.2);color:#fca5a5;margin-left:4px;">ASP terjangkau</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid axis labels + footnote -->
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:#6b7280;">
+            <span style="background:#e5e7eb;padding:2px 8px;border-radius:4px;">← Volume Rendah</span>
+            <span style="font-weight:700;color:#374151;">VOLUME PENJUALAN</span>
+            <span style="background:#e5e7eb;padding:2px 8px;border-radius:4px;">Volume Tinggi →</span>
+        </div>
+        <div style="font-size:0.75rem;color:#9ca3af;text-align:right;line-height:1.6;">
+            📌 Threshold:<br>
+            Volume ≥5% = Tinggi &nbsp;|&nbsp; ASP ≥Rp150K = Harga Tinggi
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 3 — BCG CHART
+══════════════════════════════════════════ -->
+<div class="slide slide-dark">
+    <div class="slide-label">03 / 11</div>
+    <div class="content" style="height:100%;display:flex;flex-direction:column;">
+        <div style="margin-bottom:1rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#00E273;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem;">BCG Chart 2026 YTD</div>
+            <h2 style="font-size:1.75rem;font-weight:900;color:white;">Posisi Produk — Epicentrum vs Mataram</h2>
+        </div>
+
+        <!-- Chart image -->
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+            <img src="bcg_chart.png" alt="BCG Matrix Dual Store Chart"
+                style="max-width:100%;max-height:380px;object-fit:contain;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+        </div>
+
+        <!-- 2 callouts -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.35);border-radius:10px;padding:1rem 1.25rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#fbbf24;letter-spacing:0.1em;margin-bottom:0.4rem;">🏪 ZUMA EPICENTRUM</div>
+                <div style="font-size:1rem;font-weight:700;color:white;">⭐ 1 BINTANG (ELSA)</div>
+                <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);margin-top:0.25rem;">+ 4 Mesin Uang — Portfolio sehat!</div>
+            </div>
+            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:1rem 1.25rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#f87171;letter-spacing:0.1em;margin-bottom:0.4rem;">🏪 ZUMA MATARAM</div>
+                <div style="font-size:1rem;font-weight:700;color:white;">⚠️ 0 BINTANG</div>
+                <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);margin-top:0.25rem;">3 Mesin Uang — Perlu upgrade ke premium!</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 4 — SNAPSHOT EPICENTRUM
+══════════════════════════════════════════ -->
+<div class="slide slide-light">
+    <div class="slide-label">04 / 11</div>
+
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;">
+        <div style="background:#002A3A;color:#00E273;font-weight:900;font-size:0.9rem;padding:0.4rem 1rem;border-radius:6px;">ZUMA EPICENTRUM</div>
+        <h2 style="font-size:1.6rem;font-weight:900;color:#002A3A;">Snapshot Penjualan 2026 YTD</h2>
+    </div>
+
+    <!-- Header Stats -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;">
+        <div class="metric-card-light">
+            <div style="font-size:1.75rem;font-weight:900;color:#002A3A;">1.736</div>
+            <div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;">pasang terjual</div>
+        </div>
+        <div class="metric-card-light">
+            <div style="font-size:1.75rem;font-weight:900;color:#002A3A;">Rp 239,4 Jt</div>
+            <div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;">Total Revenue</div>
+        </div>
+        <div class="metric-card-light">
+            <div style="font-size:1.75rem;font-weight:900;color:#d97706;">Rp 137.919</div>
+            <div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;">Avg ASP</div>
+        </div>
+    </div>
+
+    <!-- Progress Bars + Table side by side -->
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:1.5rem;align-items:start;">
+
+        <!-- Progress Bars -->
+        <div>
+            <div class="section-label" style="color:#6b7280;">VOLUME PER KUADRAN</div>
+            <div style="display:flex;flex-direction:column;gap:0.85rem;">
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#92400e;">💰 Mesin Uang</span>
+                        <span style="font-weight:700;color:#92400e;">60,2%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:60.2%;background:linear-gradient(90deg,#059669,#34d399);"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#374151;">❓ Potensial</span>
+                        <span style="font-weight:700;color:#374151;">29,5%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:29.5%;background:linear-gradient(90deg,#1d4ed8,#60a5fa);"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#374151;">⚠️ Lemah</span>
+                        <span style="font-weight:700;color:#374151;">5,2%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:5.2%;background:linear-gradient(90deg,#dc2626,#f87171);"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#92400e;">⭐ Bintang</span>
+                        <span style="font-weight:700;color:#92400e;">5,1%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:5.1%;background:linear-gradient(90deg,#d97706,#fbbf24);"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:90px;">Kuadran</th>
+                        <th>Series</th>
+                        <th style="text-align:right;">Qty</th>
+                        <th style="text-align:right;">Revenue</th>
+                        <th style="text-align:right;">ASP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background:#fffbeb;">
+                        <td><span class="badge badge-gold">⭐ BINTANG</span></td>
+                        <td style="font-weight:600;">ELSA</td>
+                        <td style="text-align:right;font-weight:700;">88 pc</td>
+                        <td style="text-align:right;">Rp 15,8 Jt</td>
+                        <td style="text-align:right;font-weight:700;color:#d97706;">Rp 179K</td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td><span class="badge badge-green">💰 MESIN UANG</span></td>
+                        <td>CLASSIC, BLACKSERIES, STRIPE, CLASSIC MET.</td>
+                        <td style="text-align:right;font-weight:700;">1.046 pc</td>
+                        <td style="text-align:right;">Rp 110,1 Jt</td>
+                        <td style="text-align:right;color:#059669;">Rp 105K</td>
+                    </tr>
+                    <tr style="background:#eff6ff;">
+                        <td><span class="badge badge-blue">❓ POTENSIAL</span></td>
+                        <td style="font-size:0.75rem;color:#374151;">DALLAS, FLO, MERCI, SLIDE, ZORRO, WEDGES, LUNA, LUCA, PUFFY, VELCRO, AIRMOVE, DOVER</td>
+                        <td style="text-align:right;font-weight:700;">512 pc</td>
+                        <td style="text-align:right;">Rp 108,0 Jt</td>
+                        <td style="text-align:right;color:#1d4ed8;">Rp 211K</td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td><span class="badge badge-red">⚠️ LEMAH</span></td>
+                        <td>ONYX, CLASSICEARTH, WBB</td>
+                        <td style="text-align:right;font-weight:700;">90 pc</td>
+                        <td style="text-align:right;">Rp 9,9 Jt</td>
+                        <td style="text-align:right;color:#dc2626;">Rp 110K</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 5 — SNAPSHOT MATARAM
+══════════════════════════════════════════ -->
+<div class="slide slide-light-purple">
+    <div class="slide-label">05 / 11</div>
+
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;">
+        <div style="background:#4f46e5;color:white;font-weight:900;font-size:0.9rem;padding:0.4rem 1rem;border-radius:6px;">ZUMA MATARAM</div>
+        <h2 style="font-size:1.6rem;font-weight:900;color:#1e1b4b;">Snapshot Penjualan 2026 YTD</h2>
+    </div>
+
+    <!-- Header Stats -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;">
+        <div style="background:white;border:1.5px solid #e0e7ff;border-radius:10px;padding:1.25rem;text-align:center;">
+            <div style="font-size:1.75rem;font-weight:900;color:#1e1b4b;">3.247</div>
+            <div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;">pasang terjual</div>
+        </div>
+        <div style="background:white;border:1.5px solid #e0e7ff;border-radius:10px;padding:1.25rem;text-align:center;">
+            <div style="font-size:1.75rem;font-weight:900;color:#1e1b4b;">Rp 396,5 Jt</div>
+            <div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;">Total Revenue</div>
+        </div>
+        <div style="background:white;border:1.5px solid #e0e7ff;border-radius:10px;padding:1.25rem;text-align:center;">
+            <div style="font-size:1.75rem;font-weight:900;color:#d97706;">Rp 122.126</div>
+            <div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;">Avg ASP</div>
+        </div>
+    </div>
+
+    <!-- Warning box -->
+    <div class="callout-red-soft" style="margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem;">
+        <div style="font-size:1.5rem;">⚠️</div>
+        <div>
+            <div style="font-weight:700;color:#dc2626;font-size:0.9rem;">75,9% penjualan dari produk entry-price. Saatnya naikan ASP!</div>
+            <div style="font-size:0.8rem;color:#6b7280;margin-top:0.2rem;">Dominasi Mesin Uang (entry-tier) sangat tinggi — perlu shifting ke mid-price & premium</div>
+        </div>
+    </div>
+
+    <!-- Progress Bars + Table -->
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:1.5rem;align-items:start;">
+        <div>
+            <div class="section-label" style="color:#6b7280;">VOLUME PER KUADRAN</div>
+            <div style="display:flex;flex-direction:column;gap:0.85rem;">
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#065f46;">💰 Mesin Uang</span>
+                        <span style="font-weight:700;color:#065f46;">75,9%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:75.9%;background:linear-gradient(90deg,#059669,#34d399);"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#374151;">❓ Potensial</span>
+                        <span style="font-weight:700;color:#374151;">20,1%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:20.1%;background:linear-gradient(90deg,#1d4ed8,#60a5fa);"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#374151;">⚠️ Lemah</span>
+                        <span style="font-weight:700;color:#374151;">4,0%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:4%;background:linear-gradient(90deg,#dc2626,#f87171);"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem;">
+                        <span style="font-weight:700;color:#92400e;">⭐ Bintang</span>
+                        <span style="font-weight:700;color:#dc2626;">0%</span>
+                    </div>
+                    <div class="pbar-wrap-light"><div class="pbar-fill" style="width:1%;background:#e5e7eb;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:90px;">Kuadran</th>
+                        <th>Series</th>
+                        <th style="text-align:right;">Qty</th>
+                        <th style="text-align:right;">Revenue</th>
+                        <th style="text-align:right;">ASP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background:#fff5f5;">
+                        <td><span class="badge badge-gold">⭐ BINTANG</span></td>
+                        <td style="font-weight:600;color:#dc2626;">BELUM ADA — dorong ELSA ke sini!</td>
+                        <td style="text-align:right;color:#dc2626;font-weight:700;">0</td>
+                        <td style="text-align:right;color:#dc2626;">—</td>
+                        <td style="text-align:right;color:#dc2626;">—</td>
+                    </tr>
+                    <tr style="background:#f0fdf4;">
+                        <td><span class="badge badge-green">💰 MESIN UANG</span></td>
+                        <td>CLASSIC, BLACKSERIES, STRIPE</td>
+                        <td style="text-align:right;font-weight:700;">2.464 pc</td>
+                        <td style="text-align:right;">Rp 262,1 Jt</td>
+                        <td style="text-align:right;color:#059669;">Rp 106K</td>
+                    </tr>
+                    <tr style="background:#eff6ff;">
+                        <td><span class="badge badge-blue">❓ POTENSIAL</span></td>
+                        <td style="font-size:0.75rem;">ELSA, SLIDE, MERCI, FLO, ZORRO, DALLAS, WEDGES, LUCA, LUNA, PUFFY, VELCRO, AIRMOVE, DOVER</td>
+                        <td style="text-align:right;font-weight:700;">653 pc</td>
+                        <td style="text-align:right;">Rp 126,3 Jt</td>
+                        <td style="text-align:right;color:#1d4ed8;">Rp 193K</td>
+                    </tr>
+                    <tr style="background:#fff5f5;">
+                        <td><span class="badge badge-red">⚠️ LEMAH</span></td>
+                        <td style="font-size:0.8rem;">CLASSIC MET., ONYX, STITCH, CLASSICEARTH, WBB</td>
+                        <td style="text-align:right;font-weight:700;">130 pc</td>
+                        <td style="text-align:right;">Rp 14,6 Jt</td>
+                        <td style="text-align:right;color:#dc2626;">Rp 112K</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 6 — ⭐ BINTANG
+══════════════════════════════════════════ -->
+<div class="slide slide-gold">
+    <div class="blob-gold"></div>
+    <div class="slide-label">06 / 11</div>
+    <div class="content">
+        <div style="margin-bottom:1.5rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#fbbf24;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem;">⭐ Kuadran Bintang</div>
+            <h2 style="font-size:1.9rem;font-weight:900;color:white;">PRODUK BINTANG — Jaga &amp; Maksimalkan</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+            <!-- Left: data -->
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <!-- Epicentrum -->
+                <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.25rem;">
+                    <div style="font-size:0.7rem;font-weight:700;color:#fbbf24;letter-spacing:0.1em;margin-bottom:0.75rem;">🏪 EPICENTRUM — 1 BINTANG</div>
+                    <div style="display:flex;align-items:baseline;gap:0.75rem;margin-bottom:0.5rem;">
+                        <span style="font-size:1.5rem;font-weight:900;color:#fbbf24;">ELSA</span>
+                        <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">Ladies</span>
+                        <span style="background:#fbbf24;color:#78350f;font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:4px;">SATU-SATUNYA BINTANG</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;font-size:0.8rem;">
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;color:white;">88 pc</div>
+                            <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;">Qty</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;color:white;">Rp 15,8 Jt</div>
+                            <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;">Revenue</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;color:#fbbf24;">Rp 179K</div>
+                            <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;">ASP</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(255,255,255,0.55);">
+                        Share: 5,1% volume &nbsp;|&nbsp; 6,6% revenue
+                    </div>
+                </div>
+
+                <!-- Mataram -->
+                <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:1.25rem;">
+                    <div style="font-size:0.7rem;font-weight:700;color:#f87171;letter-spacing:0.1em;margin-bottom:0.5rem;">🏪 MATARAM — BELUM ADA BINTANG</div>
+                    <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);margin-bottom:0.75rem;">Target produk yang perlu dipush ke posisi Bintang:</div>
+                    <div style="display:flex;flex-direction:column;gap:0.4rem;font-size:0.82rem;">
+                        <div style="display:flex;justify-content:space-between;padding:0.4rem 0.75rem;background:rgba(255,255,255,0.06);border-radius:6px;">
+                            <span style="font-weight:600;color:white;">ELSA</span>
+                            <span style="color:#fbbf24;">butuh &gt;150 pasang/periode</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:0.4rem 0.75rem;background:rgba(255,255,255,0.06);border-radius:6px;">
+                            <span style="font-weight:600;color:white;">DALLAS</span>
+                            <span style="color:#fbbf24;">butuh &gt;165 pasang/periode</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:0.4rem 0.75rem;background:rgba(255,255,255,0.06);border-radius:6px;">
+                            <span style="font-weight:600;color:white;">FLO</span>
+                            <span style="color:#fbbf24;">butuh &gt;165 pasang/periode</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Actions -->
+            <div>
+                <div class="section-label" style="color:rgba(255,255,255,0.45);">ACTION UNTUK STORE TEAM</div>
+                <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:1.25rem;margin-bottom:1rem;">
+                    <div style="font-size:0.75rem;font-weight:700;color:#fbbf24;margin-bottom:0.75rem;">🏪 EPICENTRUM</div>
+                    <div class="action-item"><span class="cb">✅</span><span>Display ELSA di posisi paling menonjol (eye level, dekat pintu)</span></div>
+                    <div class="action-item"><span class="cb">✅</span><span>Pastikan semua size lengkap — cek stok tiap pagi</span></div>
+                    <div class="action-item"><span class="cb">✅</span><span>Jangan diskon ELSA tanpa approval Area Supervisor</span></div>
+                </div>
+                <div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:10px;padding:1.25rem;">
+                    <div style="font-size:0.75rem;font-weight:700;color:#f87171;margin-bottom:0.75rem;">🏪 MATARAM</div>
+                    <div class="action-item"><span class="cb">✅</span><span>Push ELSA, DALLAS, FLO — target naik ke BINTANG bulan ini</span></div>
+                    <div class="action-item"><span class="cb">✅</span><span>Tambah facing — tampilkan lebih banyak pair untuk ketiga produk</span></div>
+                    <div class="action-item"><span class="cb">✅</span><span>Ajak customer coba pakai langsung di toko</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 7 — 💰 MESIN UANG
+══════════════════════════════════════════ -->
+<div class="slide slide-teal">
+    <div class="gradient-blob"></div>
+    <div class="slide-label">07 / 11</div>
+    <div class="content">
+        <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#34d399;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem;">💰 Kuadran Mesin Uang</div>
+            <h2 style="font-size:1.9rem;font-weight:900;color:white;">MESIN UANG — Tulang Punggung Penjualan Kita</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.25rem;">
+            <!-- Epicentrum -->
+            <div>
+                <div class="store-bar" style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);">
+                    <span style="color:#34d399;">🏪</span>
+                    <span style="color:white;font-size:0.85rem;">EPICENTRUM — 4 Mesin Uang</span>
+                </div>
+                <table class="dark-table" style="font-size:0.8rem;">
+                    <thead>
+                        <tr>
+                            <th>Series</th>
+                            <th style="text-align:right;">Qty</th>
+                            <th style="text-align:right;">Revenue</th>
+                            <th style="text-align:right;">Vol%</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight:700;color:#34d399;">CLASSIC</td>
+                            <td style="text-align:right;">537 pc</td>
+                            <td style="text-align:right;">Rp 55,5 Jt</td>
+                            <td style="text-align:right;font-weight:700;">30,9%</td>
+                            <td><span class="badge badge-dark">WAJIB ada stok</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:700;color:#34d399;">BLACKSERIES</td>
+                            <td style="text-align:right;">241 pc</td>
+                            <td style="text-align:right;">Rp 25,8 Jt</td>
+                            <td style="text-align:right;font-weight:700;">13,9%</td>
+                            <td><span class="badge badge-dark">Jangan kosong</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">STRIPE</td>
+                            <td style="text-align:right;">148 pc</td>
+                            <td style="text-align:right;">Rp 15,9 Jt</td>
+                            <td style="text-align:right;">8,5%</td>
+                            <td><span class="badge badge-dark">Safety stock</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">CLASSIC MET.</td>
+                            <td style="text-align:right;">120 pc</td>
+                            <td style="text-align:right;">Rp 12,9 Jt</td>
+                            <td style="text-align:right;">6,9%</td>
+                            <td><span class="badge badge-dark">Maintain display</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Mataram -->
+            <div>
+                <div class="store-bar" style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);">
+                    <span style="color:#34d399;">🏪</span>
+                    <span style="color:white;font-size:0.85rem;">MATARAM — 3 Mesin Uang</span>
+                </div>
+                <table class="dark-table" style="font-size:0.8rem;">
+                    <thead>
+                        <tr>
+                            <th>Series</th>
+                            <th style="text-align:right;">Qty</th>
+                            <th style="text-align:right;">Revenue</th>
+                            <th style="text-align:right;">Vol%</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight:700;color:#34d399;">CLASSIC</td>
+                            <td style="text-align:right;">1.143 pc</td>
+                            <td style="text-align:right;">Rp 120,5 Jt</td>
+                            <td style="text-align:right;font-weight:700;">35,2%</td>
+                            <td><span class="badge" style="background:#fbbf24;color:#78350f;">#1 TERLARIS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:700;color:#34d399;">BLACKSERIES</td>
+                            <td style="text-align:right;">862 pc</td>
+                            <td style="text-align:right;">Rp 92,4 Jt</td>
+                            <td style="text-align:right;font-weight:700;">26,5%</td>
+                            <td><span class="badge" style="background:#94a3b8;color:#1e293b;">#2 TERLARIS</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">STRIPE</td>
+                            <td style="text-align:right;">459 pc</td>
+                            <td style="text-align:right;">Rp 49,2 Jt</td>
+                            <td style="text-align:right;">14,1%</td>
+                            <td><span class="badge" style="background:#78716c;color:#fafaf9;">#3 TERLARIS</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Upsell Highlight -->
+        <div class="callout-teal" style="margin-bottom:1rem;">
+            <div style="font-weight:700;color:#00E273;margin-bottom:0.4rem;">💡 Upsell dari Mesin Uang → Bintang!</div>
+            <div style="font-size:0.875rem;color:rgba(255,255,255,0.85);">
+                Pelanggan beli <strong>CLASSIC Rp103K</strong> → tawarkan <strong>DALLAS/FLO Rp179K</strong> → atau <strong>LUNA/LUCA Rp341K</strong><br>
+                Setiap upgrade = <strong style="color:#00E273;">+Rp76K hingga +Rp238K</strong> per pasang!
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:1.5rem;">
+            <div class="action-item" style="flex:1;"><span class="cb">✅</span><span>Cek stok CLASSIC/BLACKSERIES/STRIPE setiap pagi</span></div>
+            <div class="action-item" style="flex:1;"><span class="cb">✅</span><span>Replenishment sebelum stok &lt;20 pasang</span></div>
+            <div class="action-item" style="flex:1;"><span class="cb">✅</span><span>Latih BA untuk selalu offer upsell ke mid-tier</span></div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 8 — ❓ POTENSIAL
+══════════════════════════════════════════ -->
+<div class="slide slide-blue-dark">
+    <div class="blob-blue"></div>
+    <div class="slide-label">08 / 11</div>
+    <div class="content">
+        <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#93c5fd;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem;">❓ Kuadran Potensial</div>
+            <h2 style="font-size:1.9rem;font-weight:900;color:white;">PRODUK POTENSIAL — Butuh Push untuk Naik Kelas</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+            <!-- Left: priority products -->
+            <div>
+                <div class="section-label" style="color:#93c5fd;">3 PRIORITAS UTAMA — ASP tinggi, potensi besar</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <div style="background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.25);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-weight:700;color:white;font-size:1rem;">LUCA + LUNA</span>
+                            <span style="background:#93c5fd;color:#1e3a5f;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:4px;">ASP Rp 341K</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">Hanya 28 pc each — <strong style="color:#93c5fd;">10x potensi growth!</strong></div>
+                    </div>
+                    <div style="background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.25);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-weight:700;color:white;font-size:1rem;">AIRMOVE</span>
+                            <span style="background:#93c5fd;color:#1e3a5f;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:4px;">ASP Rp 341K</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">Hanya 19–24 pc — premium men's terbaik</div>
+                    </div>
+                    <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-weight:700;color:white;font-size:0.95rem;">ELSA (Mataram)</span>
+                            <span style="background:#fbbf24;color:#78350f;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:4px;">ASP Rp 179K</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">106 pc — belum capai threshold Bintang (&gt;150 pc)</div>
+                    </div>
+                    <div style="background:rgba(147,197,253,0.07);border:1px solid rgba(147,197,253,0.15);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-weight:700;color:rgba(255,255,255,0.8);font-size:0.9rem;">DALLAS + FLO</span>
+                            <span style="background:rgba(147,197,253,0.3);color:#93c5fd;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:4px;">ASP Rp 179K</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:rgba(255,255,255,0.55);">Mid-tier yang perlu lebih banyak push</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: why + actions -->
+            <div>
+                <div class="section-label" style="color:rgba(255,255,255,0.45);">KENAPA BELUM LAKU BANYAK?</div>
+                <div style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.25rem;">
+                    <div style="background:rgba(255,255,255,0.06);border-left:3px solid #60a5fa;padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.85rem;color:rgba(255,255,255,0.8);">
+                        📦 Display kurang menonjol — tertutupi produk yang lebih murah
+                    </div>
+                    <div style="background:rgba(255,255,255,0.06);border-left:3px solid #60a5fa;padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.85rem;color:rgba(255,255,255,0.8);">
+                        🗣️ BA kurang menawarkan ke pelanggan yang nanya produk entry
+                    </div>
+                    <div style="background:rgba(255,255,255,0.06);border-left:3px solid #60a5fa;padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.85rem;color:rgba(255,255,255,0.8);">
+                        📏 Stok kurang lengkap — warna/ukuran tidak full range
+                    </div>
+                </div>
+
+                <div class="section-label" style="color:rgba(255,255,255,0.45);">ACTION UNTUK STORE TEAM</div>
+                <div style="background:rgba(147,197,253,0.08);border:1px solid rgba(147,197,253,0.2);border-radius:10px;padding:1.25rem;">
+                    <div class="action-item"><span class="cb">✅</span><span>Kasih display space lebih besar untuk LUCA/LUNA/AIRMOVE</span></div>
+                    <div class="action-item"><span class="cb">✅</span><span>Script BA: <em style="color:#93c5fd;">"Kak, ini ada yang premium juga, lebih awet dan nyaman..."</em></span></div>
+                    <div class="action-item"><span class="cb">✅</span><span>Set mini-target push produk premium: <strong>+5 pc/minggu per BA</strong></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 9 — ⚠️ LEMAH
+══════════════════════════════════════════ -->
+<div class="slide slide-red-dark">
+    <div class="blob-red"></div>
+    <div class="slide-label">09 / 11</div>
+    <div class="content">
+        <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#fca5a5;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem;">⚠️ Kuadran Lemah</div>
+            <h2 style="font-size:1.9rem;font-weight:900;color:white;">PRODUK LEMAH — Efisienkan Display</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.25rem;">
+            <!-- Epicentrum -->
+            <div>
+                <div class="store-bar" style="background:rgba(252,165,165,0.12);border:1px solid rgba(252,165,165,0.2);">
+                    <span style="color:#fca5a5;">🏪</span>
+                    <span style="color:white;font-size:0.85rem;">EPICENTRUM — 3 series lemah</span>
+                </div>
+                <table class="dark-table" style="font-size:0.8rem;">
+                    <thead>
+                        <tr>
+                            <th>Series</th>
+                            <th style="text-align:right;">Qty</th>
+                            <th style="text-align:right;">ASP</th>
+                            <th style="text-align:right;">Vol%</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight:600;">ONYX</td>
+                            <td style="text-align:right;">48 pc</td>
+                            <td style="text-align:right;">Rp107K</td>
+                            <td style="text-align:right;">2,8%</td>
+                            <td style="font-size:0.75rem;color:#fca5a5;">Kurangi facing</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">CLASSICEARTH</td>
+                            <td style="text-align:right;">47 pc</td>
+                            <td style="text-align:right;">Rp107K</td>
+                            <td style="text-align:right;">2,7%</td>
+                            <td style="font-size:0.75rem;color:#fca5a5;">Review stok</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">WBB</td>
+                            <td style="text-align:right;">30 pc</td>
+                            <td style="text-align:right;">Rp134K</td>
+                            <td style="text-align:right;">1,7%</td>
+                            <td style="font-size:0.75rem;color:#fca5a5;">Minimal display</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mataram -->
+            <div>
+                <div class="store-bar" style="background:rgba(252,165,165,0.12);border:1px solid rgba(252,165,165,0.2);">
+                    <span style="color:#fca5a5;">🏪</span>
+                    <span style="color:white;font-size:0.85rem;">MATARAM — 5 series lemah</span>
+                </div>
+                <table class="dark-table" style="font-size:0.8rem;">
+                    <thead>
+                        <tr>
+                            <th>Series</th>
+                            <th style="text-align:right;">Qty</th>
+                            <th style="text-align:right;">ASP</th>
+                            <th style="text-align:right;">Vol%</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background:rgba(251,191,36,0.08);">
+                            <td style="font-weight:700;color:#fbbf24;">CLASSIC MET.</td>
+                            <td style="text-align:right;">132 pc</td>
+                            <td style="text-align:right;">Rp107K</td>
+                            <td style="text-align:right;">4,1%</td>
+                            <td style="font-size:0.72rem;color:#fbbf24;">⚠️ Turun dari Cash Cow!</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">ONYX</td>
+                            <td style="text-align:right;">74 pc</td>
+                            <td style="text-align:right;">Rp107K</td>
+                            <td style="text-align:right;">2,3%</td>
+                            <td style="font-size:0.75rem;color:#fca5a5;">Kurangi</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">STITCH</td>
+                            <td style="text-align:right;">33 pc</td>
+                            <td style="text-align:right;">Rp145K</td>
+                            <td style="text-align:right;">1,0%</td>
+                            <td style="font-size:0.75rem;color:#fca5a5;">Review</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">CLASSICEARTH</td>
+                            <td style="text-align:right;">31 pc</td>
+                            <td style="text-align:right;">Rp107K</td>
+                            <td style="text-align:right;">1,0%</td>
+                            <td style="font-size:0.75rem;color:#fca5a5;">Review</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;">WBB</td>
+                            <td style="text-align:right;">15 pc</td>
+                            <td style="text-align:right;">Rp134K</td>
+                            <td style="text-align:right;">0,5%</td>
+                            <td style="font-size:0.75rem;color:#fca5a5;">Clearance</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="background:rgba(252,165,165,0.08);border:1px solid rgba(252,165,165,0.2);border-radius:10px;padding:1.25rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#fca5a5;letter-spacing:0.1em;margin-bottom:0.75rem;">ACTION UNTUK STORE TEAM</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                <div class="action-item"><span class="cb">✅</span><span>Kurangi display space — pindahkan ke area back shelf</span></div>
+                <div class="action-item"><span class="cb">✅</span><span>Space kosong → pindah display LUCA/LUNA/AIRMOVE</span></div>
+                <div class="action-item"><span class="cb">✅</span><span>Jangan re-order tanpa persetujuan Area Supervisor</span></div>
+                <div class="action-item"><span class="cb">✅</span><span>CLASSIC MET. Mataram: investigasi kenapa turun dari Cash Cow</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 10 — ACTION PLAN
+══════════════════════════════════════════ -->
+<div class="slide slide-light">
+    <div class="slide-label">10 / 11</div>
+
+    <div style="text-align:center;margin-bottom:1.5rem;">
+        <h2 style="font-size:1.9rem;font-weight:900;color:#002A3A;">Action Plan — Apa yang Harus Dilakukan Tim?</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin-top:0.3rem;">Panduan langkah-langkah konkrit untuk semua store team</p>
+    </div>
+
+    <!-- 3 columns -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;">
+
+        <!-- HARI INI -->
+        <div style="border:2px solid #dc2626;border-radius:12px;overflow:hidden;">
+            <div style="background:#dc2626;color:white;padding:0.75rem 1.25rem;">
+                <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;opacity:0.8;margin-bottom:0.1rem;">PRIORITAS TERTINGGI</div>
+                <div style="font-size:1rem;font-weight:900;">🚨 HARI INI (Segera)</div>
+            </div>
+            <div style="padding:1.25rem;">
+                <div class="action-item-light">
+                    <span class="cb-light">☐</span>
+                    <span>Cek stok CLASSIC, BLACKSERIES, STRIPE</span>
+                </div>
+                <div class="action-item-light">
+                    <span class="cb-light">☐</span>
+                    <span>Pindahkan display ONYX/CLASSICEARTH ke back shelf</span>
+                </div>
+                <div class="action-item-light">
+                    <span class="cb-light">☐</span>
+                    <span>Pasang LUCA+LUNA di posisi eye-level</span>
+                </div>
+                <div class="action-item-light">
+                    <span class="cb-light">☐</span>
+                    <span>Brief BA tentang upsell script</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MINGGU INI -->
+        <div style="border:2px solid #d97706;border-radius:12px;overflow:hidden;">
+            <div style="background:#d97706;color:white;padding:0.75rem 1.25rem;">
+                <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;opacity:0.8;margin-bottom:0.1rem;">FOLLOW UP</div>
+                <div style="font-size:1rem;font-weight:900;">📅 MINGGU INI</div>
+            </div>
+            <div style="padding:1.25rem;">
+                <div class="action-item-light">
+                    <span style="color:#d97706;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Minta replenishment jika stok &lt;20 pc</span>
+                </div>
+                <div class="action-item-light">
+                    <span style="color:#d97706;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Tambah facing ELSA (Epicentrum) &amp; DALLAS/FLO (Mataram)</span>
+                </div>
+                <div class="action-item-light">
+                    <span style="color:#d97706;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Latih BA: cara menawarkan produk premium</span>
+                </div>
+                <div class="action-item-light">
+                    <span style="color:#d97706;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Set mini-target per BA: +5 pc premium/minggu</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BULAN INI -->
+        <div style="border:2px solid #002A3A;border-radius:12px;overflow:hidden;">
+            <div style="background:#002A3A;color:white;padding:0.75rem 1.25rem;">
+                <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;opacity:0.6;margin-bottom:0.1rem;">TARGET BULAN</div>
+                <div style="font-size:1rem;font-weight:900;">🎯 BULAN INI</div>
+            </div>
+            <div style="padding:1.25rem;">
+                <div class="action-item-light">
+                    <span style="color:#002A3A;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Target: ELSA Mataram → <strong>150+ pc</strong> (naik ke BINTANG)</span>
+                </div>
+                <div class="action-item-light">
+                    <span style="color:#002A3A;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Target: LUCA+LUNA masing-masing <strong>50+ pc</strong></span>
+                </div>
+                <div class="action-item-light">
+                    <span style="color:#002A3A;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Review ONYX, CLASSICEARTH — ajukan clearance jika stuck</span>
+                </div>
+                <div class="action-item-light">
+                    <span style="color:#002A3A;font-weight:700;font-size:1rem;flex-shrink:0;">☐</span>
+                    <span>Lapor hasil ke Area Supervisor setiap Senin</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Big highlight -->
+    <div class="callout-teal-light">
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <div style="font-size:2rem;">💡</div>
+            <div>
+                <div style="font-weight:900;color:#002A3A;font-size:1rem;margin-bottom:0.25rem;">1 KUNCI SUKSES: Selalu offer upsell.</div>
+                <div style="color:#374151;font-size:0.9rem;">
+                    Setiap pelanggan yang beli entry-price = <strong>kesempatan untuk naik ke mid/premium!</strong>
+                    Jangan biarkan mereka pergi tanpa melihat produk yang lebih baik.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 11 — TARGET ASP UPLIFT (PENUTUP)
+══════════════════════════════════════════ -->
+<div class="slide slide-teal">
+    <div class="gradient-blob"></div>
+    <div class="slide-label">11 / 11</div>
+    <div class="content">
+        <div style="margin-bottom:1.5rem;">
+            <div style="font-size:0.7rem;font-weight:700;color:#00E273;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem;">Target ASP Uplift 2026</div>
+            <h2 style="font-size:1.9rem;font-weight:900;color:white;">Target Kita — Tingkatkan ASP Region Lombok</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:1.5rem;">
+            <!-- Current -->
+            <div>
+                <div class="section-label" style="color:rgba(255,255,255,0.45);">📊 KONDISI SEKARANG (YTD 2026)</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <div style="background:rgba(255,255,255,0.07);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                            <span style="color:rgba(255,255,255,0.7);font-size:0.85rem;">🏪 Epicentrum</span>
+                            <span style="font-weight:700;color:white;">Rp 239,4 Jt</span>
+                        </div>
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.45);">1.736 pc × Rp 137.919 ASP</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.07);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                            <span style="color:rgba(255,255,255,0.7);font-size:0.85rem;">🏪 Mataram</span>
+                            <span style="font-weight:700;color:white;">Rp 396,5 Jt</span>
+                        </div>
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.45);">3.247 pc × Rp 122.126 ASP</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:1rem 1.25rem;border:1px solid rgba(255,255,255,0.15);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="color:white;font-weight:700;">TOTAL REGION</span>
+                            <span style="font-size:1.5rem;font-weight:900;color:#00E273;">Rp 635,9 Jt</span>
+                        </div>
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-top:0.25rem;">4.983 pasang</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target -->
+            <div>
+                <div class="section-label" style="color:#00E273;">🎯 TARGET (JIKA ASP NAIK)</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <div style="background:rgba(0,226,115,0.08);border:1px solid rgba(0,226,115,0.25);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                            <span style="color:rgba(255,255,255,0.7);font-size:0.85rem;">🏪 Epicentrum</span>
+                            <div style="text-align:right;">
+                                <span style="font-weight:700;color:white;">Rp 269,1 Jt</span>
+                                <span style="background:#00E273;color:#002A3A;font-size:0.7rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;">+12,4%</span>
+                            </div>
+                        </div>
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.45);">1.736 pc × Rp 155.000 target ASP &nbsp;|&nbsp; <span style="color:#00E273;">+Rp 29,7 Jt</span></div>
+                    </div>
+                    <div style="background:rgba(0,226,115,0.08);border:1px solid rgba(0,226,115,0.25);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                            <span style="color:rgba(255,255,255,0.7);font-size:0.85rem;">🏪 Mataram</span>
+                            <div style="text-align:right;">
+                                <span style="font-weight:700;color:white;">Rp 438,3 Jt</span>
+                                <span style="background:#00E273;color:#002A3A;font-size:0.7rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;">+10,5%</span>
+                            </div>
+                        </div>
+                        <div style="font-size:0.78rem;color:rgba(255,255,255,0.45);">3.247 pc × Rp 135.000 target ASP &nbsp;|&nbsp; <span style="color:#00E273;">+Rp 41,8 Jt</span></div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,rgba(0,226,115,0.2),rgba(0,179,89,0.15));border:1.5px solid rgba(0,226,115,0.4);border-radius:10px;padding:1rem 1.25rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div style="color:white;font-weight:700;">TARGET REGION</div>
+                                <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);">TANPA tambah volume!</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:1.5rem;font-weight:900;color:#00E273;">+Rp 71,5 Jt</div>
+                                <div style="color:#00E273;font-size:0.8rem;font-weight:700;">+11,2% revenue</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How + Motivasi -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+            <div class="callout-teal" style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <div style="font-size:1.25rem;">📈</div>
+                <div>
+                    <div style="font-weight:700;color:#00E273;margin-bottom:0.25rem;">Caranya: Pure Mix Shift</div>
+                    <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);">
+                        Lebih banyak jual mid-price &amp; premium, kurangi dominasi entry-price.<br>
+                        Volume sama — revenue naik otomatis.
+                    </div>
+                </div>
+            </div>
+            <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:center;gap:0.75rem;">
+                <div style="font-size:1.5rem;">💪</div>
+                <div>
+                    <div style="font-weight:700;color:#fbbf24;margin-bottom:0.25rem;">Tim Lombok bisa!</div>
+                    <div style="font-size:0.85rem;color:rgba(255,255,255,0.75);">Kita punya produk bagus — tinggal tampilkan dan tawarkan dengan percaya diri.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);font-size:0.75rem;text-align:center;">
+            BCG Analysis Region Lombok | Zuma 2026 | Confidential
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

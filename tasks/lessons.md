@@ -48,6 +48,12 @@ OpenCode auto-reject .env in background mode. Hardcode langsung di command strin
 ### [2026-02-18] Iris = Orchestrator ONLY
 Bahkan query "simpel" harus delegate kalau >2 detik. Iris tidak kerja kasar.
 
+### [2026-02-21] IRIS ROLE RULE (Iron Law) — No Script Execution
+Iris dilarang keras menjalankan Python/bash scripts atau melakukan "kerja kasar" via `exec`.
+→ Script/Code/Build → SELALU delegate ke Daedalus via `sessions_spawn`.
+→ `exec` hanya untuk: nanobot calls, quick status checks (<2 detik), memory updates, gog/git single commands.
+→ Pelanggaran = Uninstalled.
+
 ---
 
 ## UX & Communication

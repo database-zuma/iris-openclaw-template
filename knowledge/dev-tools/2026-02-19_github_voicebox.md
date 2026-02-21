@@ -5,7 +5,8 @@
 **Date Fetched:** 2026-02-19  
 **Link:** https://github.com/jamiepine/voicebox  
 **Website:** https://voicebox.sh  
-**Version:** v0.1.0 (latest at time of research)  
+**Version:** v0.1.12 (as of 2026-02-21)  
+**Stars:** 7,700+  
 **License:** MIT
 
 ---
@@ -114,7 +115,7 @@ GET http://localhost:8000/docs
 6. **Transcription via Whisper:** Bisa dipakai untuk transkripsi meeting, rekaman, atau voice notes — satu stack untuk TTS + STT.
 
 ### ⚠️ Catatan:
-- Masih v0.1.0 — baru release, mungkin ada bug atau fitur belum stabil
+- v0.1.12 — aktif dikembangkan, sudah 7.7K stars, mungkin ada fitur belum stabil
 - Bahasa Indonesia belum eksplisit didukung (English + Chinese saat ini) — perlu test kualitas untuk Bahasa Indonesia
 - Qwen3-TTS model size belum diketahui — perlu cek disk space requirement
 - Linux build belum tersedia (blocked GitHub runner disk space) — jika butuh di server Linux, perlu wait atau build manual

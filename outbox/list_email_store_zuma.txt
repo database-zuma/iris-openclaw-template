@@ -1,0 +1,70 @@
+LIST EMAIL STORE ZUMA
+==============================================
+
+JAKARTA
+-------
+Pluit Village     : mallpluitvillage@zuma.id
+LMP               : lippomallpuri@zuma.id
+MOI               : moi@zuma.id
+Bintaro Exchange  : bintaroexchange@zuma.id
+
+JAWA TIMUR
+----------
+Tunjungan Plaza   : tunjunganplaza@zuma.id
+Galaxy Mall       : galaxymall@zuma.id
+PTC               : ptc@zuma.id
+Royal Plaza       : royalplaza@zuma.id
+Lippo Sidoarjo    : lippoplazasidoarjo@zuma.id
+MATOS             : malangtownsquare@zuma.id
+Lippo Batu        : lippoplazabatu@zuma.id
+Icon Gresik       : iconmallgresik@zuma.id
+Cito              : cito@zuma.id
+Sunrise Mall      : sunrisemall@zuma.id
+MOG               : mog@zuma.id
+
+BALI
+----
+Panjer            : panjer@zuma.id
+Kesiman           : kesiman@zuma.id
+Monang Maning     : monangmaning@zuma.id
+Dalung            : dalung@zuma.id
+Pemogan           : pemogan@zuma.id
+Penatih           : penatih@zuma.id
+Peguyangan        : peguyangan@zuma.id
+Tanah Lot         : tanahlot@zuma.id
+Living World      : livingworld@zuma.id
+Level 21          : level21@zuma.id
+Kedonganan        : kedonganan@zuma.id
+MBG               : mallbaligaleria@zuma.id
+Lippo Bali        : lippoplazasunset@zuma.id
+Peliatan          : peliatan@zuma.id
+Batubulan         : batubulan@zuma.id
+Ubud MF           : ubud@zuma.id
+Uluwatu           : pecatu@zuma.id
+Singaraja         : singaraja@zuma.id
+Tabanan           : tabanan@zuma.id
+Seririt           : seririt@zuma.id
+Gianyar           : gianyar@zuma.id
+Bajera            : bajera@zuma.id
+Jembrana          : jembrana@zuma.id
+Klungkung         : klungkung@zuma.id
+Karangasem        : karangasem@zuma.id
+Kapal             : kapal@zuma.id
+Icon Bali         : iconmall@zuma.id
+Lebah Peliatan    : lebahpeliatan@zuma.id
+Bangli            : bangli@zuma.id
+
+LOMBOK
+------
+Epicentrum        : epicentrummall@zuma.id
+Mataram           : mataram@zuma.id
+
+SUMATERA
+--------
+SKA Mall          : skamall@zuma.id
+Nagoya Hills      : nagoyahills@zuma.id
+K Square          : ksquare@zuma.id
+
+SULAWESI
+--------
+Megamall Manado   : megamallmanado@zuma.id

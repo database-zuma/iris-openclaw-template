@@ -90,6 +90,8 @@ python3 -c "import json,base64; d=json.load(open('/tmp/resp.json')); open('/path
 ## Google Drive (gog CLI)
 
 **Binary:** `~/homebrew/Cellar/gogcli/0.9.0/bin/gog` | **Account:** harveywayan@gmail.com
+**Auth Status:** ✅ Authenticated (drive, sheets) — 2026-02-20
+**Services:** drive, sheets
 
 **Auto-share rule (MANDATORY):**
 ```bash
@@ -102,6 +104,9 @@ gog drive share <file_id> --email wayan@zuma.id --role writer
 gog drive share <file_id> --email database@zuma.id --role writer
 ```
 Workflow: Upload → get file_id → `--anyone --role writer` → share emails → reply with link.
+
+### gog OAuth Troubleshooting
+Unlock keychain → `gog auth add --manual harveywayan@gmail.com --services drive,sheets` → state harus match (jangan restart antara URL & paste). Detail: `docs/gog-oauth-troubleshooting.md`
 
 ## OpenCode (Primary Coding Tool)
 
@@ -125,10 +130,35 @@ Password: $PGPASSWORD
 [task details]"
 ```
 
-**PPT RULE:** Kalau OpenCode gagal 2x → switch ke direct Python scripting (`python-pptx`).
-- Symptom: Process running tapi no output >10 min, atau undefined errors
-- Solution: Write Python script directly, incremental (2 slides dulu → expand), `python3 generate_ppt.py`
-- Template: `~/Desktop/generate_kbi_ppt.py`
+## OpenClaw Skills
+
+**Location:** `~/homebrew/lib/node_modules/openclaw/skills/`
+
+| Skill | Use Case |
+|-------|---------|
+| `nano-pdf` | PDF generation via AI |
+| `nano-banana-pro` | Image generation (Gemini 3 Pro Image) |
+| `openai-whisper` | Speech-to-text |
+| `peekaboo` | Screen capture/analysis |
+| `video-frames` | Extract frames from video |
+| `voice-call` | Voice call capability |
+| `obsidian` | Obsidian vault skill |
+
+**PPT/DECK RULE (2026-02-20, Wayan — PERMANENT):**
+- **Agent:** ALWAYS Eos 🌅 (Gemini 3.1 Pro)
+- **Format:** HTML + Tailwind CSS (single .html file, self-contained, print-friendly)
+- **Style:** Reference Zuma deck templates (see workspace/zuma-business-skills/ + Active URLs in MEMORY.md)
+- **Design:** Zuma brand (teal #002A3A, green #00E273) + smooth animations on slides
+- **Animations:** Include CSS transitions/fade effects on slide navigation (tested & approved by Wayan on tier8-analysis.vercel.app)
+- **Never:** python-pptx (unless user explicitly requests ".pptx")
+- **⚠️ DELIVERY (MANDATORY):** Vercel live URL ONLY (NOT GDrive)
+  - Vercel live URL is the final output to user
+  - .html files deploy directly to Vercel (no build needed)
+  - Example: https://tier8-analysis.vercel.app
+- **NEVER send GDrive link** for PPT requests — always deliver Vercel live deck URL
+
+## Python Libraries
+All installed: `pdfplumber`, `PyMuPDF`, `reportlab`, `gspread`, `matplotlib`, `firecrawl-py`, `google-genai`, `psycopg2-binary`, `openpyxl`, `xlsxwriter`, `python-pptx`, `pandas`, `numpy`.
 
 ## SSH
 
@@ -203,21 +233,11 @@ Intercompany = antar entitas (DDD→MBB, UBB→DDD), bukan within single store.
 ```
 Speaker harus ON + same network. Discovery via mDNS/UPnP; kalau gagal, pakai IP langsung.
 
-## Obsidian Vault (Knowledge Base)
+## Obsidian Vault
+Path: `~/.openclaw/obsidian-vault/` | MCP: `mcp-obsidian` | Also direct file access.
 
-**Vault Path:** `~/.openclaw/obsidian-vault/`
-**MCP Server:** `mcp-obsidian` (`@mauricio.wolff/mcp-obsidian`)
-**Binary:** `/Users/database-zuma/homebrew/bin/mcp-obsidian`
-**mcporter name:** `obsidian`
-
-**Structure:**
-- `Daily/` — Daily notes and logs
-- `Projects/` — Project-specific notes
-- `Templates/` — Reusable templates
-- `Attachments/` — Images, PDFs, files
-
-**Access via mcporter:** Discover all tools via `mcporter call obsidian.*`
-**Direct file access:** Vault is just a folder of `.md` files — can also read/write directly.
+## MCP Servers
+Installed (perlu config): `mcp-obsidian`, `figma-developer-mcp`, `shadcn-ui-mcp-server`
 
 ## Control Stock Sheet (PO Tracking)
 

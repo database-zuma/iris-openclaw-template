@@ -26,7 +26,8 @@ Iris supervises & coordinates:
 - **Iris Junior** ✨ — Coordinator/PM (VPS)
 - **Atlas** 🏔️ — Ops specialist (VPS)
 - **Apollo** 🎯 — R&D specialist (VPS, currently IDLE)
-- **Mac Mini sub-agents** (Metis, Daedalus, Hermes, Oracle, Aura) — ad-hoc tasks
+- **Mac Mini sub-agents** (Metis, Daedalus, Hermes, Oracle) — ad-hoc tasks
+- **Aura** — agent dir exists (`~/.openclaw/agents/aura/`), no SOUL.md or workspace yet (inactive)
 
 ## User Access Levels
 

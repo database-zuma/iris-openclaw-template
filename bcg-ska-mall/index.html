@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuma SKA Mall — BCG Matrix Jan–Feb 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        * { font-family: 'Inter', -apple-system, sans-serif; }
+        body { background: #1a1a1a; padding: 2rem; }
+        .slide { background: #f9f9f9; border-radius: 12px; padding: 3rem; margin-bottom: 1.5rem; position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .slide-teal { background: #002A3A; color: white; }
+        .slide-dark { background: #111827; color: white; }
+        .gradient-blob { position: absolute; top: -80px; right: -80px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(0,226,115,0.25) 0%, transparent 70%); border-radius: 50%; z-index: 0; pointer-events:none; }
+        .content { position: relative; z-index: 1; }
+        .slide-label { position: absolute; top: 1.5rem; right: 2rem; font-size: 0.75rem; font-weight: 600; color: #999; }
+        .slide-teal .slide-label, .slide-dark .slide-label { color: rgba(255,255,255,0.35); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #002A3A; color: white; padding: 0.55rem 0.75rem; text-align: left; font-size: 0.72rem; }
+        td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e5e7eb; font-size: 0.72rem; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        .badge { padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
+        .badge-green { background:#dcfce7; color:#16a34a; }
+        .badge-blue  { background:#dbeafe; color:#1d4ed8; }
+        .badge-amber { background:#fef3c7; color:#b45309; }
+        .badge-red   { background:#fee2e2; color:#dc2626; }
+        .badge-gray  { background:#f1f5f9; color:#64748b; }
+        .grow   { color:#16a34a; font-weight:700; }
+        .decline{ color:#dc2626; font-weight:700; }
+        .footnote { font-size:0.68rem; color:#9ca3af; margin-top:1rem; padding-top:0.75rem; border-top:1px solid #e5e7eb; }
+        .quadrant { border-radius:10px; padding:1.25rem; }
+        .q-star  { background:#f0fdf4; border:1.5px solid #86efac; }
+        .q-qmark { background:#eff6ff; border:1.5px solid #93c5fd; }
+        .q-cow   { background:#fffbeb; border:1.5px solid #fcd34d; }
+        .q-dog   { background:#fff5f5; border:1.5px solid #fca5a5; }
+        .series-chip { display:inline-block; padding:0.2rem 0.55rem; border-radius:4px; font-size:0.68rem; font-weight:700; margin:0.15rem; }
+        @media print {
+            @page { size: A4 landscape; margin: 0; }
+            html, body { background: white !important; padding: 0 !important; }
+            .slide { page-break-after: always; break-after: page; border-radius:0 !important; box-shadow:none !important; margin:0 !important; padding:1.75rem 2.25rem !important; min-height:0 !important; height:190mm !important; overflow:hidden !important; box-sizing:border-box; }
+            .slide:last-child { page-break-after:avoid; }
+            * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+            .slide-teal { background:#002A3A !important; }
+            .slide-dark { background:#111827 !important; }
+            .gradient-blob { display:none !important; }
+            #print-btn { display:none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="print-btn" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;">
+    <button onclick="window.print()" style="background:#00E273;color:#002A3A;border:none;padding:0.6rem 1.5rem;border-radius:6px;font-weight:700;font-size:0.875rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);">🖨️ Print / Save PDF (Landscape A4)</button>
+</div>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide slide-teal" style="min-height:460px;">
+    <div class="gradient-blob"></div>
+    <div class="content">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:3rem;">
+            <div style="background:#00E273;color:#002A3A;font-weight:900;font-size:1.1rem;padding:0.35rem 1rem;border-radius:6px;">ZUMA</div>
+            <div style="color:rgba(255,255,255,0.45);font-size:0.8rem;">Product Strategy · Confidential</div>
+        </div>
+        <div style="font-size:0.7rem;color:#00E273;font-weight:700;letter-spacing:0.15em;margin-bottom:0.75rem;">SKA MALL — PEKANBARU</div>
+        <h1 style="font-size:2.8rem;font-weight:900;line-height:1.1;margin-bottom:1rem;color:white;">BCG Matrix<br>Product Analysis<br><span style="font-size:1.8rem;color:rgba(255,255,255,0.7);">Jan–Feb 2026</span></h1>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;max-width:480px;line-height:1.7;">Klasifikasi portfolio produk SKA Mall berdasarkan volume penjualan & pertumbuhan YoY. Basis pengambilan keputusan mix produk, planogram, dan alokasi stok.</p>
+        <div style="margin-top:2.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;">
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:#00E273;">46M</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Revenue Jan 2026</div>
+            </div>
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:#00E273;">+52.3%</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">YoY Jan (vs 30M)</div>
+            </div>
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:white;">465</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Pairs sold Jan</div>
+            </div>
+            <div>
+                <div style="font-size:2rem;font-weight:900;color:#fbbf24;">21</div>
+                <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Series aktif</div>
+            </div>
+        </div>
+        <div style="margin-top:2rem;color:rgba(255,255,255,0.22);font-size:0.68rem;">
+            Toko: Zuma SKA Mall · Pekanbaru, Riau &nbsp;|&nbsp; Data: core.sales_with_product · 19 Feb 2026 · Iris for Zuma Indonesia
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: BCG OVERVIEW -->
+<div class="slide">
+    <div class="slide-label">02 / 04</div>
+    <h2 style="font-size:1.5rem;font-weight:900;color:#002A3A;margin-bottom:0.2rem;">BCG Matrix — Portfolio SKA Mall</h2>
+    <p style="color:#6b7280;font-size:0.78rem;margin-bottom:1.25rem;">Klasifikasi 13 series dengan YoY baseline (threshold volume: 18 pairs, median non-new series). 8 series baru belum bisa diklasifikasi.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:1rem;">
+
+        <!-- Stars -->
+        <div class="quadrant q-star">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">⭐</span>
+                    <strong style="color:#15803d;font-size:0.9rem;"> STARS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Tinggi · Tumbuh Cepat → Prioritaskan stok & planogram</div>
+                </div>
+                <span class="badge badge-green">6 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">CLASSIC +24.2% · 77 prs</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">STRIPE +92.9% · 27 prs 🔥</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">VELCRO +68.8% · 27 prs</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">LUNA +85.7% · 26 prs 🔥</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">BLACKSERIES +9.1% · 24 prs</div>
+                <div class="series-chip" style="background:#dcfce7;color:#15803d;">FLO +20.0% · 18 prs</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#166534;line-height:1.5;background:rgba(22,163,74,0.08);padding:0.5rem 0.75rem;border-radius:6px;">
+                💡 STRIPE +93% & LUNA +86% — pertumbuhan kuat di volume menengah. CLASSIC tetap andalan utama. Jaga stok semua Stars, jangan biarkan kosong di display.
+            </div>
+        </div>
+
+        <!-- Cash Cows -->
+        <div class="quadrant q-cow">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">🐄</span>
+                    <strong style="color:#b45309;font-size:0.9rem;"> CASH COWS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Tinggi · Mulai Melambat → Pertahankan, jangan over-invest</div>
+                </div>
+                <span class="badge badge-amber">1 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#fef3c7;color:#b45309;">SLIDE -38.1% · 26 prs ⚠️</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#92400e;line-height:1.5;background:rgba(180,83,9,0.07);padding:0.5rem 0.75rem;border-radius:6px;">
+                ⚠️ SLIDE turun cukup tajam -38.1% — masih di volume reasonable tapi tren negatif. Monitor 1 bulan ke depan. Jika berlanjut, kurangi slot planogram bertahap.
+            </div>
+        </div>
+
+        <!-- Question Marks -->
+        <div class="quadrant q-qmark">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">❓</span>
+                    <strong style="color:#1d4ed8;font-size:0.9rem;"> QUESTION MARKS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Kecil · Tumbuh Cepat → Potensi jadi Star, investasi selektif</div>
+                </div>
+                <span class="badge badge-blue">4 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">CLASSIC METALIC +240.0% · 17 prs 🚀</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">WEDGES +700% · 8 prs 🚀</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">MICKEY & FRIENDS +133.3% · 7 prs</div>
+                <div class="series-chip" style="background:#dbeafe;color:#1d4ed8;">DALLAS +12.5% · 9 prs</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#1e40af;line-height:1.5;background:rgba(29,78,216,0.07);padding:0.5rem 0.75rem;border-radius:6px;">
+                💡 CLASSIC METALIC +240% & WEDGES +700% — growth signal luar biasa dari base kecil. Tambah 2–3 slot planogram untuk keduanya, lihat apakah demand di SKA Mall bisa scaling.
+            </div>
+        </div>
+
+        <!-- Dogs -->
+        <div class="quadrant q-dog">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:1.3rem;">🐕</span>
+                    <strong style="color:#dc2626;font-size:0.9rem;"> DOGS</strong>
+                    <div style="font-size:0.65rem;color:#6b7280;margin-top:0.1rem;">Volume Kecil · Menurun → Kurangi slot, pertimbangkan phase-out</div>
+                </div>
+                <span class="badge badge-red">2 series</span>
+            </div>
+            <div>
+                <div class="series-chip" style="background:#fee2e2;color:#dc2626;">ELSA -27.3% · 16 prs</div>
+                <div class="series-chip" style="background:#fee2e2;color:#dc2626;">LUCA -30.4% · 16 prs</div>
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.72rem;color:#991b1b;line-height:1.5;background:rgba(220,38,38,0.07);padding:0.5rem 0.75rem;border-radius:6px;">
+                🔴 ELSA & LUCA keduanya turun ~30% dengan volume rendah. Kurangi slot → realokasi ke CLASSIC METALIC & WEDGES yang tumbuh pesat. Habiskan stok lama via promo jika ada.
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;font-size:0.72rem;color:#64748b;">
+        🆕 <strong>New (no YoY baseline):</strong> AIRMOVE (32 prs), MILTON (19), ZORRO (16), ONYX (16), MERCI (14), DOVER (11), WBB (10), POOH (6) — monitor 1–2 bulan sebelum klasifikasi BCG.
+        <strong style="color:#1d4ed8;"> AIRMOVE (32 prs) & MILTON (19 prs)</strong> paling menjanjikan dari batch new.
+    </div>
+</div>
+
+<!-- SLIDE 3: DETAIL TABLE -->
+<div class="slide">
+    <div class="slide-label">03 / 04</div>
+    <h2 style="font-size:1.5rem;font-weight:900;color:#002A3A;margin-bottom:0.2rem;">Detail Series — SKA Mall Jan–Feb 2026</h2>
+    <p style="color:#6b7280;font-size:0.78rem;margin-bottom:1rem;">Diurutkan berdasarkan volume. ⭐ Star · ❓ Q-Mark · 🐄 Cow · 🐕 Dog · 🆕 New</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        <table>
+            <thead><tr>
+                <th>Series</th>
+                <th style="text-align:right;">Vol Jan-Feb 26</th>
+                <th style="text-align:right;">Vol Jan-Feb 25</th>
+                <th style="text-align:center;">YoY</th>
+                <th>BCG</th>
+            </tr></thead>
+            <tbody>
+                <tr><td><strong>CLASSIC</strong></td><td style="text-align:right;">77</td><td style="text-align:right;">62</td><td style="text-align:center;" class="grow">+24.2%</td><td>⭐ Star</td></tr>
+                <tr><td>AIRMOVE</td><td style="text-align:right;">32</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td><strong>STRIPE</strong></td><td style="text-align:right;">27</td><td style="text-align:right;">14</td><td style="text-align:center;" class="grow">+92.9%</td><td>⭐ Star</td></tr>
+                <tr><td><strong>VELCRO</strong></td><td style="text-align:right;">27</td><td style="text-align:right;">16</td><td style="text-align:center;" class="grow">+68.8%</td><td>⭐ Star</td></tr>
+                <tr><td><strong>LUNA</strong></td><td style="text-align:right;">26</td><td style="text-align:right;">14</td><td style="text-align:center;" class="grow">+85.7%</td><td>⭐ Star</td></tr>
+                <tr><td>SLIDE</td><td style="text-align:right;">26</td><td style="text-align:right;">42</td><td style="text-align:center;" class="decline">-38.1%</td><td>🐄 Cow</td></tr>
+                <tr><td><strong>BLACKSERIES</strong></td><td style="text-align:right;">24</td><td style="text-align:right;">22</td><td style="text-align:center;" class="grow">+9.1%</td><td>⭐ Star</td></tr>
+                <tr><td>MILTON</td><td style="text-align:right;">19</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td><strong>FLO</strong></td><td style="text-align:right;">18</td><td style="text-align:right;">15</td><td style="text-align:center;" class="grow">+20.0%</td><td>⭐ Star</td></tr>
+                <tr><td>CLASSIC METALIC</td><td style="text-align:right;">17</td><td style="text-align:right;">5</td><td style="text-align:center;" class="grow">+240.0%</td><td>❓ Q-Mark</td></tr>
+            </tbody>
+        </table>
+        <table>
+            <thead><tr>
+                <th>Series</th>
+                <th style="text-align:right;">Vol Jan-Feb 26</th>
+                <th style="text-align:right;">Vol Jan-Feb 25</th>
+                <th style="text-align:center;">YoY</th>
+                <th>BCG</th>
+            </tr></thead>
+            <tbody>
+                <tr><td>ZORRO</td><td style="text-align:right;">16</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>ELSA</td><td style="text-align:right;">16</td><td style="text-align:right;">22</td><td style="text-align:center;" class="decline">-27.3%</td><td>🐕 Dog</td></tr>
+                <tr><td>ONYX</td><td style="text-align:right;">16</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>LUCA</td><td style="text-align:right;">16</td><td style="text-align:right;">23</td><td style="text-align:center;" class="decline">-30.4%</td><td>🐕 Dog</td></tr>
+                <tr><td>MERCI</td><td style="text-align:right;">14</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>DOVER</td><td style="text-align:right;">11</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>WBB</td><td style="text-align:right;">10</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+                <tr><td>DALLAS</td><td style="text-align:right;">9</td><td style="text-align:right;">8</td><td style="text-align:center;" class="grow">+12.5%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>WEDGES</td><td style="text-align:right;">8</td><td style="text-align:right;">1</td><td style="text-align:center;" class="grow">+700.0%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>MICKEY & FRIENDS</td><td style="text-align:right;">7</td><td style="text-align:right;">3</td><td style="text-align:center;" class="grow">+133.3%</td><td>❓ Q-Mark</td></tr>
+                <tr><td>POOH</td><td style="text-align:right;">6</td><td style="text-align:right;">—</td><td style="text-align:center;color:#64748b;">New</td><td>🆕 New</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="footnote">Volume = qty pairs terjual Jan–Feb 2026. YoY = dibandingkan Jan–Feb 2025 periode sama. Toko: Zuma SKA Mall, Pekanbaru (excl. wholesale). Threshold Star/Cow vs QMark/Dog = 18 pairs (median non-new series).</div>
+</div>
+
+<!-- SLIDE 4: INSIGHTS & ACTIONS -->
+<div class="slide slide-dark" style="min-height:460px;">
+    <div class="slide-label">04 / 04</div>
+    <div class="content">
+        <h2 style="font-size:1.6rem;font-weight:900;color:white;margin-bottom:0.4rem;">Key Insights & Rekomendasi Aksi</h2>
+        <p style="color:rgba(255,255,255,0.45);font-size:0.78rem;margin-bottom:1.75rem;">SKA Mall Jan–Feb 2026 · Revenue Jan +52.3% YoY — Pertumbuhan sangat kuat 💪</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div style="background:rgba(0,226,115,0.1);border:1px solid rgba(0,226,115,0.35);border-radius:10px;padding:1.25rem;">
+                <div style="color:#00E273;font-weight:700;font-size:0.85rem;margin-bottom:0.6rem;">🚀 Top Opportunities</div>
+                <div style="font-size:0.78rem;color:rgba(255,255,255,0.8);line-height:1.7;">
+                    <strong style="color:white;">1. STRIPE & LUNA</strong> — keduanya tumbuh >85% dan sudah di volume solid. Prioritas replenishment tertinggi setelah CLASSIC.<br><br>
+                    <strong style="color:white;">2. CLASSIC METALIC +240%</strong> — growth tertinggi dari series ber-baseline. Dari hanya 5 pairs jadi 17 — ada appetite premium di SKA Mall. Push lebih agresif, test dengan 5–8 pairs tambahan.<br><br>
+                    <strong style="color:white;">3. AIRMOVE (new, 32 prs)</strong> — series baru terlaris di SKA Mall. Jaga ketersediaan, ini sinyal demand yang kuat bahkan tanpa YoY benchmark.
+                </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:1.25rem;">
+                <div style="color:#fbbf24;font-weight:700;font-size:0.85rem;margin-bottom:0.6rem;">⚠️ Yang Perlu Diperhatikan</div>
+                <div style="font-size:0.78rem;color:rgba(255,255,255,0.8);line-height:1.7;">
+                    <strong style="color:white;">1. SLIDE -38.1%</strong> — penurunan cukup tajam. Satu-satunya Cash Cow. Jangan langsung cut drastis, tapi monitor Feb–Mar. Jika trend berlanjut, kurangi slot bertahap.<br><br>
+                    <strong style="color:white;">2. ELSA & LUCA -27% s/d -30%</strong> — Dogs dengan volume rendah. Prioritaskan sell-through stok lama sebelum reorder. Slot planogram lebih baik dialihkan ke Q-Marks.<br><br>
+                    <strong style="color:white;">3. Banyak series baru (8 series)</strong> — SKA Mall sedang dalam fase ekspansi assortment. Monitor konversi mana yang sustainably grow setelah 3 bulan.
+                </div>
+            </div>
+        </div>
+
+        <div style="background:rgba(0,226,115,0.08);border:1px solid rgba(0,226,115,0.25);border-radius:10px;padding:1.1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+            <div>
+                <div style="font-size:0.65rem;color:#00E273;font-weight:700;letter-spacing:0.08em;margin-bottom:0.4rem;">PLANOGRAM ACTION</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.6;">Kurangi slot ELSA + LUCA (Dogs) → tambah ke CLASSIC METALIC, WEDGES, LUNA. SLIDE dikurangi 1 slot saja dulu — masih perlu monitoring.</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem;color:#00E273;font-weight:700;letter-spacing:0.08em;margin-bottom:0.4rem;">STOK PRIORITY</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.6;">CLASSIC > AIRMOVE > STRIPE > LUNA > VELCRO. Semua Stars harus tersedia. AIRMOVE (new terlaris) jangan sampai kosong — demand SKA tinggi.</div>
+            </div>
+            <div>
+                <div style="font-size:0.65rem;color:#00E273;font-weight:700;letter-spacing:0.08em;margin-bottom:0.4rem;">NEXT REVIEW</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.6;">April 2026 post-Ramadan: apakah CLASSIC METALIC & WEDGES naik ke Star? Apakah AIRMOVE, ZORRO, ONYX bisa diklasifikasi BCG? SLIDE — apakah sudah recovery?</div>
+            </div>
+        </div>
+
+        <div style="margin-top:1rem;font-size:0.65rem;color:rgba(255,255,255,0.2);border-top:1px solid rgba(255,255,255,0.08);padding-top:0.75rem;">
+            Framework: BCG Growth–Share Matrix · Data: core.sales_with_product (Zuma SKA Mall, excl. wholesale) · Jan–Feb 2026 vs Jan–Feb 2025 · Generated 19 Feb 2026 · Iris for Zuma Indonesia
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
