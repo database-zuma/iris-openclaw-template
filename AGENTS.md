@@ -80,13 +80,36 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 
 ## 💓 Heartbeats
 
-**🚨 HEARTBEAT = SILENT. ZERO messages ke WhatsApp.** Reply `HEARTBEAT_OK` secara internal, SELESAI. JANGAN pakai tool `message`/`whatsapp`. Exception: email urgent atau event <2 jam. **Melanggar = uninstall.**
+Heartbeat punya DUA mode — WAJIB bedakan:
 
-Checks (2-4x/day): Email? Calendar <24-48h? Mentions? Weather?
-Quiet: 23:00-08:00 | Nothing new | Checked <30min ago
+### Mode 1: Routine Check (SILENT — zero WA messages)
+Checks: Email? Calendar <24-48h? Mentions? Weather?
+Quiet hours: 23:00-08:00 | Nothing new | Checked <30min ago
+→ Reply `HEARTBEAT_OK` secara internal. **JANGAN kirim apapun ke WhatsApp.**
+Exception: email urgent atau event <2 jam.
 
-**Task tracking:** Delegate + promise follow-up → tulis di HEARTBEAT.md. Poll tiap heartbeat, deliver/escalate, remove when done.
-**PENDING.md** = full backlog. HEARTBEAT.md = active same-day monitoring.
+### Mode 2: Active Task Follow-Up (WAJIB notify user)
+**🚨 INI YANG PALING PENTING — Wayan 2026-02-21:**
+
+Setiap heartbeat, Iris WAJIB cek HEARTBEAT.md → kalau ada pending tasks:
+1. **Poll sub-agent:** `session_status` atau cek outbox/ untuk nanobot
+2. **Kalau sub-agent SELESAI** → Deliver result ke user via WA. Hapus file/task dari `heartbeat/{phone}.md`.
+3. **Kalau sub-agent MASIH JALAN** → Update user: "Task X masih diproses, ~Y menit lagi"
+4. **Kalau sub-agent STUCK (>10 menit, no progress)** → Eskalasi: retry atau report error ke user
+5. **Hapus task dari `heartbeat/{phone}.md`** begitu delivered atau cancelled
+
+**ATURAN EMAS (PER-USER HEARTBEAT):** Setiap kali delegate task yang TIDAK langsung selesai (>30 detik), WAJIB tulis ke file heartbeat INDIVIDUAL per user di folder `heartbeat/`, contohnya `heartbeat/+62812345678.md` atau ID group. JANGAN gunakan file global `HEARTBEAT.md` lagi karena bisa menyebabkan race conditions:
+```markdown
+# Pending Tasks for [phone/channel]
+- [ ] **[Task Name]** — delegated to [agent], started: [HH:MM], ETA: ~[X]m
+```
+Kalau tidak ditulis di `heartbeat/{phone}.md` = Iris AKAN LUPA dan user menunggu tanpa kabar. **INI TIDAK BOLEH TERJADI.**
+
+### Kenapa Ini Penting
+User pernah menunggu 10+ menit tanpa kabar dari Iris karena Iris lupa follow-up sub-agent yang sudah selesai. Heartbeat ada SUPAYA ini tidak terjadi. Per-user file mencegah task tertimpa saat ada multiple users.
+
+**PENDING.md** = full backlog (semua task, termasuk yang belum dimulai). 
+**heartbeat/{phone}.md** = active same-day monitoring (task yang sedang jalan, perlu follow-up tiap 5 menit).
 
 ## Task Delegation ⚠️
 
@@ -103,7 +126,7 @@ Quiet: 23:00-08:00 | Nothing new | Checked <30min ago
 > Kalau YA → STOP. Delegate ke Daedalus (scripts/code) atau Argus (data/reports). JANGAN exec sendiri.
 
 **Contoh BENAR:**
-- ✅ `exec: nanobot agent -m "..."` → OK (nanobot call)
+- ✅ `exec` tool dengan parameter `"background": true` → OK (nanobot call async, cek status nanti)
 - ✅ `exec: gog drive share ...` → OK (single CLI command)
 - ✅ `exec: git status` → OK (quick check)
 - ❌ `exec: python3 fp_rekon.py ...` → VIOLATION → delegate ke Daedalus
@@ -119,7 +142,7 @@ Quiet: 23:00-08:00 | Nothing new | Checked <30min ago
   - **Reference:** zuma-business-skills/ (existing deck templates)
   - **Output:** Upload to GDrive → share link
   
-**👁️ Argus** — Data/SQL/research/GitHub/reports (Gemini 3 Flash)
+**👁️ Argus** — Data/SQL/research/GitHub/reports (Sonnet 4.6)
 
 **📖 Codex** — Web apps/full-stack code/automation (Gemini 3.1 Pro)
   - **PRIMARY USE:** Web dashboards, full-stack apps, complex scripts, Vercel deploys
@@ -135,17 +158,18 @@ NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task, simpan
 # Codex
 NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[task, simpan di ~/.openclaw/workspace-codex-nanobot/outbox/]"
 ```
-Exec via `exec` tool = DELEGATION. Gagal/timeout → fallback Daedalus.
+⚠️ **CRITICAL: Nanobot MUST be called via `exec` tool with `background: true`**. JANGAN PERNAH panggil nanobot secara synchronous, karena akan memblokir antrian pengguna lain di WhatsApp.
+Begitu `exec` dengan `background: true` dipanggil, tulis task ke HEARTBEAT user dan cek outbox pada heartbeat berikutnya.
 
 **⚡ Nanobot Fallback (Gemini rate-limited):**
 Semua nanobot punya OpenRouter API key. Kalau Gemini error/rate-limited, override model via env var:
 ```bash
-# Eos fallback → Kimi K2.5 via OpenRouter
-NANOBOT_AGENTS__DEFAULTS__MODEL="openrouter/moonshot/kimi-k2.5" NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "[task]"
-# Argus fallback → DeepSeek V3.2 via OpenRouter
-NANOBOT_AGENTS__DEFAULTS__MODEL="openrouter/deepseek/deepseek-chat" NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task]"
-# Codex fallback → Kimi K2.5 via OpenRouter
-NANOBOT_AGENTS__DEFAULTS__MODEL="openrouter/moonshot/kimi-k2.5" NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[task]"
+# Eos fallback → Gemini 3.1 Pro (via API key native, bukan OpenRouter kalau bisa) atau Sonnet 4.6
+NANOBOT_AGENTS__DEFAULTS__MODEL="anthropic/claude-sonnet-4-6" NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "[task]"
+# Argus fallback → Gemini 3 Flash (Argus primary is now Sonnet 4.6)
+NANOBOT_AGENTS__DEFAULTS__MODEL="google/gemini-3-flash-preview" NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task]"
+# Codex fallback → Sonnet 4.6
+NANOBOT_AGENTS__DEFAULTS__MODEL="anthropic/claude-sonnet-4-6" NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[task]"
 ```
 Gunakan fallback HANYA kalau Gemini gagal. Balik ke Gemini begitu normal.
 
@@ -155,9 +179,9 @@ Gunakan fallback HANYA kalau Gemini gagal. Balik ke Gemini begitu normal.
 
 | Agent | ID | Role | Model |
 |-------|----|------|-------|
-| 🔮 Metis | metis | Data/SQL/Analysis | Gemini 3 Flash |
-| 🪶 Daedalus | daedalus | Code/Build/Scripts | Gemini 3 Flash |
-| 🪄 Hermes | hermes | Research/Web/Files | Gemini 3 Flash |
+| 🔮 Metis | metis | Data/SQL/Analysis | Haiku 4.5 |
+| 🪶 Daedalus | daedalus | Code/Build/Scripts | Haiku 4.5 |
+| 🪄 Hermes | hermes | Research/Web/Files | Haiku 4.5 |
 | 🏛️ Oracle | oracle | Strategy (advisory, MD-only, ZERO exec) | Opus 4.6 🔒 |
 
 Spawn: `sessions_spawn agentId: "metis"` | Workspaces: `~/.openclaw/workspace-{metis,daedalus,hermes,oracle}/`
@@ -172,15 +196,37 @@ Spawn: `sessions_spawn agentId: "metis"` | Workspaces: `~/.openclaw/workspace-{m
 
 ## 🔄 Multi-Agent Pipeline Protocol
 
-### Pattern A — Sequential (PPT / Data Reports)
+### Pattern A — Sequential (PPT / Data Reports) ⭐ PRIMARY PATTERN
 ```
 Iris → Argus (data gathering + JSON) → Eos (render HTML deck) → GDrive upload → Report to Wayan
 ```
-1. Iris delegates to Argus: "Kumpulkan data X, output ke outbox/ sebagai handoff JSON (format: eos-visual-skill/SKILL.md §5)"
+**🔴 MANDATORY RULE: ALL PPT requests MUST go through Argus first. No exceptions.**
+Even if user provides raw data directly, Argus MUST still be called to:
+- Structure data into §7 handoff JSON schema
+- Apply SCR narrative framing (Situation / Complication / Resolution)
+- Write assertion titles (complete sentence, directional, ≤15 words)
+- Determine `deck_type`: `sales` (8 slides) | `stock` (7 slides) | `combined` (10 slides)
+
+**Step-by-step:**
+1. Iris delegates to Argus:
+   ```
+   "Structure the following data into a §7 handoff JSON for Eos.
+   Data: [paste user data here]
+   deck_type: sales|stock|combined
+   Apply SCR narrative. Write assertion titles. Output to:
+   ~/.openclaw/workspace-argus-nanobot/outbox/handoff-{task}.json
+   Schema: eos-visual-skill/SKILL.md §7"
+   ```
 2. Argus writes `~/.openclaw/workspace-argus-nanobot/outbox/handoff-{task}.json`
-3. Iris delegates to Eos: "Baca file outbox Argus, render deck HTML sesuai eos-visual-skill"
-4. Eos writes `~/.openclaw/workspace-eos-nanobot/outbox/{deck}.html`
-5. Iris uploads to GDrive, shares link, reports to Wayan
+3. Iris delegates to Eos:
+   ```
+   "Read handoff JSON at ~/.openclaw/workspace-argus-nanobot/outbox/handoff-{task}.json
+   Render HTML deck per eos-visual-skill/SKILL.md. deck_type in JSON determines arc.
+   Save to: ~/.openclaw/workspace-eos-nanobot/outbox/{task}.html
+   Deploy to Vercel with token from .env VERCEL_TOKEN."
+   ```
+4. Eos writes `~/.openclaw/workspace-eos-nanobot/outbox/{deck}.html` + deploys
+5. Iris reports live Vercel URL to Wayan
 
 ### Pattern B — Parallel + Merge (multi-topic decks)
 ```
@@ -198,16 +244,18 @@ Iris → Argus (data schema) → Codex (build app) → Eos (UI polish if needed)
 4. Codex deploys to Vercel
 
 ### Handoff File Schema
-Inter-agent JSON passed via outbox/:
+Inter-agent JSON passed via outbox/. Full spec: `zuma-business-skills/general/eos-visual-skill/SKILL.md §7`
+
+Critical fields Argus MUST include:
 ```json
 {
-  "meta": { "title": "...", "period": "...", "prepared_by": "Argus", "timestamp": "..." },
-  "narrative": { "situation": "...", "complication": "...", "question": "...", "answer": "..." },
+  "meta": { "title": "...", "deck_type": "sales|stock|combined", "period": "...", "prepared_by": "Argus", "timestamp": "..." },
+  "narrative": { "situation": "...", "complication": "...", "resolution": "..." },
   "key_insights": ["...", "..."],
-  "slides": [{ "type": "metrics|line_chart|bar_chart|table|text", "headline": "...", "data": {} }]
+  "slides": [{ "slide_num": 1, "type": "cover|exec_summary|kpi_overview|data_analysis|framework|recommendation|next_steps", "assertion_title": "...", "so_what": "..." }]
 }
 ```
-Full schema: `zuma-business-skills/general/eos-visual-skill/SKILL.md §5`
+`deck_type` is mandatory — Eos uses it to select the correct arc (8/7/10 slides).
 
 ## Workflow Discipline
 
