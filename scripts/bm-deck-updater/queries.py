@@ -19,6 +19,21 @@ def get_current_period():
     return today.year, today.month, today.day, days_in_month
 
 
+def get_latest_data_date(conn, year, month):
+    """Returns the latest transaction_date in the DB for the given year/month."""
+    with conn.cursor() as cur:
+        cur.execute(f"""
+            SELECT MAX(transaction_date)
+            FROM core.sales_with_product
+            WHERE is_intercompany = FALSE
+              AND EXTRACT(YEAR FROM transaction_date) = {year}
+              AND EXTRACT(MONTH FROM transaction_date) = {month}
+        """)
+        row = cur.fetchone()
+        return row[0] if row and row[0] else date(year, month, 1)
+
+
+
 def get_store_revenue(conn, stores, year, month):
     """Revenue per store for a given year/month."""
     store_list = ", ".join(f"'{s}'" for s in stores)

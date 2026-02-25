@@ -4,6 +4,9 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-25** | [World Monitor — Real-Time Global Intelligence Dashboard](dev-tools/2026-02-25_github_worldmonitor.md) | #osint #intelligence-dashboard #tauri #typescript #local-ai #open-source | Real-time geopolitical/news/financial dashboard — 100+ feeds, 3D globe, local LLM, native desktop (Tauri), AGPL
+- **2026-02-25** | [Vibe Coding 2.0 — 18 Rules to Be the Top 1% Builder](dev-tools/2026-02-25_vibe-coding-2-rules.md) | #vibe-coding #mvp #ship-fast #nextjs #tailwind #shadcn #best-practices | 18 DO's & DON'Ts untuk build MVP cepat — inti: "tau apa yang TIDAK perlu dibangun", pakai tools yang ada, ship imperfect > polished never launched
+- **2026-02-22** | [KittenTTS — Lightweight Open-Source Text-to-Speech](ai-agents/20260222_kittentts_tts_model.md) | #tts #open-source #lightweight #voice-generation #privacy #apache-2.0 | Ultra-lightweight TTS model (15M params, <25MB), 8 voices, CPU-only, perfect for Zuma automation
 - **2026-02-21** | [Arscontexta — Skill Graphs > SKILL.md](ai-agents/2026-02-21_twitter_arscontexta-skill-graphs.md) | #skill-graphs #knowledge-management #claude-code-plugin #second-brain #agent-architecture | Claude Code plugin for generating knowledge systems; Skill Graphs = navigable markdown networks vs monolithic SKILL.md
 - **2026-02-20** | [Gateway Pairing Issue Fix — Scope Mismatch](dev-tools/2026-02-20_gateway-pairing-fix.md) | #openclaw #gateway #pairing #troubleshooting #whatsapp #device-auth | Device scope mismatch (missing operator.read/write) → pairing required error; fix via device rotation + full scopes
 - **2026-02-20** | [Multi-Agent Architecture — Production (Eos Live)](ai-agents/2026-02-20_multi-agent-architecture-production.md) | #multi-agent #nanobot #openclaw #architecture #production | Hybrid OpenClaw (Iris) + Nanobot (Eos) with filesystem bridge communication
@@ -32,6 +35,9 @@ Auto-generated index of saved links, articles, and threads.
 - [Dieter Rams — Braun Design & Apple Influence](design/2026-02-14_research_dieter-rams-braun.md) — Industrial design philosophy, 10 Principles of Good Design, influence on Apple/Jonathan Ive
 
 ### Dev Tools
+- **[World Monitor — Real-Time Global Intelligence Dashboard](dev-tools/2026-02-25_github_worldmonitor.md)** — OSINT-grade real-time dashboard (geopolitics/tech/finance), 100+ feeds, 3D WebGL globe (deck.gl), 35+ data layers, local LLM (Ollama), native Tauri desktop app, proto-first API (17 typed services), AGPL, free
+- **[Vibe Coding 2.0 — 18 Rules](dev-tools/2026-02-25_vibe-coding-2-rules.md)** — Stack: Next.js+Tailwind+shadcn+tRPC+Prisma+Clerk+Stripe+Sentry+Vercel. Core: tau apa yang TIDAK perlu dibangun. 18 DO's + 16 DON'Ts untuk MVP cepat
+- [KittenTTS — Lightweight Open-Source TTS](ai-agents/20260222_kittentts_tts_model.md) — Ultra-lightweight TTS (15M params, <25MB nano), 8 voices, CPU-only, Apache-2.0, use cases: WhatsApp voice messages, product VO, customer service automation
 - [Gateway Pairing Issue Fix — Scope Mismatch](dev-tools/2026-02-20_gateway-pairing-fix.md) — OpenClaw gateway device pairing troubleshooting, scope diagnosis, token rotation, device auth verification
 - [Voicebox — Open-Source Voice Synthesis Studio](dev-tools/2026-02-19_github_voicebox.md) — Local-first voice cloning studio (ElevenLabs alternative), powered by Qwen3-TTS, REST API, MLX-optimized for Apple Silicon
 - [Botasaurus — All-in-One Web Scraping Framework](dev-tools/2026-02-19_github_botasaurus.md) — Python scraping framework, bypass Cloudflare/Datadome/Fingerprint, Selenium-based with @browser + @request decorators, built-in Web UI, Kubernetes scaling
@@ -57,4 +63,4 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-21 (arscontexta Skill Graphs, Voicebox version update)
+**Last updated:** 2026-02-25 (World Monitor + Vibe Coding 2.0 added)

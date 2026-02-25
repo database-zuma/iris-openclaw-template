@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from config import DB_URL, VERCEL_TOKEN, VERCEL_BIN, VERCEL_CLI, BRANCHES
 from queries import (
-    get_connection, get_current_period,
+    get_connection, get_current_period, get_latest_data_date,
     get_store_revenue, get_store_targets,
     get_ff_fa_fs, get_bcg_series, get_top_products,
 )
@@ -97,6 +97,51 @@ def momentum_color(jan_ach, feb_ach_proj):
     return "#6b7280"
 
 
+def generate_store_table_rows(stores, rev_data, tgt_data, projection_factor):
+    """Generate <tr> HTML rows sorted by rev_feb DESC (current month MTD highest first)."""
+    rows = []
+    # Filter to only stores with revenue data and sort by rev_feb DESC
+    stores_with_data = [(s, rev_data.get(s.lower(), {})) for s in stores if s.lower() in rev_data]
+    stores_with_data.sort(key=lambda x: x[1].get('rev_feb', 0), reverse=True)
+    
+    for idx, (store, rd) in enumerate(stores_with_data):
+        store_lower = store.lower()
+        td = tgt_data.get(store_lower, {})
+        
+        rev_jan = rd.get('rev_jan', 0)
+        rev_feb = rd.get('rev_feb', 0)
+        tgt_jan = td.get('jan', 0)
+        tgt_feb = td.get('feb', 0)
+        
+        jan_ach = (rev_jan / tgt_jan * 100) if tgt_jan > 0 else None
+        feb_proj = int(rev_feb * projection_factor)
+        feb_ach_proj = (feb_proj / tgt_feb * 100) if tgt_feb > 0 else None
+        
+        # Row background based on projected achievement
+        if feb_ach_proj is not None and feb_ach_proj < 50:
+            row_style = ' style="background:#fee2e2;"'
+        elif feb_ach_proj is not None and feb_ach_proj < 80:
+            row_style = ' style="background:#fff5f5;"'
+        else:
+            row_style = ''
+        
+        # Bold top 3 stores
+        store_display = store.replace('zuma ', 'Zuma ').title()
+        name_html = f"<strong>{store_display}</strong>" if idx < 3 else store_display
+        
+        rows.append(f"""            <tr{row_style}>
+                <td>{name_html}</td>
+                <td style="text-align:right;">{fmt_rp(rev_jan)}</td>
+                <td style="text-align:center;" class="{ach_class(jan_ach)}">{fmt_pct(jan_ach, plus=False)} {ach_emoji(jan_ach)}</td>
+                <td style="text-align:right; color:#6b7280;">{fmt_rp(rev_feb)}</td>
+                <td style="text-align:right; font-weight:600;">{fmt_rp(feb_proj)}</td>
+                <td style="text-align:right; color:#6b7280;">{fmt_rp(tgt_feb)}</td>
+                <td style="text-align:center;" class="{ach_class(feb_ach_proj)}">{fmt_pct(feb_ach_proj, plus=False)} {ach_emoji(feb_ach_proj)}</td>
+                <td><span style="color:{momentum_color(jan_ach, feb_ach_proj)}; font-weight:700;">{momentum(jan_ach, feb_ach_proj)}</span></td>
+            </tr>""")
+    return "\n".join(rows)
+
+
 def classify_bcg(yoy_pct, ytd_now, median_volume):
     """Classify series into BCG quadrant."""
     if yoy_pct is None:
@@ -125,6 +170,49 @@ def replace_marker(html, marker, new_value):
     return new_html
 
 
+
+def update_date_references(html, data_date, days_in_month):
+    """Replace all hardcoded date strings and projection factor text in HTML.
+    data_date: date object of the latest transaction in DB.
+    """
+    day = data_date.day
+    year = data_date.year
+    month_id = data_date.month
+
+    MONTH_ID = {1:'Jan',2:'Feb',3:'Mar',4:'Apr',5:'Mei',6:'Jun',
+               7:'Jul',8:'Ags',9:'Sep',10:'Okt',11:'Nov',12:'Des'}
+    MONTH_LONG = {1:'Januari',2:'Februari',3:'Maret',4:'April',5:'Mei',6:'Juni',
+                 7:'Juli',8:'Agustus',9:'September',10:'Oktober',11:'November',12:'Desember'}
+    mon = MONTH_ID[month_id]
+    mon_long = MONTH_LONG[month_id]
+    proj_factor = days_in_month / day
+
+    # 1. Replace 'X Feb 2026' / 'X Februari 2026' (any day number)
+    html = re.sub(rf'\d{{1,2}} {mon} {year}', f'{day} {mon} {year}', html)
+    html = re.sub(rf'\d{{1,2}} {mon_long} {year}', f'{day} {mon_long} {year}', html)
+
+    # 2. Replace 's/d X Feb' (with or without year)
+    html = re.sub(rf's/d \d{{1,2}} {mon}', f's/d {day} {mon}', html)
+
+    # 3. Replace '{days}÷{old} hari' and '÷ {old} hari'
+    html = re.sub(rf'{days_in_month}÷\d{{1,2}} hari', f'{days_in_month}÷{day} hari', html)
+    html = re.sub(rf'÷ \d{{1,2}} hari', f'÷ {day} hari', html)
+
+    # 4. Replace '×X.XXX (N÷M hari)' projection multiplier
+    html = re.sub(
+        rf'×[\d\.]+\s*\({days_in_month}÷\d{{1,2}} hari\)',
+        f'×{proj_factor:.3f} ({days_in_month}÷{day} hari)',
+        html
+    )
+
+    # 5. 'Feb YTD ÷ X hari'
+    html = re.sub(rf'{mon} YTD ÷ \d{{1,2}} hari', f'{mon} YTD ÷ {day} hari', html)
+
+
+    # 6. Bare '(X Feb)' parenthesized references without year
+    html = re.sub(rf'\(\d{{1,2}} {mon}\)', f'({day} {mon})', html)    
+    return html
+
 # ─── Branch Update ───────────────────────────────────────────────────────────
 
 def update_branch(branch_key, dry_run=False):
@@ -147,22 +235,16 @@ def update_branch(branch_key, dry_run=False):
 
     print("  🔌 Connecting to DB...")
     conn = get_connection(DB_URL)
-
-    print("  📊 Querying revenue per store...")
     revenue_rows = get_store_revenue(conn, stores, year, month)
-
-    print("  🎯 Querying targets...")
     target_rows = get_store_targets(conn, stores, year)
-
-    print("  📐 Querying FF/FA/FS...")
     ff_store_map = cfg.get("ff_store_map", None)
     ff_rows = get_ff_fa_fs(conn, stores, ff_store_map)
-
-    print("  📦 Querying BCG series data...")
     bcg_rows = get_bcg_series(conn, stores, year)
-
+    print("  📅 Querying latest data date...")
+    data_date = get_latest_data_date(conn, year, month)
+    projection_factor = days_in_month / data_date.day if data_date.day > 0 else 1
     conn.close()
-    print("  ✅ DB queries done")
+    print(f"  ✅ DB queries done | Latest data: {data_date} | Proj factor: {projection_factor:.3f}")
 
     # ── Parse data into dicts ────────────────────────────────
     # Revenue: {store_name: {rev_jan, rev_feb, rev_jan_ly, rev_feb_ly}}
@@ -210,7 +292,7 @@ def update_branch(branch_key, dry_run=False):
     stores_below_ff_70 = sum(1 for v in ff_data.values() if v["ff"] < 70)
 
     run_rate_pct = (total_rev_feb / total_tgt_feb * 100) if total_tgt_feb > 0 else None
-    time_elapsed_pct = day_elapsed / days_in_month * 100
+    time_elapsed_pct = data_date.day / days_in_month * 100
 
     print(f"  💰 Branch total Jan: {fmt_rp(total_rev_jan)} | Target: {fmt_rp(total_tgt_jan)} | Ach: {branch_ach_jan:.0f}%")
     print(f"  📈 YoY Jan: {branch_yoy_jan:+.1f}%")
@@ -219,6 +301,7 @@ def update_branch(branch_key, dry_run=False):
     # ── Update HTML markers ──────────────────────────────────
     print(f"  📝 Reading HTML: {html_path}")
     html = html_path.read_text()
+    html = update_date_references(html, data_date, days_in_month)
 
     # Cover KPIs
     html = replace_marker(html, "cover_stores_count", str(len([s for s in stores if "wholesale" not in s and "pusat" not in s])))
@@ -238,6 +321,10 @@ def update_branch(branch_key, dry_run=False):
     html = replace_marker(html, "feb_ytd_rev", fmt_rp(total_rev_feb))
     html = replace_marker(html, "feb_proj_rev", fmt_rp(int(feb_projected)))
     html = replace_marker(html, "feb_tgt", fmt_rp(total_tgt_feb))
+
+    # Generate store table rows for slide 3 (sorted by Feb MTD highest first)
+    store_rows_html = generate_store_table_rows(stores, rev_data, tgt_data, projection_factor)
+    html = replace_marker(html, "store_table_rows", store_rows_html)
 
     print(f"  ✅ HTML markers updated (or logged if not found)")
 

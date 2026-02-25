@@ -36,12 +36,18 @@ Load: `source .env` atau `python-dotenv`.
 - **Kesimpulan:** Iris = image generation ✅, image editing/face swap ❌ (butuh Adobe Firefly/InsightFace)
 - **SDK:** `google-genai` Python — `client.models.generate_images(model='imagen-4.0-generate-001', prompt='...', config=GenerateImagesConfig(number_of_images=1, aspect_ratio="1:1"))`
 
-## Gemini sebagai Fallback Agent (2026-02-19)
+## ⚡ Nanobot Fallback (Gemini rate-limited)
 
-- Google provider sudah di OpenClaw config (`models.providers.google`)
-- `google/gemini-3-pro-preview` = default fallback GLOBAL
-- Per-agent config (Iris, Metis, dll) punya model sendiri → Gemini belum otomatis jadi fallback individual
-- TODO: Patch per-agent config kalau Wayan mau
+Semua nanobot punya OpenRouter API key. Kalau Gemini error/rate-limited, override model via env var:
+```bash
+# Eos fallback → Sonnet 4.6
+NANOBOT_AGENTS__DEFAULTS__MODEL="anthropic/claude-sonnet-4-6" NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "[task]"
+# Argus fallback → Gemini 2.5 Flash
+NANOBOT_AGENTS__DEFAULTS__MODEL="google/gemini-2.5-flash" NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task]"
+# Codex fallback → Sonnet 4.6
+NANOBOT_AGENTS__DEFAULTS__MODEL="anthropic/claude-sonnet-4-6" NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[task]"
+```
+Gunakan fallback HANYA kalau Gemini gagal. Balik ke Gemini begitu normal.
 
 ## Browser & Screenshot
 
