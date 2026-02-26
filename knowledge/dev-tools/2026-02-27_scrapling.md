@@ -6,6 +6,8 @@
 **Author:** D4Vinci
 **License:** BSD-3 | **Stack:** Python library
 **Installed:** ✅ v0.2.99 (`pip` package + `/Users/database-zuma/Library/Python/3.9/bin/scrapling` CLI)
+**Browser Status:** ✅ **Playwright Chromium CONFIRMED WORKING** (2026-02-27) — StealthyFetcher + DynamicFetcher fully operational. Initial install had timeout during Chromium download; now complete.
+**`scrapling install` output:** "dependencies already installed"
 **Performance:** 784x faster than BeautifulSoup for repeated scrapes
 
 ---
@@ -33,8 +35,8 @@
 |---------|----------|-------|--------|--------------|
 | **Fetcher** | Simple sites, fast HTTP | ⚡ Fastest | Basic | ❌ No |
 | **AsyncFetcher** | Bulk crawling 1000s URLs | ⚡ Fast (parallel) | Basic | ❌ No |
-| **StealthyFetcher** | Anti-bot, Cloudflare Turnstile | 🔶 Medium | ✅ High (Camoufox) | ❌ No |
-| **DynamicFetcher** | Heavy JavaScript sites | 🐌 Slow | Medium | ✅ Full |
+| **StealthyFetcher** | Anti-bot, Cloudflare Turnstile | 🔶 Medium | ✅ High (Camoufox) | ❌ No | **✅ CONFIRMED WORKING** (Playwright Chromium installed) |
+| **DynamicFetcher** | Heavy JavaScript sites | 🐌 Slow | Medium | ✅ Full | **✅ CONFIRMED WORKING** (Playwright Chromium installed) |
 
 ### Key Features
 

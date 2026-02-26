@@ -4,6 +4,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-27** | [Public APIs — Curated for Zuma & Iris (Full Analysis)](dev-tools/2026-02-27_public-apis-zuma-relevant.md) | #public-apis #indonesia #payment-gateway #nlp #google-maps #email #notifications #finance | 268-line analysis: 60+ APIs filtered for Zuma retail ops & Iris AI. Tier-1: Google Maps, Sendinblue, NewsAPI, NLP Cloud (Indonesian support), Xendit/Midtrans. Critical: Sendgrid free tier ended Jul 2025, MercadoPago no IDR support.
+- **2026-02-27** | [Public APIs — Verification & Action Items Summary](dev-tools/2026-02-27_public-apis-verification-summary.md) | #public-apis #verification #indonesia #payment-gateway #cors-analysis #action-items | Executive summary: payment gateway comparison (Xendit/Midtrans/Doku), CORS analysis (60% need backend proxy), critical findings & integration priority roadmap
 - **2026-02-27** | [Iris Vector Memory + Reflection Cycle — Implementation](ai-agents/2026-02-27_iris-vector-memory-implementation.md) | #vector-memory #pgvector #semantic-search #reflection-cycle #iris-upgrade #implementation | IMPLEMENTED: pgvector semantic search over 438 memory+knowledge chunks (Gemini embeddings), daily reflection cycle at 22:00, scripts in workspace/scripts/
 - **2026-02-27** | [AI Town — Autonomous Agent Town Simulator](ai-agents/2026-02-27_github_a16z-ai-town.md) | #multi-agent #autonomous-agents #simulation #memory-system #vector-search #a16z #generative-agents | Stanford-inspired multi-agent simulation: agents perceive→remember→reflect→act. Architecture patterns: vector memory retrieval, tick-based simulation, shared state, agent-to-agent communication. Reference for Iris memory/heartbeat evolution
 - **2026-02-27** | [Scrapling — Adaptive Web Scraping Framework](dev-tools/2026-02-27_scrapling.md) | #web-scraping #anti-bot #cloudflare-bypass #adaptive #concurrent #mcp-server | Adaptive scraping (survive redesigns), 784x faster than BeautifulSoup, anti-bot Cloudflare Turnstile bypass, concurrent crawling, MCP-ready for AI agents
@@ -41,6 +43,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ### Dev Tools
 - **[Scrapling — Adaptive Web Scraping Framework](dev-tools/2026-02-27_scrapling.md)** — 784x faster than BeautifulSoup, adaptive element relocation (survive redesigns), StealthyFetcher (Cloudflare Turnstile + TLS bypass), concurrent crawling (1000s URLs), MCP-ready for AI agents, BSD-3, 14.1k stars
+- **[Public APIs — Curated for Zuma & Iris](dev-tools/2026-02-27_public-apis-zuma-relevant.md)** — 60+ APIs filtered for Zuma retail ops & Iris AI. Tier-1: Google Maps, Sendinblue, NewsAPI, NLP Cloud (Indonesian ✅), Xendit/Midtrans. ⚠️ Sendgrid free tier ended Jul 2025. ⚠️ MercadoPago no IDR.
+- **[Public APIs — Verification Summary](dev-tools/2026-02-27_public-apis-verification-summary.md)** — Executive summary: payment gateway comparison, CORS analysis (60% need backend proxy), action items (URGENT: migrate Sendgrid → Sendinblue, MercadoPago → Xendit)
 - **[Agent Browser — AI-Optimized Browser Automation](dev-tools/2026-02-27_agent-browser.md)** — 93% less context vs Playwright MCP, 95% first-try success, Rust CLI + Node.js daemon, installed v0.15.1, perfect for token-constrained agent runs
 - **[World Monitor — Real-Time Global Intelligence Dashboard](dev-tools/2026-02-25_github_worldmonitor.md)** — OSINT-grade real-time dashboard (geopolitics/tech/finance), 100+ feeds, 3D WebGL globe (deck.gl), 35+ data layers, local LLM (Ollama), native Tauri desktop app, proto-first API (17 typed services), AGPL, free
 - **[Vibe Coding 2.0 — 18 Rules](dev-tools/2026-02-25_vibe-coding-2-rules.md)** — Stack: Next.js+Tailwind+shadcn+tRPC+Prisma+Clerk+Stripe+Sentry+Vercel. Core: tau apa yang TIDAK perlu dibangun. 18 DO's + 16 DON'Ts untuk MVP cepat
@@ -70,4 +74,4 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-27 (AI Town + Agent Browser + Scrapling added)
+**Last updated:** 2026-02-27 (Public APIs analysis + verification summary added; Scrapling StealthyFetcher confirmed working)
