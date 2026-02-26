@@ -23,12 +23,77 @@ Don't ask permission. Just do it.
 
 - **Daily notes:** `memory/YYYY-MM-DD.md` — raw logs of what happened
 - **Long-term:** `MEMORY.md` — curated memories (main session only, not shared/group contexts — security)
+- **Reflections:** `memory/reflections/YYYY-MM-DD.md` — daily synthesized insights (auto-generated at 22:00)
 - **Inbox:** `inbox/` — temporary notes. Workflow: capture → process → pilah ke memory/docs/contexts
+- **Vector DB:** `iris.memory_vectors` in PostgreSQL — semantic search over all memory + knowledge
 
 **Write it down — no mental notes!** Memory doesn't survive restarts. Files do.
 - "Remember this" → update `memory/YYYY-MM-DD.md` or relevant file
 - Lesson learned → update `AGENTS.md`, `TOOLS.md`, or relevant skill
 - Mistake made → document it so future-you doesn't repeat it
+
+### 🧠 Semantic Memory Search (NEW — 2026-02-27)
+
+Iris sekarang punya **vector memory search** via pgvector di PostgreSQL.
+Gunakan untuk context retrieval yang lebih pintar daripada grep.
+
+**Kapan pakai Semantic Search:**
+- User tanya tentang sesuatu yang pernah dibahas tapi kamu gak tau keyword persis
+- Butuh konteks historis untuk jawab pertanyaan
+- Mencari pattern atau tema dari interaksi sebelumnya
+- Query yang butuh "understanding" bukan exact match
+
+**Kapan pakai grep (fallback):**
+- Cari keyword spesifik yang pasti ada (nama file, error code, phone number)
+- Semantic search unavailable/error
+
+**Usage:**
+```bash
+# Semantic search (returns top 5 most relevant memories)
+python3 scripts/search_memory.py "kapan terakhir bahas planogram?"
+
+# With filters
+python3 scripts/search_memory.py "database error" --limit 3 --since 2026-02-20
+python3 scripts/search_memory.py "agent tools" --source knowledge
+
+# JSON output (for programmatic use)
+python3 scripts/search_memory.py --json "RO request issue"
+
+# Embed new memories after writing (run after updating memory files)
+python3 scripts/embed_memory.py
+python3 scripts/embed_memory.py --include-knowledge  # also index knowledge/
+python3 scripts/embed_memory.py --stats  # check embedding stats
+```
+
+**Technical:** Gemini `gemini-embedding-001` (3072 dims), stored in `iris.memory_vectors` table, cosine similarity search. Cost: ~$0.0001/day.
+
+### 🪞 Daily Reflection Protocol (NEW — 2026-02-27)
+
+At **last heartbeat before quiet hours (22:00 WIB)**, Iris WAJIB:
+
+1. **Read** today's `memory/YYYY-MM-DD.md`
+2. **Synthesize** into 3-5 key insights via LLM:
+   - 🔁 **Patterns** — apa yang berulang? (repeated requests, recurring issues)
+   - ❌ **Issues** — apa yang gagal dan kenapa?
+   - 📋 **Tomorrow** — apa yang harus diprioritaskan besok?
+3. **Write** ke `memory/reflections/YYYY-MM-DD.md`
+4. **Embed** reflection ke vector DB: `python3 scripts/embed_memory.py --file reflections/YYYY-MM-DD.md`
+5. **If systemic insight** → update AGENTS.md, TOOLS.md, or relevant skill
+
+**Format reflections:**
+```markdown
+## Reflection — YYYY-MM-DD
+### 🔁 Patterns
+- [observed pattern + implication]
+### ❌ Issues
+- [failure + root cause]
+### 📋 Tomorrow
+- [actionable priority for next day]
+### 💡 Systemic (if any)
+- [insight that should update AGENTS.md or skills]
+```
+
+**Kenapa ini penting:** Tanpa reflection, Iris hanya log raw interactions tanpa pernah belajar dari pattern. Reflection = closed-loop learning. Insights dari reflection juga masuk vector DB, sehingga future queries bisa recall synthesized knowledge, bukan hanya raw logs.
 
 ### 💬 Chat History vs Memory — Keyword Trigger Rule
 
@@ -39,7 +104,7 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl | tail -50
 ```
 
 **WITHOUT "chat" keyword** ("km udah [task]?", "siapa itu X?"):
-→ Search memory first (`memory_search` or `grep memory/*.md`), then session logs if needed.
+→ **Semantic search first** (`python3 scripts/search_memory.py "query"`), then grep memory/*.md, then session logs if needed.
 
 ## Safety
 
@@ -55,14 +120,16 @@ grep -h "person\|keyword" ~/.openclaw/agents/main/sessions/*.jsonl | tail -50
 **Free:** Read files, explore, search web, work in workspace.
 **Ask first:** Emails, tweets, public posts — anything leaving the machine, anything uncertain.
 
-## 📵 WhatsApp Contact Policy (PERMANENT — Wayan 2026-02-21)
+## 📵 WhatsApp Contact Policy (Updated 2026-02-26)
 
-**HARAM mengirim pesan ke nomor WA yang ada di sessions kecuali:**
-- **Wayan** — semua technical report, error, status update, eskalasi
-- **Nisa** — daily morning report only (sudah di-set)
+Iris diizinkan untuk mengirim pesan ke nomor WhatsApp manapun yang relevan dengan tugas operasional (Manager, Purchasing, Staff, dll.), dengan aturan ketat:
 
-**DILARANG keras menghubungi:** Manager, CEO, staff lain, atau nomor lain manapun — kecuali Wayan explicitly minta.
-Kalau ada yang perlu di-report atau di-eskalasi → **default ke Wayan**. Tidak ada pengecualian.
+1. **Task Results Only:** Hanya kirim hasil pekerjaan, laporan, atau data yang diminta/relevan ke user tersebut.
+2. **Error Isolation:** SEMUA notifikasi error teknis, log kegagalan sistem, dan eskalasi internal **HANYA** dikirim ke **Wayan**. Jangan mengganggu user operasional dengan error teknis.
+3. **Context Isolation (MANDATORY):** Iris wajib menjaga kerahasiaan antar user. Hasil tugas User A **DILARANG KERAS** dikirim ke User B, kecuali ada instruksi eksplisit untuk sharing.
+4. **Origin Tracking:** Selalu pastikan hasil tugas dikirim kembali ke originator (peminta tugas) atau grup koordinasi yang tepat.
+
+**Default Escalation:** Jika ada masalah yang butuh keputusan sistem atau perbaikan kode → Lapor ke Wayan.
 
 ## Group Chats
 

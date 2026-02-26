@@ -209,28 +209,118 @@ Example output:
 ├── .env.example        # Template for credentials (copy to .env)
 ├── .gitignore          # Protects sensitive files
 ├── memory/             # Daily memory logs (YYYY-MM-DD.md)
-│   └── .gitkeep
+│   └── reflections/    # Daily synthesized insights (auto-generated)
+├── knowledge/          # Curated knowledge dump (links, tools, research)
+│   ├── INDEX.md        # Master index
+│   ├── ai-agents/      # Multi-agent architecture, tools, research
+│   ├── dev-tools/      # Installed tools, libraries, CLIs
+│   ├── business-ops/   # Operational processes, SOPs
+│   └── design/         # Design references, brand guidelines
+├── scripts/            # Automation scripts
+│   ├── embed_memory.py # Vector memory indexer (pgvector)
+│   └── search_memory.py# Semantic memory search CLI
 └── README.md           # This file
-```
 
 ---
 
 ## 🧠 Memory System
 
-Iris uses a two-tier memory system:
+Iris uses a **three-tier memory system** with semantic search:
 
-### Daily Logs (`memory/YYYY-MM-DD.md`)
+### Tier 1: Daily Logs (`memory/YYYY-MM-DD.md`)
 - Raw logs of conversations and events
 - Created automatically for each day
 - Great for recent context (yesterday + today)
 
-### Long-Term Memory (`MEMORY.md`)
+### Tier 2: Long-Term Memory (`MEMORY.md`)
 - Curated learnings and key facts
 - Manually updated (by you or the agent during heartbeats)
 - Persistent knowledge across sessions
 
-**Best Practice**: Load both in main sessions, only daily logs in shared contexts (security).
+### Tier 3: Vector Memory Search (`iris.memory_vectors` via pgvector)
 
+**NEW (2026-02-27)** — Iris now has **semantic memory search** powered by pgvector on PostgreSQL. Instead of exact keyword matching (`grep`), Iris retrieves memories by meaning using vector similarity.
+
+**How it works:**
+
+```
+User asks: "kapan terakhir bahas masalah pengiriman?"
+
+BEFORE (grep):  searches for exact word "pengiriman" → misses "delay ekspedisi JNE"
+AFTER (vector):  understands MEANING → finds "delay ekspedisi JNE", "stock sync terlambat", "PO belum sampai"
+```
+
+**Architecture:**
+
+```
+Memory Write:  Iris writes memory/YYYY-MM-DD.md
+                → embed_memory.py reads + chunks entries
+                → Gemini embedding API generates vectors (3072 dims)
+                → Upserts to iris.memory_vectors table (PostgreSQL + pgvector)
+
+Memory Search: User asks question needing context
+                → search_memory.py embeds the query
+                → Cosine similarity search against all stored memories
+                → Returns top-K most relevant memory chunks
+                → Iris uses as context for response
+```
+
+**Components:**
+
+| Component | Detail |
+|-----------|--------|
+| Database | PostgreSQL + pgvector extension |
+| Embedding model | Gemini `gemini-embedding-001` (3072 dims, free tier) |
+| Index script | `scripts/embed_memory.py` — batch embed memory + knowledge files |
+| Search script | `scripts/search_memory.py` — semantic query CLI |
+| Cost | ~$0.0001/day (effectively free) |
+
+**Usage:**
+
+```bash
+# Search memories semantically
+python3 scripts/search_memory.py "what was discussed about planogram?"
+python3 scripts/search_memory.py "database error" --limit 10 --since 2026-02-20
+python3 scripts/search_memory.py --json "query"  # JSON output for programmatic use
+python3 scripts/search_memory.py "query" --source knowledge  # search knowledge only
+
+# Embed new/changed memories into vector DB
+python3 scripts/embed_memory.py                    # incremental (new entries only)
+python3 scripts/embed_memory.py --include-knowledge  # also embed knowledge/ files
+python3 scripts/embed_memory.py --full               # re-embed everything
+python3 scripts/embed_memory.py --stats               # show embedding statistics
+```
+
+**When to use which:**
+- **Semantic search**: context retrieval, finding related past discussions, pattern discovery
+- **Grep (fallback)**: exact keywords, error codes, phone numbers, file names
+
+### 🪞 Daily Reflection Cycle
+
+**NEW (2026-02-27)** — At the last heartbeat before quiet hours (22:00), Iris automatically synthesizes the day's interactions into structured insights.
+
+**The loop:** `log raw interactions → reflect at end of day → extract patterns → improve tomorrow`
+
+**Output:** `memory/reflections/YYYY-MM-DD.md`
+
+```markdown
+## Reflection — 2026-02-27
+### 🔁 Patterns
+- User focused on planogram 3 days straight → likely preparing store revamp
+### ❌ Issues
+- Metis failed SQL 2x due to schema change → need schema sync job
+### 📋 Tomorrow
+- Prioritize planogram-related requests
+- Run schema check on raw.* tables
+### 💡 Systemic
+- Update AGENTS.md: add schema validation before SQL queries
+```
+
+Reflections are also embedded into the vector DB, so future queries can recall synthesized insights — not just raw logs.
+
+**Inspired by:** [a16z-infra/ai-town](https://github.com/a16z-infra/ai-town) — Stanford's *Generative Agents* research (perceive → remember → reflect → act loop).
+
+**Best Practice**: Load daily logs + MEMORY.md in main sessions, only daily logs in shared contexts (security). Semantic search handles the rest.
 ---
 
 ## 🔐 Security & Access Control

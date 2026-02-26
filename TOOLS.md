@@ -67,6 +67,40 @@ python3 -c "import json,base64; d=json.load(open('/tmp/resp.json')); open('/path
 
 **Browser automation:** `browser(action=open/snapshot/act, profile=openclaw)` — headless. Anti-bot sites gak load → pakai Firecrawl.
 
+## Agent Browser (Vercel Labs)
+
+**Binary:** `/Users/database-zuma/homebrew/bin/agent-browser` (v0.15.1) ✅ INSTALLED & TESTED
+**Repo:** https://github.com/vercel-labs/agent-browser (15.9k stars, Apache 2.0)
+**Tech:** Rust CLI + Node.js daemon | **Chromium:** pre-installed
+**Install date:** 2026-02-27 | **Status:** Production-ready
+
+### Keunggulan vs Playwright MCP
+- **93% less context** — ~400 chars output vs 4000+ chars Playwright
+- **95% first-try success rate** — fewer retry loops needed
+- **Speed:** Rust-based CLI = faster startup
+- **Light output:** Perfect for token-constrained scenarios (nanobot, quick automation)
+
+### Commands
+```bash
+agent-browser open <url>           # Open URL in browser
+agent-browser snapshot -i          # Take & return snapshot
+agent-browser click @ref           # Click element by AI ref
+agent-browser fill @ref "text"     # Fill input field
+agent-browser screenshot           # Full page screenshot
+agent-browser exec <js>            # Execute JavaScript
+agent-browser type "text"          # Type text
+agent-browser press <key>          # Press keyboard key
+agent-browser wait <selector>      # Wait for element
+```
+
+### Who Can Use?
+✅ Iris (Mac Mini) | ✅ All sub-agents (Metis, Daedalus, Hermes, Oracle) | ✅ All nanobots (Eos, Argus, Codex) | ✅ All CLIs (opencode, claude-code, kimi-cli)
+
+### When to Use
+- Prefer when: Light automation needed, token budget tight, 1st-try matters
+- Avoid when: Complex multi-step with heavy context (use Playwright MCP instead)
+- Best for: Quick snapshots, form fills, element clicks, lightweight scraping
+
 ## Output File Locations
 
 **PO:** `~/Desktop/DN PO ENTITAS/` — Format: `PO-[ENTITY]-[YYMMDD]-[NNN].xlsx` (ALL PO outputs here)
@@ -251,3 +285,41 @@ Installed (perlu config): `mcp-obsidian`, `figma-developer-mcp`, `shadcn-ui-mcp-
 **Sheet ID:** `1qInTrRUOUi2983vefS8doS5Pt3jC2yftQAG99yYlVOE` | **Sheet:** `PO`
 **Rule (Wayan 2026-02-18):** Kalau user tanya PO → CEK SHEET INI DULU sebelum query database.
 **Isi:** Rekap PO 2025 — per artikel, tier, status PO, jumlah PO/RCV.
+
+## 🧠 Vector Memory Search (NEW — 2026-02-27)
+
+**Semantic search over Iris memory + knowledge via pgvector.**
+
+| Component | Detail |
+|-----------|--------|
+| DB Table | `iris.memory_vectors` (PostgreSQL VPS) |
+| Embedding Model | Gemini `gemini-embedding-001` (3072 dims) |
+| Scripts | `scripts/embed_memory.py`, `scripts/search_memory.py` |
+| Data | 438 chunks from 18 memory files + 18 knowledge files |
+| Cost | ~$0.0001/day (basically free) |
+
+### Quick Reference
+```bash
+# Search memories semantically
+python3 scripts/search_memory.py "query here"
+python3 scripts/search_memory.py "query" --limit 10 --since 2026-02-20
+python3 scripts/search_memory.py --json "query"  # for programmatic use
+python3 scripts/search_memory.py "query" --source memory  # memory only
+python3 scripts/search_memory.py "query" --source knowledge  # knowledge only
+
+# Embed new/changed memories
+python3 scripts/embed_memory.py                  # incremental (new only)
+python3 scripts/embed_memory.py --include-knowledge  # + knowledge files
+python3 scripts/embed_memory.py --full             # re-embed everything
+python3 scripts/embed_memory.py --stats             # show stats
+```
+
+### When to Use
+- **Semantic search**: context retrieval, "kapan terakhir bahas X?", finding related memories
+- **Grep (fallback)**: exact keyword, error codes, phone numbers, file names
+- **After writing memory**: run `embed_memory.py` to index new entries
+
+### 🪞 Daily Reflection
+- Triggered at **22:00 WIB** (last heartbeat before quiet hours)
+- Output: `memory/reflections/YYYY-MM-DD.md`
+- See `AGENTS.md § Daily Reflection Protocol` for format

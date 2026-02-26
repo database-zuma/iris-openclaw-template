@@ -4,6 +4,10 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-27** | [Iris Vector Memory + Reflection Cycle — Implementation](ai-agents/2026-02-27_iris-vector-memory-implementation.md) | #vector-memory #pgvector #semantic-search #reflection-cycle #iris-upgrade #implementation | IMPLEMENTED: pgvector semantic search over 438 memory+knowledge chunks (Gemini embeddings), daily reflection cycle at 22:00, scripts in workspace/scripts/
+- **2026-02-27** | [AI Town — Autonomous Agent Town Simulator](ai-agents/2026-02-27_github_a16z-ai-town.md) | #multi-agent #autonomous-agents #simulation #memory-system #vector-search #a16z #generative-agents | Stanford-inspired multi-agent simulation: agents perceive→remember→reflect→act. Architecture patterns: vector memory retrieval, tick-based simulation, shared state, agent-to-agent communication. Reference for Iris memory/heartbeat evolution
+- **2026-02-27** | [Scrapling — Adaptive Web Scraping Framework](dev-tools/2026-02-27_scrapling.md) | #web-scraping #anti-bot #cloudflare-bypass #adaptive #concurrent #mcp-server | Adaptive scraping (survive redesigns), 784x faster than BeautifulSoup, anti-bot Cloudflare Turnstile bypass, concurrent crawling, MCP-ready for AI agents
+- **2026-02-27** | [Agent Browser — AI-Optimized Browser Automation](dev-tools/2026-02-27_agent-browser.md) | #browser-automation #ai-agents #rust #lightweight #token-efficiency #vercel-labs | Minimal context footprint (93% less vs Playwright), 95% first-try success, Rust CLI + Node.js daemon, purpose-built for AI agents
 - **2026-02-25** | [World Monitor — Real-Time Global Intelligence Dashboard](dev-tools/2026-02-25_github_worldmonitor.md) | #osint #intelligence-dashboard #tauri #typescript #local-ai #open-source | Real-time geopolitical/news/financial dashboard — 100+ feeds, 3D globe, local LLM, native desktop (Tauri), AGPL
 - **2026-02-25** | [Vibe Coding 2.0 — 18 Rules to Be the Top 1% Builder](dev-tools/2026-02-25_vibe-coding-2-rules.md) | #vibe-coding #mvp #ship-fast #nextjs #tailwind #shadcn #best-practices | 18 DO's & DON'Ts untuk build MVP cepat — inti: "tau apa yang TIDAK perlu dibangun", pakai tools yang ada, ship imperfect > polished never launched
 - **2026-02-22** | [KittenTTS — Lightweight Open-Source Text-to-Speech](ai-agents/20260222_kittentts_tts_model.md) | #tts #open-source #lightweight #voice-generation #privacy #apache-2.0 | Ultra-lightweight TTS model (15M params, <25MB), 8 voices, CPU-only, perfect for Zuma automation
@@ -23,6 +27,7 @@ Auto-generated index of saved links, articles, and threads.
 ## By Topic
 
 ### AI Agents
+- **[AI Town — Autonomous Agent Town Simulator](ai-agents/2026-02-27_github_a16z-ai-town.md)** — a16z starter kit (9.3k ⭐): generative agents with vector memory, perceive→reflect→plan→act loop, Convex real-time backend, agent-to-agent conversations. Reference architecture for Iris memory system and heartbeat evolution
 - [Arscontexta — Skill Graphs > SKILL.md](ai-agents/2026-02-21_twitter_arscontexta-skill-graphs.md) — Claude Code plugin: knowledge systems from conversation, Skill Graphs (wikilinked markdown networks), progressive disclosure navigation, 249 research claims, Three-Space architecture
 - [Docker Multi-Agent Architecture](ai-agents/2026-02-19_docker-multi-agent-architecture.md) — Supervisor/Worker pattern with Docker Compose, A2A protocol, isolation strategies (Docker/venv/process), cost comparison Kimi K2.5 vs Gemini Flash, Mac mini M4 resource planning, implementation roadmap for OpenClaw
 - [OpenClaw Agent "Larry" - TikTok Viral Marketing](ai-agents/2026-02-14_twitter_openclaw-larry-tiktok.md) — AI agent automation for TikTok slideshows, 500K+ views in 5 days
@@ -35,6 +40,8 @@ Auto-generated index of saved links, articles, and threads.
 - [Dieter Rams — Braun Design & Apple Influence](design/2026-02-14_research_dieter-rams-braun.md) — Industrial design philosophy, 10 Principles of Good Design, influence on Apple/Jonathan Ive
 
 ### Dev Tools
+- **[Scrapling — Adaptive Web Scraping Framework](dev-tools/2026-02-27_scrapling.md)** — 784x faster than BeautifulSoup, adaptive element relocation (survive redesigns), StealthyFetcher (Cloudflare Turnstile + TLS bypass), concurrent crawling (1000s URLs), MCP-ready for AI agents, BSD-3, 14.1k stars
+- **[Agent Browser — AI-Optimized Browser Automation](dev-tools/2026-02-27_agent-browser.md)** — 93% less context vs Playwright MCP, 95% first-try success, Rust CLI + Node.js daemon, installed v0.15.1, perfect for token-constrained agent runs
 - **[World Monitor — Real-Time Global Intelligence Dashboard](dev-tools/2026-02-25_github_worldmonitor.md)** — OSINT-grade real-time dashboard (geopolitics/tech/finance), 100+ feeds, 3D WebGL globe (deck.gl), 35+ data layers, local LLM (Ollama), native Tauri desktop app, proto-first API (17 typed services), AGPL, free
 - **[Vibe Coding 2.0 — 18 Rules](dev-tools/2026-02-25_vibe-coding-2-rules.md)** — Stack: Next.js+Tailwind+shadcn+tRPC+Prisma+Clerk+Stripe+Sentry+Vercel. Core: tau apa yang TIDAK perlu dibangun. 18 DO's + 16 DON'Ts untuk MVP cepat
 - [KittenTTS — Lightweight Open-Source TTS](ai-agents/20260222_kittentts_tts_model.md) — Ultra-lightweight TTS (15M params, <25MB nano), 8 voices, CPU-only, Apache-2.0, use cases: WhatsApp voice messages, product VO, customer service automation
@@ -63,4 +70,4 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-25 (World Monitor + Vibe Coding 2.0 added)
+**Last updated:** 2026-02-27 (AI Town + Agent Browser + Scrapling added)
