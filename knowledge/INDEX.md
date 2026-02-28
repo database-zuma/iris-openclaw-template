@@ -4,6 +4,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-28** | [prompts.chat — AI Prompt Library Analysis for Iris](ai-agents/2026-02-28_promptschat-analysis.md) | #prompts #iris-upgrade #anti-hallucination #communication #skills | 1,341 community prompts analyzed (145 featured). Top patterns: confidence tagging ([Accurate]/[iSeller]/[Estimated]/[Manual]), anti-hallucination guardrails, strip AI voice (banned word list + burstiness), CLAUDE.md framework for SKILL.md audit, tiered output (QUICK/STANDARD/DETAIL). 5 new skill recs + system prompt changes ready to apply.
+- **2026-02-28** | [Claude Supermemory — Persistent Memory Plugin for Claude Code](ai-agents/2026-02-28_claude-supermemory.md) | #memory #claude-code #persistent-memory #saas #supermemory #vector-search #auto-capture #paid-service | Hosted SaaS memory layer untuk Claude Code sessions. Auto-capture conversations, signal extraction (keyword-based), team memory via container tags. $19/mo Pro required. NOT untuk Iris (beda ecosystem). Tapi auto-capture + signal extraction concepts bisa di-adopt ke pgvector system kita. 2.2k⭐.
 - **2026-02-28** | [AgentSkillOS — Skill Discovery & Composition OS for Agents](ai-agents/2026-02-28_agentskillos-analysis.md) | #openclaw #skills #agent-skills #skill-tree #dag #iris-upgrade #skill-gap | Research paper + framework: discover & chain 90,000+ community skills via Skill Tree (LLM-navigated hierarchy, better than pure semantic search) + DAG orchestration. 194⭐. Gap analysis: Iris butuh markitdown, xlsx, statistical-analysis, data-visualization. SKILL.md format validated. Skill seeds bisa di-fetch langsung dari GitHub.
 - **2026-02-28** | [OpenClaw Studio — Web Dashboard for OpenClaw Gateway](dev-tools/2026-02-28_openclaw-studio.md) | #openclaw #dashboard #web-ui #agent-management #next-js #gateway #chat #approvals #cron #high-relevance | Web GUI untuk manage OpenClaw agents. Connect ke gateway via WS, chat langsung dari browser, manage exec approvals, edit SOUL.md/AGENTS.md, configure cron. Next.js 16 + shadcn/ui. One command install: `npx -y openclaw-studio@latest`. 660⭐, actively maintained (668 commits). HIGH RELEVANCE untuk setup kita.
 - **2026-02-28** | [Project AIRI — Self-Hosted AI Companion & VTuber](ai-agents/2026-02-28_project-airi.md) | #ai-companion #vtuber #open-source #self-hosted #voice-chat #xsai #multi-agent #moeru-ai | Open-source Neuro-sama: self-hosted AI companion with realtime voice, Live2D/VRM avatars, Minecraft/Factorio gameplay, 30+ LLM providers via xsai (<1KB SDK). Web-first (WebGPU/WASM) + Tauri desktop. Reference for voice + multi-agent patterns.
@@ -37,7 +39,9 @@ Auto-generated index of saved links, articles, and threads.
 ## By Topic
 
 ### AI Agents
+- **[prompts.chat — AI Prompt Library Analysis for Iris](ai-agents/2026-02-28_promptschat-analysis.md)** — 1,341 community prompts analyzed. 5 actionable patterns: confidence tagging, anti-hallucination guardrails, strip AI voice (banned words + burstiness), CLAUDE.md framework for SKILL.md audit, tiered output (QUICK/STANDARD/DETAIL). 5 new skill recommendations. System prompt changes ready to copy-paste.
 - **[AgentSkillOS — Skill Discovery & Composition OS for Agents](ai-agents/2026-02-28_agentskillos-analysis.md)** — Research paper + framework (Jan 2026, 194⭐): 90,000+ community skills via skills.sh marketplace, Skill Tree navigation (LLM-navigated hierarchy > pure semantic search), DAG orchestration. SKILL.md format validated. Iris gap analysis: 🔴 HIGH — markitdown + xlsx + statistical-analysis + data-visualization. Batch 1 quick wins documented.
+- **[Claude Supermemory — Persistent Memory for Claude Code](ai-agents/2026-02-28_claude-supermemory.md)** — Hosted SaaS memory (2.2k ⭐): auto-capture sessions, signal extraction (keyword triggers), team sharing via container tags. $19/mo min. NOT for Iris (Claude Code plugin only). Ideas to steal: signal extraction + auto-capture for our pgvector.
 - **[Project AIRI — Self-Hosted AI Companion & VTuber](ai-agents/2026-02-28_project-airi.md)** — Open-source Neuro-sama (2k+ ⭐): realtime voice chat, Live2D/VRM avatars, Minecraft/Factorio gameplay, 30+ LLM providers via xsai. Web-first (WebGPU/WASM) + Tauri. Sub-projects: xsai (<1KB AI SDK), unspeech (universal ASR/TTS proxy). Reference for voice-enabled agents.
 - **[AI Town — Autonomous Agent Town Simulator](ai-agents/2026-02-27_github_a16z-ai-town.md)** — a16z starter kit (9.3k ⭐): generative agents with vector memory, perceive→reflect→plan→act loop, Convex real-time backend, agent-to-agent conversations. Reference architecture for Iris memory system and heartbeat evolution
 - [Arscontexta — Skill Graphs > SKILL.md](ai-agents/2026-02-21_twitter_arscontexta-skill-graphs.md) — Claude Code plugin: knowledge systems from conversation, Skill Graphs (wikilinked markdown networks), progressive disclosure navigation, 249 research claims, Three-Space architecture
@@ -90,6 +94,6 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-28 (AgentSkillOS analysis added — skill gap assessment for Iris)
+**Last updated:** 2026-02-28 (Claude Supermemory added — persistent memory analysis + comparison vs our pgvector)
 
 - `dev-tools/2026-02-27_accurate-api-troubleshooting.md` — Accurate API 401/500 debug flow, token regenerate steps, VPS run guide
