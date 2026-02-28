@@ -1,7 +1,7 @@
 # SKILLS_INDEX.md — Skill Routing Table for Iris
 
 _Baca file ini di setiap session. Gunakan untuk routing user request ke skill + agent yang tepat._
-_Last updated: 2026-02-27_
+_Last updated: 2026-02-28_
 
 ---
 
@@ -129,6 +129,13 @@ Load bersama skill lain untuk upgrade output quality. Bukan standalone — dipak
 | `iris-openclaw-strategic-decisions` | "worth it gak", "lebih baik mana", "should we", keputusan strategis | `zuma-business-skills/general/iris-openclaw-strategic-decisions/SKILL.md` |
 | `iris-openclaw-product-photo` | "foto produk", "product photo brief", "prompt foto", "listing image" | `zuma-business-skills/general/iris-openclaw-product-photo/SKILL.md` |
 
+---
+
+## 💻 Coding Reference Skills
+
+| Skill Name | Trigger Keywords | Delegate To | Skill File Path |
+|-----------|------------------|-------------|-----------------|
+| `coding-reference-hub` | "implementasi dari scratch", "build your own", "bagaimana X bekerja internally", "contoh implementasi", "reference kode low-level" | Daedalus / Codex | `zuma-business-skills/general/coding-reference-hub/SKILL.md` |
 ## 🔧 Operations & Finance Skills
 
 | Skill Name | Trigger Keywords | Delegate To | Skill File Path |
@@ -181,6 +188,7 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 │   ├── iris-openclaw-data-analyst-guided/SKILL.md  ← NEW
 │   ├── iris-openclaw-strategic-decisions/SKILL.md  ← NEW
 │   ├── iris-openclaw-product-photo/SKILL.md  ← NEW
+│   ├── coding-reference-hub/SKILL.md          ← NEW
 │   └── zuma-ppt-design/SKILL.md
 ├── ops/
 │   ├── dn-to-po/SKILL.md
