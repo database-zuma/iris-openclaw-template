@@ -320,8 +320,31 @@ Skills sekarang sudah auto-discovered oleh OpenClaw (`workspace/skills/` → sym
   - **Format:** Single .html file, self-contained, Vercel-ready
   - **Style:** Zuma brand (teal #002A3A, green #00E273), responsive + print-friendly
   - **Reference:** zuma-business-skills/ (existing deck templates)
-  - **Output:** Upload to GDrive → share link
+  - **Output:** Deploy to Vercel → return URL
+
+  **🚨 MANDATORY PRE-COPY (Wayan 2026-02-28):**
+  Eos (Gemini) KONSISTEN GAGAL membuat HTML dari scratch — selalu menghasilkan file pendek (60-120 baris) dan skip slides.
+  **Solusi: Iris WAJIB copy TEMPLATE.html ke output path SEBELUM spawn Eos.**
   
+  ```bash
+  # STEP 1: Copy template SEBELUM spawn Eos
+  cp /Users/database-zuma/.openclaw/workspace/zuma-business-skills/general/zuma-ppt-design/TEMPLATE.html \
+     /Users/database-zuma/.openclaw/workspace-eos-nanobot/outbox/{nama-deck}.html
+  
+  # STEP 2: Spawn Eos dengan instruksi EDIT (bukan CREATE)
+  NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "
+  EDIT file yang sudah ada di outbox/{nama-deck}.html — file ini sudah berisi TEMPLATE.html (567 baris, CSS lengkap, 9 slide patterns).
+  JANGAN buat file baru. JANGAN tulis dari scratch. EDIT file yang ada:
+  1. Baca data dari {handoff-json-path}
+  2. Baca 3 skill: eos-visual-skill, zuma-ppt-design, data-visualization
+  3. Replace placeholder content di setiap slide dengan data aktual
+  4. Tambah/kurangi slide sesuai kebutuhan — COPY PASTE pattern dari slide yang ada
+  5. Deploy ke Vercel
+  "
+  ```
+  
+  **Tanpa pre-copy = Eos PASTI buat dari scratch = output jelek. ZERO TOLERANCE.**
+
 **👁️ Argus** — Data/SQL/research/GitHub/reports (Sonnet 4.6)
 
 **📖 Codex** — Web apps/full-stack code/automation (kimi-coding/k2p5)

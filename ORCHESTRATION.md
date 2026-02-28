@@ -515,9 +515,15 @@ Critical: GROUP BY `kodemix` | JOIN `portal.store` for location | Same-period Yo
 2. Acknowledge: "Siap, aku buatkan ya. Estimasi ~10 menit."
 3. Call Argus: gather data → save handoff JSON to Argus outbox (background: true)
 4. **Write to `heartbeat/{phone}.md`** ← MANDATORY
-5. On heartbeat when Argus done → call Eos with handoff path (background: true)
-6. **Update `heartbeat/{phone}.md`** with Eos task (KEEP origin_phone sama!)
-7. On heartbeat when Eos done → deliver Vercel URL to **ORIGIN phone** → clear entry
+5. **PRE-COPY TEMPLATE** (MANDATORY sebelum Eos):
+   ```bash
+   cp ~/.openclaw/workspace/zuma-business-skills/general/zuma-ppt-design/TEMPLATE.html \
+     ~/.openclaw/workspace-eos-nanobot/outbox/{nama-deck}.html
+   ```
+   File HARUS sudah ada di outbox SEBELUM spawn Eos. Tanpa ini, Eos buat dari scratch → output jelek (60-120 baris).
+6. On heartbeat when Argus done → call Eos dengan instruksi **EDIT file yang sudah ada** (background: true). Eos DILARANG membuat file baru — harus edit TEMPLATE yang sudah di-copy.
+7. **Update `heartbeat/{phone}.md`** with Eos task (KEEP origin_phone sama!)
+8. On heartbeat when Eos done → **VALIDASI: output file HARUS >200 baris** (template alone = 567 baris). Kalau <200 baris = Eos gagal, retry dengan instruksi lebih tegas → deliver Vercel URL to **ORIGIN phone** → clear entry
 
 ### "RO Request"
 1. Tag sender (Step 0)
