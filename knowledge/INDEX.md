@@ -4,6 +4,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-28** | [Clawbox — OpenClaw-Ready macOS VMs](dev-tools/2026-02-28_clawbox-macos-vm.md) | #openclaw #macos #vm #virtualization #tart #mutagen | Spin up isolated macOS VMs for OpenClaw via 2 commands. Standard mode (latest release) + Developer mode (bidirectional Mutagen sync). Max 2 VMs/host (Apple EULA). Playwright, Tailscale, signal-cli optional. Low priority for Iris (already on VPS).
+- **2026-02-28** | [Awesome OpenClaw Use Cases — Community Collection](dev-tools/2026-02-28_awesome-openclaw-usecases.md) | #openclaw #use-cases #multi-agent #automation #community #iris-inspiration | 11k⭐ repo, 30 verified use cases. Key patterns: STATE.yaml subagent coordination, cron heartbeat as the real product, multi-agent team via Telegram, self-healing server, customer service 80% auto-handled. Security: TruffleHog pre-push + local Gitea staging (AI WILL hardcode secrets).
 - **2026-02-28** | [OpenClaw Cost Optimization Playbook](dev-tools/2026-02-28_openclaw-cost-optimization-playbook.md) | #openclaw #cost-optimization #model-tiering #iris #llm-ops #qmd #ollama #openrouter | 65-70% cost reduction. 7 tactics: model tiering, QMD local search, session memory fix (50kb→8kb), thinking token trap, Ollama for repetitive tasks, Exa free search, OpenRouter auto-routing. Session memory fix URGENT for Iris (990k token issue).
 - **2026-02-28** | [Qwen3.5-35B-A3B — Local Install Guide (Mac Mini M4 16GB)](dev-tools/2026-02-28_qwen35-35b-a3b-local-install.md) | #local-llm #qwen3 #gguf #lm-studio #ollama #mac-mini #moe | 35B total / 3B active params, released Feb 24 2026. Unsloth GGUFs refreshed Feb 27. Recommended for 16GB: UD-Q2_K_XL (12.9GB). LM Studio & Ollama install commands included.
 - **2026-02-27** | [Public APIs — Curated for Zuma & Iris (Full Analysis)](dev-tools/2026-02-27_public-apis-zuma-relevant.md) | #public-apis #indonesia #payment-gateway #nlp #google-maps #email #notifications #finance | 268-line analysis: 60+ APIs filtered for Zuma retail ops & Iris AI. Tier-1: Google Maps, Sendinblue, NewsAPI, NLP Cloud (Indonesian support), Xendit/Midtrans. Critical: Sendgrid free tier ended Jul 2025, MercadoPago no IDR support.
@@ -45,6 +47,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ### Dev Tools
 - **[OpenClaw Cost Optimization Playbook](dev-tools/2026-02-28_openclaw-cost-optimization-playbook.md)** — 65-70% cost cut. Model tiering (Opus→Sonnet→Flash), QMD local search (90% token reduction), session memory fix (50kb→8kb), Ollama for free repetitive tasks, heartbeats→Flash. Session fix URGENT for Iris.
+- **[Awesome OpenClaw Use Cases](dev-tools/2026-02-28_awesome-openclaw-usecases.md)** — 30 real use cases (11k⭐). Deep dives: Self-healing server (cron+SSH+kubectl), STATE.yaml subagent pattern, multi-agent Telegram team, multi-channel customer service (80% auto), Second Brain. **Security:** AI hardcodes secrets — use TruffleHog + local Gitea.
+- **[Clawbox — OpenClaw macOS VMs](dev-tools/2026-02-28_clawbox-macos-vm.md)** — 2-command macOS VM setup for OpenClaw (brew install + clawbox up). Standard/Developer modes, Mutagen bidirectional sync, Playwright/Tailscale/signal-cli optional. Max 2 VMs/Mac host. Low priority for Iris (on VPS).
 - **[Qwen3.5-35B-A3B — Local Install Guide](dev-tools/2026-02-28_qwen35-35b-a3b-local-install.md)** — Released Feb 24 2026. 35B total/3B active MoE. Unsloth GGUFs (refreshed Feb 27). Fits 16GB: UD-Q2_K_XL (12.9GB) recommended. Vision+video+tool use. Thinking mode default ON.
 - **[Scrapling — Adaptive Web Scraping Framework](dev-tools/2026-02-27_scrapling.md)** — 784x faster than BeautifulSoup, adaptive element relocation (survive redesigns), StealthyFetcher (Cloudflare Turnstile + TLS bypass), concurrent crawling (1000s URLs), MCP-ready for AI agents, BSD-3, 14.1k stars
 - **[Public APIs — Curated for Zuma & Iris](dev-tools/2026-02-27_public-apis-zuma-relevant.md)** — 60+ APIs filtered for Zuma retail ops & Iris AI. Tier-1: Google Maps, Sendinblue, NewsAPI, NLP Cloud (Indonesian ✅), Xendit/Midtrans. ⚠️ Sendgrid free tier ended Jul 2025. ⚠️ MercadoPago no IDR.
@@ -78,6 +82,6 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-27 (Public APIs analysis + verification summary added; Scrapling StealthyFetcher confirmed working)
+**Last updated:** 2026-02-28 (Awesome OpenClaw Use Cases + Clawbox VM added)
 
 - `dev-tools/2026-02-27_accurate-api-troubleshooting.md` — Accurate API 401/500 debug flow, token regenerate steps, VPS run guide
