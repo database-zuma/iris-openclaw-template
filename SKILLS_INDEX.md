@@ -1,7 +1,7 @@
 # SKILLS_INDEX.md — Skill Routing Table for Iris
 
 _Baca file ini di setiap session. Gunakan untuk routing user request ke skill + agent yang tepat._
-_Last updated: 2026-02-25_
+_Last updated: 2026-02-27_
 
 ---
 
@@ -82,6 +82,14 @@ User bilang "bikin RO request" →
 | `zuma-branch` | "branch", "cabang", "toko mana", "area", "region" | (dependency — load bersama skill lain) | `zuma-business-skills/ops/zuma-branch/SKILL.md` |
 | `zuma-business-metrics` | "KPI", "target", "metrics", "KRA", "performance" | Argus | `zuma-business-skills/general/zuma-business-metrics/SKILL.md` |
 | `zuma-token-usage-report` | "token usage", "cost report", "LLM spending" | (auto — cross-cutting) | `zuma-business-skills/ops/zuma-token-usage-report/SKILL.md` |
+| `statistical-analysis` | "analisis statistik", "rata-rata", "std dev", "outlier", "tren signifikan", "korelasi", "distribusi", "perbandingan periode" | Argus / Metis | `zuma-business-skills/general/statistical-analysis/SKILL.md` |
+| `data-visualization` | "grafik", "chart", "plot", "visualisasi", "line chart", "bar chart", "heatmap", "tren visual" | Argus | `zuma-business-skills/general/data-visualization/SKILL.md` |
+| `zuma-database-assistant-skill` | "schema", "ETL", "view", "table issue", "DB maintenance" | Metis | `zuma-business-skills/ops/zuma-database-assistant-skill/SKILL.md` |
+| `zuma-sku-context` | "tier", "kode mix", "assortment", "product categorization" | (dependency — load bersama skill lain) | `zuma-business-skills/ops/zuma-sku-context/SKILL.md` |
+| `zuma-warehouse-and-stocks` | "gudang", "warehouse", "stok WH", "DDD", "LJBB" | (dependency — load bersama skill lain) | `zuma-business-skills/ops/zuma-warehouse-and-stocks/SKILL.md` |
+| `zuma-branch` | "branch", "cabang", "toko mana", "area", "region" | (dependency — load bersama skill lain) | `zuma-business-skills/ops/zuma-branch/SKILL.md` |
+| `zuma-business-metrics` | "KPI", "target", "metrics", "KRA", "performance" | Argus | `zuma-business-skills/general/zuma-business-metrics/SKILL.md` |
+| `zuma-token-usage-report` | "token usage", "cost report", "LLM spending" | (auto — cross-cutting) | `zuma-business-skills/ops/zuma-token-usage-report/SKILL.md` |
 
 ---
 
@@ -104,6 +112,8 @@ User bilang "bikin RO request" →
 | `zuma-image-gen-skill` | "generate image", "bikin gambar", "visual asset" | Daedalus (Gemini) | `zuma-business-skills/general/zuma-image-gen-skill/SKILL.md` |
 | `data-storytelling-skill` | "storytelling", "narrative", "insight report", "BCG style" | Argus | `zuma-business-skills/general/data-storytelling-skill/SKILL.md` |
 | `zuma-company-context` | "brand", "Zuma identity", "brand guidelines" | (dependency — load bersama visual skills) | `zuma-business-skills/general/zuma-company-context/SKILL.md` |
+| `xlsx-skill` | "output excel", "file xlsx", "bikin excel", "laporan excel", "template excel", "download xlsx" | Argus / Daedalus | `zuma-business-skills/general/xlsx-skill/SKILL.md` |
+| `zuma-company-context` | "brand", "Zuma identity", "brand guidelines" | (dependency — load bersama visual skills) | `zuma-business-skills/general/zuma-company-context/SKILL.md` |
 
 ---
 
@@ -113,6 +123,7 @@ User bilang "bikin RO request" →
 |-----------|------------------|-------------|-----------------|
 | `dn-to-po` | "delivery note", "DN", "convert DN", "invoice", "PO" | Daedalus | `zuma-business-skills/ops/dn-to-po/SKILL.md` |
 | `fp-rekon-stock` | "faktur pajak", "FP rekon", "register pembelian" | Daedalus | `zuma-business-skills/skills/finance/fp-rekon-stock/SKILL.md` |
+| `coretax-faktur-generator` | "coretax", "faktur pajak keluaran", "generate faktur", "upload DJP", "register penjualan" | Daedalus | `zuma-business-skills/skills/finance/coretax-faktur-generator/SKILL.md` |
 | `deploy-to-live` | "deploy", "push to vercel", "push to github" | Daedalus / Codex | `zuma-business-skills/general/deploy-to-live/SKILL.md` |
 
 ---
@@ -132,6 +143,10 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 | `eos-visual-skill` | `zuma-company-context` |
 | `dn-to-po` | (none) |
 | `fp-rekon-stock` | (none) |
+| `coretax-faktur-generator` | (none) |
+| `statistical-analysis` | `zuma-data-analyst-skill` (untuk DB query) |
+| `data-visualization` | `statistical-analysis` (opsional, kalau butuh stats dulu) |
+| `xlsx-skill` | (none — standalone output tool) |
 
 ---
 
@@ -146,6 +161,9 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 │   ├── zuma-business-metrics/SKILL.md
 │   ├── zuma-company-context/SKILL.md
 │   ├── zuma-image-gen-skill/SKILL.md
+│   ├── data-visualization/SKILL.md       ← NEW
+│   ├── statistical-analysis/SKILL.md      ← NEW
+│   ├── xlsx-skill/SKILL.md                ← NEW
 │   └── zuma-ppt-design/SKILL.md
 ├── ops/
 │   ├── dn-to-po/SKILL.md
@@ -169,9 +187,11 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 │   └── zuma-warehouse-and-stocks/SKILL.md
 └── skills/
     └── finance/
+        ├── coretax-faktur-generator/SKILL.md
         └── fp-rekon-stock/SKILL.md
 ```
 
 ---
 
 _Catatan: File ini harus di-update setiap ada skill baru ditambahkan ke `zuma-business-skills/`._
+_Last updated: 2026-02-28 — tambah xlsx-skill, statistical-analysis, data-visualization_
