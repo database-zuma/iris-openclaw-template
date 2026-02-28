@@ -1,0 +1,222 @@
+{
+  "deck": {
+    "title": "Baby Category Performance",
+    "subtitle_green": "Store Only — Nasional",
+    "description": "Analisis komprehensif performa seluruh artikel Baby di semua tier, mencakup 62 artikel di 50 toko retail aktif. Periode analisis: Januari 2025 hingga Februari 2026.",
+    "department": "Sales Analytics",
+    "date": "28 Feb 2026",
+    "period": "Jan 2025 – Feb 2026",
+    "source": "Portal Analytics"
+  },
+  "slides": [
+    {
+      "type": "cover",
+      "title": "Baby Category Performance",
+      "subtitle_green": "Store Only — Nasional",
+      "description": "Analisis komprehensif performa seluruh artikel Baby di semua tier, mencakup 62 artikel di 50 toko retail aktif. Periode analisis: Januari 2025 hingga Februari 2026.",
+      "kpis": [
+        { "value": "43.301", "label": "Total Pairs Sold" },
+        { "value": "Rp 6,18M", "label": "Total Revenue" },
+        { "value": "62", "label": "Active Articles" },
+        { "value": "50", "label": "Active Stores" }
+      ]
+    },
+    {
+      "type": "exec_summary",
+      "title": "Executive Summary",
+      "kpis": [
+        { "label": "Total Volume", "value": "43.301 prs" },
+        { "label": "Revenue", "value": "Rp 6,18 M" },
+        { "label": "ASP", "value": "Rp 142.727" },
+        { "label": "Avg/Month", "value": "3.093 prs" }
+      ],
+      "findings": [
+        { "bold": "VELCRO dominan:", "text": "10.356 prs (23,9% dari total volume), revenue tertinggi Rp 1,86M dengan ASP Rp 179.774 — menjadi seri premium utama." },
+        { "bold": "Bali jadi mesin utama:", "text": "29 toko di Bali menyumbang 48,3% volume nasional (20.921 prs) dan 48,7% revenue (Rp 3,01M)." },
+        { "bold": "Desember peak season:", "text": "Volume Desember 2025 mencapai 5.198 prs (tertinggi) namun ASP turun, mengindikasikan pengaruh promo akhir tahun." },
+        { "bold": "Tier 1 & 2 backbone:", "text": "Tier 1 (17.465 prs) + Tier 2 (16.031 prs) menguasai 77,4% total volume, menjadi tulang punggung kategori Baby." }
+      ],
+      "so_what": "Kategori Baby sangat bergantung pada Bali + seri VELCRO/CLASSIC. Diversifikasi wilayah dan tier atas (T3–T4) harus diperkuat untuk pertumbuhan berkelanjutan."
+    },
+    {
+      "type": "chart_trend",
+      "title": "Tren Volume & Revenue Bulanan",
+      "labels": ["Jan'25","Feb'25","Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],
+      "datasets": [
+        {
+          "label": "Volume (prs)",
+          "data": [2443, 1966, 4181, 3576, 2756, 2581, 2986, 2864, 2990, 2883, 3872, 5198, 2720, 2285],
+          "color": "#002A3A",
+          "axis": "y"
+        },
+        {
+          "label": "Revenue (Jt)",
+          "data": [345, 272, 594, 506, 389, 368, 443, 429, 449, 431, 566, 588, 435, 365],
+          "color": "#00E273",
+          "axis": "y1"
+        }
+      ],
+      "so_what": "Pola musiman terlihat jelas: Q1 dan Q4 konsisten kuat (Mar & Dec peaks). Feb selalu terendah — perlu strategi early-year activation untuk mengangkat low season."
+    },
+    {
+      "type": "chart_ranking",
+      "title": "Top 10 Seri Baby by Volume",
+      "labels": ["VELCRO","CLASSIC","WBB","MICKEY & FRIENDS","DISNEY","TOY STORY","STITCH","COCOMELON","BATMAN","PRINCESS"],
+      "data": [10356, 10021, 5646, 4857, 4222, 2754, 2523, 2386, 2380, 1976],
+      "data_label": "Volume (prs)",
+      "bar_color": "#002A3A",
+      "so_what": "VELCRO dan CLASSIC menguasai 47% total volume. Kolaborasi Disney (Mickey, Disney, Toy Story, Stitch, Princess) secara kolektif menyumbang 36% — collab strategy works."
+    },
+    {
+      "type": "table",
+      "title": "Detail Performa per Seri",
+      "headers": ["Seri", "Artikel", "Volume", "Revenue", "ASP"],
+      "rows": [
+        ["VELCRO", "6", "10.356", "Rp 1,86M", "Rp 179.774"],
+        ["CLASSIC", "11", "10.021", "Rp 1,06M", "Rp 106.023"],
+        ["WBB", "5", "5.646", "Rp 741Jt", "Rp 131.292"],
+        ["MICKEY & FRIENDS", "4", "4.857", "Rp 635Jt", "Rp 130.649"],
+        ["DISNEY", "4", "4.222", "Rp 562Jt", "Rp 133.227"],
+        ["TOY STORY", "3", "2.754", "Rp 370Jt", "Rp 134.246"],
+        ["STITCH", "2", "2.523", "Rp 561Jt", "Rp 222.157"],
+        ["COCOMELON", "3", "2.386", "Rp 317Jt", "Rp 132.821"],
+        ["BATMAN", "2", "2.380", "Rp 321Jt", "Rp 134.856"],
+        ["PRINCESS", "4", "1.976", "Rp 258Jt", "Rp 130.706"],
+        ["POOH", "2", "1.746", "Rp 215Jt", "Rp 123.140"],
+        ["MICKEY", "3", "1.133", "Rp 149Jt", "Rp 131.225"],
+        ["LOTSO", "1", "745", "Rp 100Jt", "Rp 134.228"],
+        ["MINNIE", "2", "695", "Rp 91Jt", "Rp 130.791"],
+        ["MILTON", "4", "441", "Rp 28Jt", "Rp 63.435"],
+        ["HELLOKITTY", "2", "201", "Rp 27Jt", "Rp 134.577"],
+        ["OXFORD", "1", "187", "Rp 55Jt", "Rp 294.265"],
+        ["CLOG", "3", "10", "Rp 425Rb", "Rp 42.500"]
+      ],
+      "footnote": "Data: Jan 2025 – Feb 2026 | Store Only (RETAIL) | Excl. Online & Intercompany",
+      "so_what": "STITCH menonjol dengan ASP tertinggi (Rp 222K) di hanya 2 artikel — potensi premium expansion. CLOG (10 prs) dan T0 articles perlu evaluasi discontinue."
+    },
+    {
+      "type": "breakdown",
+      "title": "Distribusi per Branch",
+      "columns": [
+        {
+          "icon": "🏝️",
+          "title": "Bali — 29 Toko",
+          "items": [
+            { "name": "Volume", "value": "20.921 prs" },
+            { "name": "Revenue", "value": "Rp 3,01M" },
+            { "name": "ASP", "value": "Rp 143.855" },
+            { "name": "Share", "value": "48,3%" }
+          ]
+        },
+        {
+          "icon": "🏭",
+          "title": "Jatim — 12 Toko",
+          "items": [
+            { "name": "Volume", "value": "13.557 prs" },
+            { "name": "Revenue", "value": "Rp 1,84M" },
+            { "name": "ASP", "value": "Rp 135.574" },
+            { "name": "Share", "value": "31,3%" }
+          ]
+        },
+        {
+          "icon": "🏙️",
+          "title": "Jakarta — 4 Toko",
+          "items": [
+            { "name": "Volume", "value": "4.162 prs" },
+            { "name": "Revenue", "value": "Rp 658Jt" },
+            { "name": "ASP", "value": "Rp 158.184" },
+            { "name": "Share", "value": "9,6%" }
+          ]
+        },
+        {
+          "icon": "🌊",
+          "title": "Lainnya — 4 Toko",
+          "items": [
+            { "name": "Lombok", "value": "2.313 prs" },
+            { "name": "Sulawesi", "value": "1.522 prs" },
+            { "name": "Sumatra", "value": "541 prs" },
+            { "name": "Batam", "value": "285 prs" }
+          ]
+        }
+      ],
+      "so_what": "Bali + Jatim = 79,6% total volume. Jakarta punya ASP tertinggi (Rp 158K) tapi hanya 4 toko — peluang ekspansi toko baru di area high-ASP."
+    },
+    {
+      "type": "insights",
+      "title": "Strategic Insights",
+      "cards": [
+        {
+          "icon": "📊",
+          "title": "Tier Distribution",
+          "bullets": [
+            "T1 + T2 = 77,4% volume (33.496 prs), backbone kategori",
+            "T3 (11.687 prs) masih potensial, perlu push lebih agresif",
+            "T4 (6.220 prs, 15 artikel) — volume per artikel rendah, review assortment",
+            "T8 premium (638 prs, ASP Rp 294K) — niche but healthy margin"
+          ]
+        },
+        {
+          "icon": "🏆",
+          "title": "Product Winners",
+          "bullets": [
+            "BABY CLASSIC 4 = top seller (2.622 prs), CLASSIC seri terlaris",
+            "VELCRO BRICKS series (4 SKU) total 7.710 prs — best-in-class",
+            "STITCH premium play: 2 artikel, ASP Rp 222K, clear margin leader",
+            "Disney collabs menyumbang 36% total — partnership strategy proven"
+          ]
+        },
+        {
+          "icon": "📈",
+          "title": "Seasonal Patterns",
+          "bullets": [
+            "Peak: Dec (5.198) dan Mar (4.181) — school holiday & Lebaran effect",
+            "Low: Feb (1.966) dan Jun (2.581) — perlu activation program",
+            "Q4 growth Nov→Dec (+34%) paling agresif, manfaatkan dengan promo timing",
+            "Jan'26 vs Jan'25 +11,3% YoY — tren positif masih terjaga"
+          ]
+        },
+        {
+          "icon": "🗺️",
+          "title": "Geographic Opportunities",
+          "bullets": [
+            "Jakarta ASP tertinggi (Rp 158K) vs rata-rata Rp 143K — premium market",
+            "Sumatra + Batam hanya 826 prs combined — under-penetrated",
+            "Bali per-store avg: 721 prs, Jatim: 1.130 prs — Jatim lebih produktif per toko",
+            "Lombok (2.313 prs dari 2 toko) = hidden champion, 1.157 prs/toko"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "closing",
+      "title": "Prioritas Aksi",
+      "title_green": "Q2 2026",
+      "section_label": "Rekomendasi & Tindak Lanjut",
+      "footer_topic": "Baby Category — Store Only",
+      "footer_type": "National Performance Review",
+      "priorities": [
+        {
+          "level": "1",
+          "title": "Perkuat VELCRO & CLASSIC Assortment",
+          "description": "Dua seri ini menguasai 47% volume. Tambah colorway/variant baru untuk VELCRO (ASP premium Rp 180K) dan review CLASSIC sizing (11 artikel tapi ASP hanya Rp 106K — potensi upsize).",
+          "target": "Q2 2026 — New variant launch",
+          "color": "green"
+        },
+        {
+          "level": "2",
+          "title": "Expand High-ASP Territories",
+          "description": "Jakarta (Rp 158K ASP) dan Lombok (1.157 prs/toko) menunjukkan market appetite kuat. Prioritaskan opening toko baru atau pop-up di area ini untuk mengurangi ketergantungan pada Bali.",
+          "target": "Q2–Q3 2026 — Store expansion plan",
+          "color": "amber"
+        },
+        {
+          "level": "3",
+          "title": "Rationalize Tail SKUs",
+          "description": "CLOG (10 prs), T0 articles (20 prs), dan MILTON (441 prs, ASP Rp 63K) membebani inventory tanpa kontribusi signifikan. Evaluasi discontinue atau markdown untuk bersihkan stok.",
+          "target": "Mar 2026 — SKU review meeting",
+          "color": "cyan"
+        }
+      ]
+    }
+  ]
+}
