@@ -155,6 +155,53 @@ Single-writer locking enforced for signal payload paths.
 
 ---
 
+## Alternatif: Docker untuk 3+ Instances
+
+> Kalau butuh lebih dari 2 OpenClaw instances, Docker adalah jalur yang tepat.
+
+**Koreksi asumsi umum:** OpenClaw BISA jalan di Linux Docker container. Ada official image `openclaw/openclaw:latest`. Docker Desktop di macOS menggunakan hidden Linux VM internal sehingga tidak terkena limit 2 macOS VM dari Apple.
+
+**Yang tidak bisa di Docker (hanya di macOS native/Clawbox):**
+- iMessage / AppleScript / Cocoa GUI integrations
+- macOS Keychain native access
+- Calendar AppleScript
+
+**Yang tetap bisa di Docker:**
+- WhatsApp gateway, Telegram, Discord, Slack
+- Web search, file operations, SQL
+- Skills berbasis HTTP API
+
+**Quick start Docker multi-instance:**
+```bash
+docker run -d \
+  --name openclaw-instance2 \
+  --restart unless-stopped \
+  -p 18801:3001 \
+  -m 512m --cpus=1 \
+  -v openclaw-instance2-data:/app/data \
+  -e OPENCLAW_GATEWAY_TOKEN=unique-token \
+  -e ANTHROPIC_API_KEY=sk-ant-... \
+  openclaw/openclaw:latest
+```
+
+**Resource per container:** ~200-300MB idle, 400-600MB active, limit 512MB standard.
+
+**Kapasitas Mac Mini M4 16GB:** ~6GB host overhead -> ~10GB usable -> **5-8 instances** concurrent dengan nyaman.
+
+**Perbandingan Clawbox vs Docker:**
+
+| | Clawbox (macOS VM) | Docker (Linux container) |
+|---|---|---|
+| Max instances | 2 (Apple EULA) | Tidak terbatas |
+| RAM per instance | ~5-6GB | ~512MB |
+| macOS native features | Full | Tidak tersedia |
+| WhatsApp/Telegram | Ya | Ya |
+| Startup time | Menit | Detik |
+| Isolation | Full OS | Process namespace |
+
+-> Detail lengkap: `dev-tools/2026-02-28_openclaw-multi-instance-mac-mini.md`
+
+
 ## Relevance for Iris/Zuma
 
 **Low immediate priority** (Iris is already running on VPS). But relevant if:
