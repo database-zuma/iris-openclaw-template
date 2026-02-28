@@ -4,6 +4,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-28** | [OpenClaw Cost Optimization Playbook](dev-tools/2026-02-28_openclaw-cost-optimization-playbook.md) | #openclaw #cost-optimization #model-tiering #iris #llm-ops #qmd #ollama #openrouter | 65-70% cost reduction. 7 tactics: model tiering, QMD local search, session memory fix (50kb→8kb), thinking token trap, Ollama for repetitive tasks, Exa free search, OpenRouter auto-routing. Session memory fix URGENT for Iris (990k token issue).
+- **2026-02-28** | [Qwen3.5-35B-A3B — Local Install Guide (Mac Mini M4 16GB)](dev-tools/2026-02-28_qwen35-35b-a3b-local-install.md) | #local-llm #qwen3 #gguf #lm-studio #ollama #mac-mini #moe | 35B total / 3B active params, released Feb 24 2026. Unsloth GGUFs refreshed Feb 27. Recommended for 16GB: UD-Q2_K_XL (12.9GB). LM Studio & Ollama install commands included.
 - **2026-02-27** | [Public APIs — Curated for Zuma & Iris (Full Analysis)](dev-tools/2026-02-27_public-apis-zuma-relevant.md) | #public-apis #indonesia #payment-gateway #nlp #google-maps #email #notifications #finance | 268-line analysis: 60+ APIs filtered for Zuma retail ops & Iris AI. Tier-1: Google Maps, Sendinblue, NewsAPI, NLP Cloud (Indonesian support), Xendit/Midtrans. Critical: Sendgrid free tier ended Jul 2025, MercadoPago no IDR support.
 - **2026-02-27** | [Public APIs — Verification & Action Items Summary](dev-tools/2026-02-27_public-apis-verification-summary.md) | #public-apis #verification #indonesia #payment-gateway #cors-analysis #action-items | Executive summary: payment gateway comparison (Xendit/Midtrans/Doku), CORS analysis (60% need backend proxy), critical findings & integration priority roadmap
 - **2026-02-27** | [Iris Vector Memory + Reflection Cycle — Implementation](ai-agents/2026-02-27_iris-vector-memory-implementation.md) | #vector-memory #pgvector #semantic-search #reflection-cycle #iris-upgrade #implementation | IMPLEMENTED: pgvector semantic search over 438 memory+knowledge chunks (Gemini embeddings), daily reflection cycle at 22:00, scripts in workspace/scripts/
@@ -42,6 +44,8 @@ Auto-generated index of saved links, articles, and threads.
 - [Dieter Rams — Braun Design & Apple Influence](design/2026-02-14_research_dieter-rams-braun.md) — Industrial design philosophy, 10 Principles of Good Design, influence on Apple/Jonathan Ive
 
 ### Dev Tools
+- **[OpenClaw Cost Optimization Playbook](dev-tools/2026-02-28_openclaw-cost-optimization-playbook.md)** — 65-70% cost cut. Model tiering (Opus→Sonnet→Flash), QMD local search (90% token reduction), session memory fix (50kb→8kb), Ollama for free repetitive tasks, heartbeats→Flash. Session fix URGENT for Iris.
+- **[Qwen3.5-35B-A3B — Local Install Guide](dev-tools/2026-02-28_qwen35-35b-a3b-local-install.md)** — Released Feb 24 2026. 35B total/3B active MoE. Unsloth GGUFs (refreshed Feb 27). Fits 16GB: UD-Q2_K_XL (12.9GB) recommended. Vision+video+tool use. Thinking mode default ON.
 - **[Scrapling — Adaptive Web Scraping Framework](dev-tools/2026-02-27_scrapling.md)** — 784x faster than BeautifulSoup, adaptive element relocation (survive redesigns), StealthyFetcher (Cloudflare Turnstile + TLS bypass), concurrent crawling (1000s URLs), MCP-ready for AI agents, BSD-3, 14.1k stars
 - **[Public APIs — Curated for Zuma & Iris](dev-tools/2026-02-27_public-apis-zuma-relevant.md)** — 60+ APIs filtered for Zuma retail ops & Iris AI. Tier-1: Google Maps, Sendinblue, NewsAPI, NLP Cloud (Indonesian ✅), Xendit/Midtrans. ⚠️ Sendgrid free tier ended Jul 2025. ⚠️ MercadoPago no IDR.
 - **[Public APIs — Verification Summary](dev-tools/2026-02-27_public-apis-verification-summary.md)** — Executive summary: payment gateway comparison, CORS analysis (60% need backend proxy), action items (URGENT: migrate Sendgrid → Sendinblue, MercadoPago → Xendit)
@@ -75,3 +79,5 @@ find knowledge/ -name "*.md" -mtime -7
 ---
 
 **Last updated:** 2026-02-27 (Public APIs analysis + verification summary added; Scrapling StealthyFetcher confirmed working)
+
+- `dev-tools/2026-02-27_accurate-api-troubleshooting.md` — Accurate API 401/500 debug flow, token regenerate steps, VPS run guide
