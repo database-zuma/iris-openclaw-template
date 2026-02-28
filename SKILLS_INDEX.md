@@ -13,7 +13,7 @@ _Last updated: 2026-02-28_
 4. Include konten skill (atau ringkasannya) di prompt delegasi ke agent yang ditunjuk
 5. Jangan lupa heartbeat + origin_phone
 
-**PENTING:** Skill files ini BUKAN auto-discovered. Iris HARUS baca tabel ini untuk tahu skill mana yang relevan.
+**UPDATE 2026-02-28:** Skills sekarang AUTO-DISCOVERED oleh OpenClaw. Semua 35 skill di-symlink di `workspace/skills/`. Subagent bisa `read skills/{name}/SKILL.md` langsung. Tapi Iris TETAP harus baca tabel ini untuk routing + extract critical facts sebelum delegasi. Lihat `AGENTS.md § Skill Loading Before Delegation`.
 
 ---
 

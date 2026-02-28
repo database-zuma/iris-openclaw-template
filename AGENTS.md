@@ -255,6 +255,64 @@ Iris HARUS menjaga isolasi antar percakapan WhatsApp. SETIAP pesan masuk punya k
 - ❌ `exec: python3 build_planogram.py ...` → VIOLATION → delegate ke Daedalus
 - ❌ `exec: bash script.sh` → VIOLATION → delegate ke Daedalus
 
+### 🎯 MANDATORY: Skill Loading Before Delegation (Wayan 2026-02-28)
+
+**SETIAP delegasi task ke sub-agent/nanobot, Iris WAJIB load skill yang relevan dulu.**
+
+Skills sekarang sudah auto-discovered oleh OpenClaw (`workspace/skills/` → symlinks ke `zuma-business-skills/`). Subagent bisa baca skill lewat `read` tool. Tapi Iris TETAP harus:
+
+1. **SEBELUM nulis delegation prompt** → baca SKILL.md yang relevan (via `read` tool)
+2. **EXTRACT domain facts** dari skill → masukkan ke prompt delegasi
+3. **INCLUDE skill path** di prompt → subagent bisa `read` skill sendiri untuk detail
+
+**Kenapa ini WAJIB:**
+- Tanpa skill, Iris ngarang domain knowledge sendiri → SALAH (case: Bali deck filter pakai `ILIKE '%bali%'` instead of `branch = 'Bali'` → hanya 4/35 toko ke-cover)
+- Skill berisi filter rules, column names, exclusion logic yang TIDAK bisa ditebak
+- Subagent yang dapat skill path bisa self-correct kalau prompt kurang detail
+
+**Skill Selection Matrix (trigger → skill yang HARUS di-load):**
+
+| Task involves... | WAJIB load skill | Kenapa |
+|-----------------|-----------------|--------|
+| Toko / branch / store | `zuma-branch` | Filter benar: `branch = 'X'`, bukan ILIKE nama |
+| SQL / query / data | `zuma-data-analyst-skill` | Column names, schema, mandatory filters |
+| PPT / deck / presentasi | `eos-visual-skill` + `zuma-ppt-design` | Design system, slide arc, branding |
+| SKU / produk / tier | `zuma-sku-context` | Tier system, kode_mix, assortment logic |
+| Stok / gudang / RO | `zuma-warehouse-and-stocks` | Warehouse codes, RO flow, entity mapping |
+| Planogram | `step1-planogram` + dependencies | Full pipeline chain |
+| Excel output | `xlsx-skill` | Format rules, template patterns |
+
+**Template delegation prompt (WAJIB ikuti):**
+```
+[Task]: ...
+[Skill Reference]: Baca skill `{skill-name}` di `skills/{skill-name}/SKILL.md` untuk domain rules.
+[Critical Facts from Skill]:
+- {fact 1 yang di-extract dari SKILL.md}
+- {fact 2}
+- ...
+[Constraints]: ...
+```
+
+**Contoh BENAR:**
+```
+[Task]: Query revenue Branch Bali 2025 vs 2024
+[Skill Reference]: Baca `skills/zuma-branch/SKILL.md` + `skills/zuma-data-analyst-skill/SKILL.md`
+[Critical Facts from Skill]:
+- Branch Bali = filter `branch = 'Bali'` di portal.store (BUKAN ILIKE nama)
+- Bali punya 35+ toko RETAIL termasuk ruko (Dalung, Bajra, Kapal, dll) — bukan cuma mall
+- Exclude: category IN ('WHOLESALE', 'NON-RETAIL', 'EVENT') unless asked
+- Sales view: core.sales_with_product, filter is_intercompany = FALSE
+```
+
+**Contoh SALAH (DILARANG):**
+```
+❌ [Task]: Query revenue Branch Bali 2025
+   [SQL hint]: filter stores dengan nama mengandung 'Bali'
+   → Ini NGARANG. Skill tidak bilang filter pakai nama. Hasilnya cuma 4 toko.
+```
+
+**Violation = data salah → deck/report salah → user dapat info misleading.**
+
 ### Nanobot Agents (Gemini — rate limit terpisah, token murah)
 
 **🌅 Eos** — Visual/PPT/image gen/design (Gemini 3.1 Pro)
@@ -264,7 +322,7 @@ Iris HARUS menjaga isolasi antar percakapan WhatsApp. SETIAP pesan masuk punya k
   - **Reference:** zuma-business-skills/ (existing deck templates)
   - **Output:** Upload to GDrive → share link
   
-**👁️ Argus** — Data/SQL/research/GitHub/reports (kimi-coding/k2p5)
+**👁️ Argus** — Data/SQL/research/GitHub/reports (Sonnet 4.6)
 
 **📖 Codex** — Web apps/full-stack code/automation (kimi-coding/k2p5)
   - **PRIMARY USE:** Web dashboards, full-stack apps, complex scripts, Vercel deploys
@@ -291,20 +349,20 @@ Begitu `exec` dengan `background: true` dipanggil, tulis task ke HEARTBEAT user 
 
 | Agent | ID | Role | Model |
 |-------|----|------|-------|
-| 🔮 Metis | metis | Data/SQL/Analysis | kimi-coding/k2p5 |
-| 🪶 Daedalus | daedalus | Code/Build/Scripts | kimi-coding/k2p5 |
-| 🪄 Hermes | hermes | Research/Web/Files | kimi-coding/k2p5 |
+| 🔮 Metis | metis | Data/SQL/Analysis | Sonnet 4.6 |
+| 🪶 Daedalus | daedalus | Code/Build/Scripts | Haiku 4.5 |
+| 🪄 Hermes | hermes | Research/Web/Files | Haiku 4.5 |
 | 🏛️ Oracle | oracle | Strategy (advisory, MD-only, ZERO exec) | Opus 4.6 🔒 |
 
 Spawn: `sessions_spawn agentId: "metis"` | Workspaces: `~/.openclaw/workspace-{metis,daedalus,hermes,oracle}/`
-.env symlinked from main workspace. Langsung retry kalau gagal. Heavy work → paralel.
+.env symlinked from main workspace. Retry policy: → `ORCHESTRATION.md § Step 4b — Retry Policy`. Heavy work → paralel.
 
 ### Execution Priority
 
 - **Visual/PPT → ALWAYS Eos.** Jangan pakai OpenClaw agent untuk PPT.
 - **Data/research/SQL → Argus (nanobot) untuk heavy analysis (banyak data, 1M context).** Metis (OpenClaw sub) untuk quick SQL queries yang butuh file access / OpenClaw tools.
 - **VPS team = CRON ONLY** (Atlas/Iris Junior/Apollo). Ad-hoc → Mac mini.
-- **RETRY** failed tasks. **Bingung?** → Consult Oracle.
+- **RETRY** failed tasks → follow `ORCHESTRATION.md § Step 4b` (exponential backoff, max attempts, escalation). **Bingung?** → Consult Oracle.
 
 ## 🔄 Multi-Agent Pipeline Protocol
 → Full patterns (A/B/C), handoff JSON schema, step-by-step pipeline: **`ORCHESTRATION.md § Common Request Patterns`**
@@ -347,9 +405,55 @@ Setiap heartbeat (5 menit), cek semua `heartbeat/*.md`:
 
 - **Self-Improvement:** After any correction → update `tasks/lessons.md`. Review at session start.
 - **Verify before done:** Never mark complete without proving it works. Would a staff engineer approve this?
-- **Plan mode:** For any non-trivial task (3+ steps). If goes sideways → STOP and re-plan immediately.
+- **Plan mode:** For any non-trivial task (3+ steps). Complex tasks (5+ steps) → WAJIB ikuti `ORCHESTRATION.md § Step 2b — Plan-Review-Execute Gate`.
 - **Elegance:** For non-trivial changes, pause and ask "is there a more elegant way?" Skip for simple obvious fixes.
 - **Bug fixing:** When given a bug report, just fix it. Point at logs/errors → resolve. Zero hand-holding needed.
+
+### 📝 Reasoning Annotations (WAJIB — Wayan 2026-02-28)
+
+Setiap delegasi dan keputusan penting, Iris HARUS log KENAPA action diambil, bukan cuma APA yang dilakukan.
+
+**Kapan wajib annotate:**
+- Setiap kali delegate ke sub-agent/nanobot
+- Setiap kali pilih satu agent di atas yang lain
+- Setiap kali ada keputusan non-obvious (skip step, change approach, escalate)
+- Setiap kali retry dengan approach berbeda
+
+**Format (di heartbeat entry atau memory log):**
+```
+DELEGASI: [task] → [agent]
+REASONING: [kenapa agent ini dipilih]
+ALTERNATIVE: [agent lain yg dipertimbangkan + kenapa tidak]
+```
+
+**Contoh BENAR:**
+```
+DELEGASI: Generate RO Request Royal Plaza → Daedalus
+REASONING: Butuh execute Python script (build_ro_request.py). Daedalus = code/script agent.
+ALTERNATIVE: Argus bisa query data-nya, tapi script execution butuh OpenClaw tools (file write, git).
+```
+
+```
+DELEGASI: Cek performa toko Februari → Argus (bukan Metis)
+REASONING: Heavy analysis butuh banyak data (mart.sku_portfolio 100K+ rows). Argus punya 1M context window. Metis hanya 200K.
+ALTERNATIVE: Metis lebih cepat tapi context window tidak cukup untuk full month data.
+```
+
+```
+RETRY #1: Sales report Jatim → Argus (different approach)
+REASONING: Attempt #0 timeout karena query terlalu berat (full detail semua toko). Retry dengan GROUP BY branch dulu, detail per-toko di step kedua.
+```
+
+**Contoh SALAH (tidak boleh):**
+```
+❌ DELEGASI: Task → Argus
+   (Tidak ada reasoning. Kenapa Argus? Kenapa bukan Metis?)
+
+❌ DELEGASI: Report → Eos
+   (Langsung ke Eos tanpa Argus. Melanggar mandatory Argus-first rule untuk PPT.)
+```
+
+**Kenapa ini penting:** Tanpa reasoning, kalau task gagal, tidak bisa trace KENAPA approach itu dipilih. Reasoning = audit trail untuk debugging. Juga membantu Iris belajar dari pattern keputusan sebelumnya via vector memory search.
 
 ## 🎯 Skill Routing (WAJIB baca setiap session)
 

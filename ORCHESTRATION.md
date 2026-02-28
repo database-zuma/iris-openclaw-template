@@ -3,7 +3,7 @@
 _Read this BEFORE spawning any sub-agent._
 _For agent roster, nanobot exec syntax, and pipeline patterns → see `AGENTS.md` (this workspace)._
 _For skill routing → see `SKILLS_INDEX.md`._
-_Last updated: 2026-02-25_
+_Last updated: 2026-02-28 (added Step 2b Plan-Review-Execute Gate, Step 4b Retry Policy, reasoning annotations cross-ref)_
 
 ---
 
@@ -93,7 +93,7 @@ The full agent roster and execution priority is in `AGENTS.md § Task Delegation
 
 ## Step 2 — Write a Good Prompt
 
-Every prompt MUST have these 5 parts. Missing any = agent guesses wrong.
+Every prompt MUST have these **6 parts**. Missing any = agent guesses wrong.
 
 **1. TASK** — One atomic action. Not "help with stocks". Yes: "Query active stock per series for Jatim, return total pairs."
 
@@ -102,6 +102,35 @@ Every prompt MUST have these 5 parts. Missing any = agent guesses wrong.
 - Zuma = footwear retail, 6 branches (Jatim, Jakarta, Sumatra, Sulawesi, Batam, Bali)
 - DB = PostgreSQL VPS `167.71.198.86:5432`, database `openclaw_ops`
 - What Wayan ACTUALLY wants (not just what he typed)
+
+**2b. SKILL INJECTION** (NEW — 2026-02-28) — **WAJIB. Bukan opsional.**
+
+Sebelum nulis prompt, Iris HARUS:
+1. Identifikasi skill yang relevan dari `SKILLS_INDEX.md`
+2. `read` SKILL.md tersebut
+3. Extract critical domain facts (filters, column names, business rules)
+4. Masukkan ke prompt sebagai `[Skill Reference]` + `[Critical Facts]`
+
+Skills sekarang AUTO-DISCOVERED oleh OpenClaw di `workspace/skills/`. Subagent bisa `read` skill sendiri. Tapi Iris TETAP harus extract critical facts — jangan harap subagent baca sendiri.
+
+```
+[Skill Reference]: Baca `skills/{name}/SKILL.md` untuk detail lengkap.
+[Critical Facts from Skill]:
+- Filter toko: `branch = 'Bali'` di portal.store (BUKAN ILIKE nama)
+- Exclude: category IN ('WHOLESALE','NON-RETAIL','EVENT')
+- Sales: core.sales_with_product, filter is_intercompany = FALSE
+```
+
+**Kenapa wajib:** Tanpa skill injection, subagent ngarang domain knowledge → data salah. Contoh nyata: Bali deck pakai `ILIKE '%bali%'` → hanya 4/35 toko. Skill `zuma-branch` punya filter yang benar.
+
+**Quick reference — skill selection:**
+| Task domain | Load skill |
+|------------|-----------|
+| Toko/branch/store | `zuma-branch` |
+| SQL/query/data | `zuma-data-analyst-skill` |
+| PPT/deck | `eos-visual-skill` + `zuma-ppt-design` |
+| SKU/produk | `zuma-sku-context` |
+| Stok/gudang/RO | `zuma-warehouse-and-stocks` |
 
 **3. DATA** — Where is the input? Be specific:
 - Stock → `portal.v_stock_summary` or `mart.sku_portfolio_size`
@@ -135,7 +164,95 @@ Save CSV to ~/.openclaw/workspace/outbox/stock_jatim_2026-02-22.csv.
 Reply to Iris with 1-line summary when done.
 ```
 
+❌ BAD (no skill injection): _"Query revenue Branch Bali 2025. Filter stores dengan nama mengandung 'Bali'."_
+Ngarang filter sendiri tanpa baca skill → miss 31/35 toko.
+
+✅ GOOD (with skill injection):
+```
+[Task]: Query total revenue + units + ASP Branch Bali 2025 vs 2024 YoY
+[Skill Reference]: Baca skills/zuma-branch/SKILL.md + skills/zuma-data-analyst-skill/SKILL.md
+[Critical Facts from Skill]:
+- Toko Bali = portal.store WHERE branch = 'Bali' AND category = 'RETAIL' (35+ toko)
+- BUKAN filter ILIKE '%bali%' (itu cuma match 4 mall stores)
+- Sales: core.sales_with_product, JOIN matched_store_name, is_intercompany = FALSE
+[Output]: Markdown summary ke Iris. Save detail CSV ke outbox/
+[Constraints]: Exclude wholesale, konsinyasi, event. Include ruko stores.
+```
+
 ---
+
+## Step 2b — Plan-Review-Execute Gate (Complex Tasks)
+
+🚨 **Untuk task kompleks (5+ steps atau cross-system), Iris WAJIB generate plan dan minta approval dari USER sebelum execute.**
+
+### Kapan Gate Ini Aktif?
+
+| Kondisi | Gate? | Contoh |
+|---------|-------|--------|
+| Simple query/lookup (<3 steps) | ❌ Skip | "cek stok Jatim" |
+| Standard pipeline (3-4 steps, known pattern) | ❌ Skip | "buat PPT sales" (Argus→Eos = known) |
+| Complex task (5+ steps) | ✅ **WAJIB** | "migrasi planogram semua toko" |
+| Cross-system impact (DB + files + deploy) | ✅ **WAJIB** | "update semua RO + deploy dashboard" |
+| Destructive/irreversible action | ✅ **WAJIB** | "hapus data lama", "reset planogram" |
+| Ambiguous goal (multiple interpretations) | ✅ **WAJIB** | "improve the store performance" |
+
+### Flow
+
+```
+COMPLEX TASK DETECTED (5+ steps / cross-system / destructive / ambiguous)
+    │
+    ├─ Step 1: Iris generates plan
+    │   - Break goal into numbered steps
+    │   - Identify which agent handles each step
+    │   - Estimate total time
+    │   - List risks/edge cases
+    │   - Note what's IRREVERSIBLE
+    │
+    ├─ Step 2: Send plan to REQUESTING USER (bukan Wayan)
+    │   Format:
+    │   "Ini rencananya:
+    │    1. [step] → [agent] (~Xm)
+    │    2. [step] → [agent] (~Xm)
+    │    ...
+    │    Total estimasi: ~Ym
+    │    ⚠️ [risks/notes]
+    │    Lanjut?"
+    │
+    ├─ Step 3: WAIT for user approval
+    │   - User says "lanjut" / "ok" / "gas" → Execute
+    │   - User modifies plan → Update plan, re-confirm
+    │   - User cancels → Stop, acknowledge
+    │   - User silent >30 min → Remind once, then park task
+    │
+    └─ Step 4: Execute approved plan
+        - Follow steps as approved
+        - If deviation needed mid-execution → pause, inform user, get approval
+        - On completion → report result back to user
+```
+
+### Plan Message Template (WhatsApp-friendly)
+
+```
+Ini rencananya buat [goal]:
+
+1️⃣ [Step 1 description] → [Agent] (~Xm)
+2️⃣ [Step 2 description] → [Agent] (~Xm)
+3️⃣ [Step 3 description] → [Agent] (~Xm)
+...
+
+Total: ~Y menit
+⚠️ [Catatan penting / risiko kalau ada]
+
+Lanjut? 👍
+```
+
+### Rules
+- **Approval dari USER yang request** — BUKAN dari Wayan (kecuali task menyangkut system/infra)
+- **Kalau user = Wayan** — tetap tanya approval (Wayan juga mau review plan)
+- **Jangan over-plan simple tasks** — "cek stok" tidak perlu plan. Gate ini HANYA untuk complex tasks.
+- **Plan harus actionable** — tiap step harus jelas agent-nya dan estimasi waktunya
+- **Mid-execution deviation** — kalau ada yang berubah (error, data tidak sesuai), PAUSE dan inform user sebelum lanjut
+
 
 ## Step 3 — Non-Blocking Response Protocol
 
@@ -267,6 +384,57 @@ SETIAP HEARTBEAT POLL:
 2. **Tulis heartbeat SEBELUM context switch** — Sebelum handle user B, pastikan task user A sudah di-heartbeat
 3. **Heartbeat polling = MANDATORY** — Bahkan kalau tidak ada pesan baru, poll heartbeat tiap 5 menit
 ---
+
+## Step 4b — Retry Policy (Exponential Backoff)
+
+🚨 **Retry WAJIB systematic, bukan asal coba lagi. Pattern: exponential backoff + max attempts + escalation.**
+
+### Retry Table
+
+| Failure Type | Max Retries | Backoff | Escalation |
+|-------------|-------------|---------|------------|
+| **Network timeout** (API, DB connection) | 3 | 2s → 4s → 8s | Report ke user, coba lagi di heartbeat berikutnya |
+| **Rate limit** (429, quota exceeded) | 3 | 30s → 60s → 120s | Switch model/fallback jika ada, atau tunggu reset |
+| **Sub-agent error** (Daedalus/Hermes/Metis gagal) | 2 | 0s (langsung retry dgn perbaikan prompt) | Retry 1x dgn different approach, lalu report ke user |
+| **Nanobot error** (Argus/Eos/Codex gagal) | 2 | 5s → 15s | Switch ke fallback model (OpenRouter), lalu report |
+| **Model error** (500, overloaded, context too long) | 2 | 10s → 30s | Fallback ke next model in chain, lalu report |
+| **Auth error** (401, expired token) | 0 | — | Langsung report ke Wayan (butuh re-auth manual) |
+| **Data error** (wrong schema, missing table) | 0 | — | Langsung report ke user + Wayan (butuh fix manual) |
+| **Permission error** (403, read-only) | 0 | — | Langsung report ke Wayan |
+
+### Retry Rules
+
+1. **ALWAYS non-blocking** — Retry terjadi di heartbeat cycle, BUKAN inline. Jangan block user lain.
+2. **Log setiap retry** — Tulis di heartbeat entry: `Retry #N at HH:MM — [reason]`
+3. **Different approach on retry** — Jangan ulangi prompt yang sama persis. Ubah: simplify query, reduce data scope, switch agent, atau tambah context.
+4. **Max 2 retries untuk agent errors** — Setelah 2x gagal dengan approach berbeda, STOP dan report ke user:
+   "Maaf, task [X] gagal setelah 2x percobaan. Error: [summary]. Mau coba pendekatan lain atau eskalasi ke Wayan?"
+5. **Transient vs Permanent** — Bedakan:
+   - Transient (timeout, rate limit, 500) → retry with backoff
+   - Permanent (auth, permission, schema) → DON'T retry, langsung escalate
+6. **Fallback chain** — Untuk model errors:
+   - OpenClaw: primary model → kimi-coding/k2p5 → google/gemini-3-flash-preview
+   - Nanobot: primary → OpenRouter (env override)
+
+### Heartbeat Entry Format (with Retry Tracking)
+
+```markdown
+- [ ] **{Task Name}** — delegated to {agent}, started: {HH:MM WIB}, ETA: ~{X}m
+  - Origin: {phone}
+  - Deliver TO: {phone via channel}
+  - Status: RETRY #1 at 14:35 — timeout, retrying with smaller data scope
+  - Previous attempts:
+    - #0 (14:30): Failed — network timeout on DB query (portal.v_stock_summary)
+    - #1 (14:35): Retrying — added LIMIT 1000, split by branch
+```
+
+### Anti-Pattern
+
+- ❌ Retry prompt yang sama persis (definition of insanity)
+- ❌ Retry synchronous / inline (blocks other users)
+- ❌ Retry auth/permission errors (waste of time, needs manual fix)
+- ❌ Retry >3x tanpa inform user (user thinks Iris disappeared)
+
 
 ---
 
