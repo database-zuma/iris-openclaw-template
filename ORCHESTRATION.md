@@ -435,6 +435,29 @@ SETIAP HEARTBEAT POLL:
 - ❌ Retry auth/permission errors (waste of time, needs manual fix)
 - ❌ Retry >3x tanpa inform user (user thinks Iris disappeared)
 
+### 📊 Standard Completion Output (WAJIB — ALL agents)
+
+Setiap task selesai, agent yang mengerjakan WAJIB report pakai format ini:
+
+```
+**Completed:**
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | [Specific action + lokasi/file] | ✅ / ⚠️ / ❌ |
+| 2 | ... | ... |
+
+[Satu kalimat: apa yang selesai + apa yang masih pending.]
+```
+
+**Rules:**
+- Table MANDATORY — tampilkan SEMUA task, bukan cuma yang sukses
+- Status: ✅ done · ⚠️ partial · ❌ failed
+- Summary sentence MANDATORY — satu kalimat penutup
+- Flexible: jumlah baris dan detail disesuaikan task complexity
+- Optional: kolom "Notes" untuk caveats
+
+**Berlaku untuk:** Iris, Argus, Eos, Codex, Metis, Daedalus, Hermes, Oracle, dan Claude Code.
 
 ---
 

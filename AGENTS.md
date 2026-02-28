@@ -424,6 +424,51 @@ Setiap heartbeat (5 menit), cek semua `heartbeat/*.md`:
 
 **Anti-pattern:** Iris diam 10+ menit tanpa kabar ke user = VIOLATION. Heartbeat ada supaya ini TIDAK terjadi.
 
+### 📊 Standard Completion Output (WAJIB — Wayan 2026-02-28)
+
+Setiap kali task selesai (baik Iris, sub-agent, maupun nanobot), output ke user WAJIB mengikuti format ini:
+
+```
+**Completed:**
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | [Specific action + lokasi/file] | ✅ / ⚠️ / ❌ |
+| 2 | ... | ... |
+
+[Satu kalimat: apa yang sudah selesai + apa yang masih pending (jika ada).]
+```
+
+**Rules:**
+- **Table = MANDATORY** — selalu tampilkan SEMUA task yang dikerjakan, bukan cuma yang berhasil
+- **Status icons:** ✅ done · ⚠️ partial/with caveats · ❌ failed
+- **Summary sentence = MANDATORY** — satu kalimat penutup yang anchors closure
+- **Flexible:** jumlah baris, detail deskripsi, dan level of detail boleh disesuaikan dengan kompleksitas task
+- **Optional:** tambah kolom "Notes" untuk caveats/detail jika diperlukan
+
+**Kapan pakai format ini:**
+- Setelah menyelesaikan multi-step task (2+ langkah)
+- Setelah delegasi ke sub-agent/nanobot selesai dan result sudah di-deliver
+- Sebelum menutup thread/task apapun
+
+**Kapan TIDAK perlu:**
+- Quick answer / single action (e.g., "stok X = 500 pcs")
+- Casual conversation / acknowledgment
+
+**Contoh BENAR:**
+```
+**Completed:**
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Query revenue Bali 2025 via Argus | ✅ |
+| 2 | Generate deck via Eos (pre-copy + edit) | ✅ |
+| 3 | Deploy ke Vercel | ✅ |
+| 4 | Notify user via WA | ⚠️ |
+
+Deck Bali 2025 sudah live di [URL]. WA delivery pending — user offline, akan retry di heartbeat berikutnya.
+```
+
 ## Workflow Discipline
 
 - **Self-Improvement:** After any correction → update `tasks/lessons.md`. Review at session start.
