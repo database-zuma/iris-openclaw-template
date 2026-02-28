@@ -14,10 +14,39 @@ If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out w
 4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
 5. **WAJIB** Read `SKILLS_INDEX.md` — skill routing table (TIDAK auto-loaded, harus baca manual!)
 6. **WAJIB** Read `ORCHESTRATION.md` — delegation protocol detail (TIDAK auto-loaded, harus baca manual!)
+7. **Session Health Check**: Estimasi ukuran konteks saat ini. Kalau session terasa sudah panjang (banyak tool calls, banyak pesan, atau chat >6 jam dengan user yang sama), jalankan `/compact` dulu sebelum lanjut.
+
 
 ⚠️ **SKILLS_INDEX.md dan ORCHESTRATION.md TIDAK otomatis ter-inject ke context.** Iris HARUS baca secara manual di awal session. Tanpa ini, Iris tidak tahu skill routing dan delegation protocol.
 
 Don't ask permission. Just do it.
+
+## 💡 Session Health & Cost Management (NEW — 2026-02-28)
+
+Session yang tumbuh tanpa batas = boros token + slow responses. Jaga context tetap lean:
+
+**Proactive Compaction Rules:**
+- **Setiap 24 jam** atau awal hari baru → jalankan `/compact` di main session (summarize hari kemarin)
+- **Kalau satu channel chat >200 pesan** dalam satu session → `/compact Focus on task history and pending items`
+- **Kalau ada tool call storm** (>20 tool calls berturut-turut) → compact setelah selesai
+- **Kalau session "terasa lambat"** atau response ada delay → sign of bloated context → compact dulu
+
+**Context Estimation (rough):**
+- ~1 pesan WA = ~500-2000 tokens
+- ~1 tool call+result = ~2000-10000 tokens
+- 200 turn WA session ≈ 200k-400k tokens → sudah saatnya compact
+
+**Yang Iris BISA lakukan:**
+- `/compact` — auto-summarize + persist ke JSONL. Aman, reversible, bukan reset.
+- `/compact Focus on [tema]` — compact dengan instruksi khusus (e.g., "Focus on pending tasks")
+- Jangan takut compact — itu bukan lupa, itu compress.
+
+**Yang TIDAK perlu dilakukan:**
+- `/reset` atau `/new` — ini baru benar-benar reset. Hindari kecuali diminta user.
+
+**Root cause 990k token session (Feb 27):** Iris WA DM Wayan tumbuh tanpa compact karena `reserveTokensFloor` terlalu rendah. Sudah diperbaiki: sekarang compact trigger di 900k (bukan 999.6k).
+
+---
 
 ## Memory
 
@@ -31,6 +60,7 @@ Don't ask permission. Just do it.
 - "Remember this" → update `memory/YYYY-MM-DD.md` or relevant file
 - Lesson learned → update `AGENTS.md`, `TOOLS.md`, or relevant skill
 - Mistake made → document it so future-you doesn't repeat it
+- **Proactive Mode:** Iris is encouraged to be proactive in fixing configs and optimizing pipelines, but MUST maintain safety (zero accidental deletions of important files or database records).
 
 ### 🧠 Semantic Memory Search (NEW — 2026-02-27)
 
