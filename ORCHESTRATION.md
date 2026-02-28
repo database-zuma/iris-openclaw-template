@@ -534,48 +534,71 @@ Critical: GROUP BY `kodemix` | JOIN `portal.store` for location | Same-period Yo
 6. On heartbeat poll: check Argus outbox → format as text → deliver to **ORIGIN phone** → clear entry
 
 ### "Buat laporan/rekap/PPT" (TEMPLATE-LOCKED PIPELINE v2.0 — 2026-02-28)
+
+**⛔⛔⛔ HARD BLOCK — BACA INI SEBELUM APAPUN ⛔⛔⛔**
+- DILARANG panggil Eos dengan prompt "Generate HTML" / "bikin PPT HTML" / "HTML format"
+- DILARANG Iris bikin data JSON sendiri — HARUS Argus via helper script
+- DILARANG skip step manapun — WAJIB 4 step berurutan
+- Eos config sudah punya systemPrompt guardrail — akan REFUSE kalau disuruh bikin HTML
+- Kalau tergoda shortcut → INGAT: semua shortcut sebelumnya GAGAL dan bikin user frustasi
+**⛔⛔⛔ END HARD BLOCK ⛔⛔⛔**
+
 1. Tag sender (Step 0)
 2. Acknowledge: "Siap, aku buatkan ya. Estimasi ~10 menit."
-3. Call Argus: gather data → save handoff JSON to Argus outbox (background: true)
-4. **Write to `heartbeat/{phone}.md`** ← MANDATORY
-5. When Argus done → read handoff JSON → call **Eos** with this prompt:
+
+3. **STEP 1 — ARGUS QUERY DATA** (background: true):
    ```
-   Buat CONTENT JSON (BUKAN HTML!) untuk deck berdasarkan data Argus handoff.
-   Baca schema di: zuma-business-skills/general/eos-visual-skill/SKILL.md §12
-   Argus handoff: {path-to-argus-handoff-json}
-   Output: simpan sebagai outbox/{nama-deck}-content.json
-   PENTING: Output HANYA JSON sesuai schema. JANGAN menulis HTML.
+   NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "
+   Jalankan helper script:
+   python3 tools/query_deck_data.py --gender {X} --branch {Y} --start-date {Z} --end-date {W} --include-stock --output outbox/{nama}-handoff.json
+   Setelah script selesai, baca file outputnya lalu tambahkan narrative dan key_insights.
+   Simpan hasil akhir ke outbox/{nama}-handoff.json"
    ```
-   Spawn Eos (background: true). **Update `heartbeat/{phone}.md`** with Eos task.
-6. When Eos done → Iris runs **deterministic builder** (BUKAN Eos yang bikin HTML):
+   **Write to `heartbeat/{phone}.md`** ← MANDATORY
+
+4. **STEP 2 — EOS CONTENT JSON** (background: true):
+   Ketika Argus done → spawn Eos:
+   ```
+   NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "
+   TASK: Buat CONTENT JSON untuk deck {judul}.
+   LANGKAH: 1) Baca SOUL.md section Template-Locked Pipeline v2.0
+            2) Baca file Argus handoff: outbox/{nama}-handoff.json
+            3) Transform jadi content JSON 8 slides sesuai schema
+            4) Simpan ke: outbox/{nama}-content.json
+   FORMAT: Volume titik ribuan. Revenue Rp X,XM. ASP Rp XXX.XXX.
+   BAHASA: Semua teks Bahasa Indonesia. MANDATORY.
+   OUTPUT: HANYA JSON. JANGAN HTML. JANGAN CSS."
+   ```
+   **Update `heartbeat/{phone}.md`** with Eos task.
+
+5. **STEP 3 — BUILD HTML** (Iris exec, bukan Eos):
    ```bash
-   python3 ~/.openclaw/workspace-eos-nanobot/build_deck.py \\
-     --content ~/.openclaw/workspace-eos-nanobot/outbox/{nama-deck}-content.json \\
-     --output  ~/.openclaw/workspace-eos-nanobot/outbox/{nama-deck}.html \\
+   python3 ~/.openclaw/workspace-eos-nanobot/build_deck.py \
+     --content ~/.openclaw/workspace-eos-nanobot/outbox/{nama}-content.json \
+     --output  ~/.openclaw/workspace-eos-nanobot/outbox/{nama}.html \
      --validate
    ```
-   Builder membaca locked TEMPLATE.html CSS + content JSON → generates HTML deterministik.
-   `--validate` otomatis jalankan post-processor QA (15 checks).
-7. **Post-processor QA**: Jika validation FAIL →
+   `--validate` otomatis jalankan 15-check QA. Kalau FAIL:
    ```bash
-   python3 ~/.openclaw/workspace-eos-nanobot/validate_deck.py \\
-     ~/.openclaw/workspace-eos-nanobot/outbox/{nama-deck}.html --fix
+   python3 ~/.openclaw/workspace-eos-nanobot/validate_deck.py \
+     ~/.openclaw/workspace-eos-nanobot/outbox/{nama}.html --fix
    ```
-   Jika masih FAIL setelah --fix → escalate ke Wayan.
-8. Deploy ke Vercel:
+   Masih FAIL → escalate ke Wayan.
+
+6. **STEP 4 — DEPLOY KE VERCEL**:
    ```bash
    source ~/.openclaw/workspace/.env
-   mkdir -p outbox/{nama-deck}-vercel
-   cp outbox/{nama-deck}.html outbox/{nama-deck}-vercel/index.html
-   cd outbox/{nama-deck}-vercel
+   mkdir -p outbox/{nama}-vercel
+   cp outbox/{nama}.html outbox/{nama}-vercel/index.html
+   cd outbox/{nama}-vercel
    ~/homebrew/Cellar/node/25.6.0/bin/node ~/homebrew/lib/node_modules/vercel/dist/index.js --prod --yes --token "$VERCEL_TOKEN"
-   curl -s -o /dev/null -w "%{http_code}" https://{nama-deck}.vercel.app  # Expect: 200
+   curl -s -o /dev/null -w "%{http_code}" https://{nama}.vercel.app  # Expect: 200
    ```
-9. Deliver Vercel URL to **ORIGIN phone** → clear heartbeat entry
 
-   **KENAPA TEMPLATE-LOCKED:** Eos (Gemini) konsisten gagal edit HTML template — selalu rewrite dari scratch
-   menghasilkan overlay navigation (position:absolute, .slide.active) yang tidak bisa Ctrl+P.
-   Solusi: Eos hanya generate content JSON, builder Python handle semua HTML generation.
+7. Deliver Vercel URL to **ORIGIN phone** → clear heartbeat entry
+
+   **KENAPA TEMPLATE-LOCKED:** Eos konsisten gagal edit HTML — selalu rewrite dari scratch
+   dengan overlay navigation. Solusi: Eos HANYA content JSON, builder Python handle HTML.
    Template CSS 100% locked, zero LLM corruption risk.
 
    **FALLBACK (jika Eos gagal generate content JSON):**

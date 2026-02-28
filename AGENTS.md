@@ -321,71 +321,90 @@ Skills sekarang sudah auto-discovered oleh OpenClaw (`workspace/skills/` → sym
 
 **Violation = data salah → deck/report salah → user dapat info misleading.**
 
-### Nanobot Agents (Gemini — rate limit terpisah, token murah)
+### Nanobot Agents
 
-**🌅 Eos** — Visual/PPT/image gen/design (Gemini 3.1 Pro)
-  - **PRIMARY USE:** Generate content JSON for PPT/deck pipelines
-  - **Format:** Content JSON (slide specs) — NOT HTML directly
-  - **Style:** Zuma brand (teal #002A3A, green #00E273)
-  - **Reference:** zuma-business-skills/general/eos-visual-skill/SKILL.md §12
-  - **Output:** Content JSON → `build_deck.py` → HTML → Vercel
+**🌅 Eos** — Visual/PPT content JSON generator (Sonnet 4.6)
+  - **ONLY OUTPUT:** Content JSON → `build_deck.py` → HTML → Vercel
+  - **DILARANG:** Generate HTML/CSS/JS langsung. Eos akan REFUSE.
+  - **Reference:** Eos SOUL.md + `eos-visual-skill/SKILL.md §12`
 
-  **🚨 TEMPLATE-LOCKED PIPELINE v2.0 (2026-02-28):**
-  Eos (Gemini) konsisten gagal edit HTML — selalu rewrite dari scratch dengan overlay navigation.
-  **Solusi: Eos hanya generate content JSON. Python builder handle semua HTML.**
-  
-  ```bash
-  # STEP 1: Argus handoff JSON sudah ready di argus-outbox/
-  
-  # STEP 2: Spawn Eos untuk generate CONTENT JSON (bukan HTML)
+**👁️ Argus** — Data/SQL/research/reports (Sonnet 4.6)
+  - Helper script: `tools/query_deck_data.py` (parameterized: --gender, --branch, --start-date, --end-date, --include-stock, --series, --tipe)
+
+**📖 Codex** — Web apps/full-stack code (kimi-coding/k2p5)
+
+### 🚨 DECK/PPT PIPELINE — WAJIB 4 STEP (ZERO EXCEPTION)
+
+```
+STEP 1 — ARGUS QUERY DATA:
+  NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "
+  Jalankan: python3 tools/query_deck_data.py --gender {X} --branch {Y} --start-date {Z} --end-date {W} --include-stock --series {S} --tipe {T} --output outbox/{nama}-handoff.json
+  Setelah selesai, baca outputnya dan tambahkan narrative + key_insights."
+
+STEP 2 — EOS CONTENT JSON (BUKAN HTML!):
   NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "
-  Buat CONTENT JSON (BUKAN HTML!) untuk deck berdasarkan data Argus handoff.
-  Baca schema di: zuma-business-skills/general/eos-visual-skill/SKILL.md §12
-  Argus handoff: {path-to-argus-handoff-json}
-  Output: simpan sebagai outbox/{nama-deck}-content.json
-  PENTING: Output HANYA JSON sesuai schema. JANGAN menulis HTML.
-  "
-  
-  # STEP 3: Build HTML dari content JSON (deterministic, template-locked)
-  python3 ~/.openclaw/workspace-eos-nanobot/build_deck.py \\
-    --content outbox/{nama-deck}-content.json \\
-    --output outbox/{nama-deck}.html \\
-    --validate
-  
-  # STEP 4: Deploy ke Vercel
+  TASK: Buat CONTENT JSON untuk deck {judul}.
+  LANGKAH: 1) Baca SOUL.md section Template-Locked Pipeline v2.0
+           2) Baca file Argus handoff: outbox/{nama}-handoff.json
+           3) Transform jadi content JSON 8 slides sesuai schema
+           4) Simpan ke: outbox/{nama}-content.json
+  FORMAT: Volume titik ribuan. Revenue Rp X,XM. ASP Rp XXX.XXX.
+  BAHASA: Semua teks Bahasa Indonesia.
+  OUTPUT: HANYA JSON. JANGAN HTML. JANGAN CSS."
+
+STEP 3 — BUILD HTML (deterministic, template-locked):
+  python3 ~/.openclaw/workspace-eos-nanobot/build_deck.py \
+    --content outbox/{nama}-content.json \
+    --output outbox/{nama}.html --validate
+
+STEP 4 — DEPLOY:
   source ~/.openclaw/workspace/.env
-  mkdir -p outbox/{nama-deck}-vercel
-  cp outbox/{nama-deck}.html outbox/{nama-deck}-vercel/index.html
-  cd outbox/{nama-deck}-vercel
+  mkdir -p outbox/{nama}-vercel
+  cp outbox/{nama}.html outbox/{nama}-vercel/index.html
+  cd outbox/{nama}-vercel
   ~/homebrew/Cellar/node/25.6.0/bin/node ~/homebrew/lib/node_modules/vercel/dist/index.js --prod --yes --token "$VERCEL_TOKEN"
-  curl -s -o /dev/null -w "%{http_code}" https://{nama-deck}.vercel.app  # Expect: 200
-  ```
-  
-  **Tanpa template-locked builder = Eos buat HTML dari scratch = overlay jelek. ZERO TOLERANCE.**
+```
 
+**⛔ KALAU SKIP STEP MANAPUN = DECK JELEK. ZERO TOLERANCE.**
+**⛔ JANGAN PERNAH panggil Eos dengan 'Generate HTML' atau 'bikin PPT HTML'. Eos akan REFUSE.**
+**⛔ Iris DILARANG bikin data JSON sendiri. HARUS Argus yang query DB via helper script.**
 
-**👁️ Argus** — Data/SQL/research/GitHub/reports (Sonnet 4.6)
+### 🚫 ANTI-HALLUCINATION RULE (Wayan 2026-03-01)
 
-**📖 Codex** — Web apps/full-stack code/automation (kimi-coding/k2p5)
-  - **PRIMARY USE:** Web dashboards, full-stack apps, complex scripts, Vercel deploys
-  - **Format:** Production-ready code, well-commented, deployable
-  - **Stack:** Next.js/HTML+Tailwind+JS, Python scripts, shell automation
-  - **Output:** Code files to outbox/ or direct deploy
+**ZERO TOLERANCE untuk data fabrication. Ini bukan guideline — ini HARD RULE.**
+
+**ROOT CAUSE (Feb 2026):** Iris delegasi ke Metis tanpa load skill → Metis respond dalam 1 DETIK dengan data NGARANG. Deployed deck dengan fake data: ASP Rp 307K (real: Rp 107K), store "Seminyak Square" (real: "zuma tabanan"). User frustrated.
+
+**RULES:**
+1. **SEMUA data angka HARUS dari DB** — Metis/Argus WAJIB execute query, bukan generate dari "knowledge"
+2. **Response time <5 detik untuk data query = SUSPICIOUS** — Flag ke user: "Data ini perlu diverifikasi, response terlalu cepat"
+3. **Skill HARUS loaded SEBELUM delegasi** — Tanpa skill, agent tidak tahu column mapping (e.g., `tipe` vs `product_type`, `branch` vs store name)
+4. **Column mapping cheat sheet:**
+   - Sandal jepit = `dim_product.tipe = 'Jepit'` (view: `product_type = 'Jepit'`)
+   - Sandal fashion = `dim_product.tipe = 'Fashion'` (view: `product_type = 'Fashion'`)
+   - Branch filter = `branch = 'Bali'` di portal.store (BUKAN ILIKE nama toko)
+   - Store names = lowercase ("zuma tabanan", BUKAN "Zuma Tabanan")
+5. **Verification checklist sebelum deploy deck:**
+   - [ ] Data dari DB query (bukan ngarang)?
+   - [ ] ASP masuk akal? (Jepit ~Rp 100-120K, Fashion ~Rp 200-400K, Baby ~Rp 140K)
+   - [ ] Store names ada di portal.store? (bukan nama tempat wisata)
+   - [ ] Total revenue masuk akal vs branch size?
+6. **Kalau ragu → JANGAN deploy. Tanya Wayan.**
+
+**Violation = deck dengan data PALSU di-deploy ke production. Ini TIDAK BOLEH terjadi lagi.**
 
 ```bash
+# Nanobot invocation (ALWAYS background: true)
 # Eos
-NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "[task, simpan di ~/.openclaw/workspace-eos-nanobot/outbox/]"
+NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "[content JSON task]"
 # Argus
-NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task, simpan di ~/.openclaw/workspace-argus-nanobot/outbox/]"
+NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[data query task]"
 # Codex
-NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[task, simpan di ~/.openclaw/workspace-codex-nanobot/outbox/]"
+NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[web app task]"
 ```
-⚠️ **CRITICAL: Nanobot MUST be called via `exec` tool with `background: true`**. JANGAN PERNAH panggil nanobot secara synchronous, karena akan memblokir antrian pengguna lain di WhatsApp.
-Begitu `exec` dengan `background: true` dipanggil, tulis task ke HEARTBEAT user dan cek outbox pada heartbeat berikutnya.
+⚠️ **CRITICAL: Nanobot MUST be called via `exec` tool with `background: true`**.
 
-**⚡ Nanobot Fallback:** Semua nanobot punya OpenRouter API key. Override model via env var kalau Gemini gagal. → See `TOOLS.md § Nanobot Fallback`
-
-**Routing:** Visual/PPT/image → Eos | Data/SQL/research/reports → Argus | Web apps/full code → Codex | Quick scripts → Daedalus | VPS DB → Metis | Quick web → Hermes | Architecture → Oracle
+**Routing:** PPT/deck → 4-STEP PIPELINE ABOVE (Argus→Eos→build→deploy) | Web apps → Codex | Quick scripts → Daedalus | VPS DB → Metis | Quick web → Hermes | Architecture → Oracle
 
 ### Mac Mini Sub-Agents — OpenClaw (sessions_spawn)
 
