@@ -4,6 +4,8 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-28** | [Project AIRI — Self-Hosted AI Companion & VTuber](ai-agents/2026-02-28_project-airi.md) | #ai-companion #vtuber #open-source #self-hosted #voice-chat #xsai #multi-agent #moeru-ai | Open-source Neuro-sama: self-hosted AI companion with realtime voice, Live2D/VRM avatars, Minecraft/Factorio gameplay, 30+ LLM providers via xsai (<1KB SDK). Web-first (WebGPU/WASM) + Tauri desktop. Reference for voice + multi-agent patterns.
+- **2026-02-28** | [OpenClaw Multi-Instance Mac Mini — Docker vs Clawbox vs Native](dev-tools/2026-02-28_openclaw-multi-instance-mac-mini.md) | #openclaw #docker #multi-instance #mac-mini #infrastructure #iris | OpenClaw BISA di Docker (official image openclaw/openclaw:latest). 5 opsi: Docker (recommended, 5-8 instances di 16GB, 512MB/container), Clawbox (max 2 macOS VM Apple EULA enforced), Multiple processes, Multiple macOS users, VPS split. WA/Telegram → Docker fine. iMessage/Keychain → butuh native.
 - **2026-02-28** | [Clawbox — OpenClaw-Ready macOS VMs](dev-tools/2026-02-28_clawbox-macos-vm.md) | #openclaw #macos #vm #virtualization #tart #mutagen | Spin up isolated macOS VMs for OpenClaw via 2 commands. Standard mode (latest release) + Developer mode (bidirectional Mutagen sync). Max 2 VMs/host (Apple EULA). Playwright, Tailscale, signal-cli optional. Low priority for Iris (already on VPS).
 - **2026-02-28** | [Awesome OpenClaw Use Cases — Community Collection](dev-tools/2026-02-28_awesome-openclaw-usecases.md) | #openclaw #use-cases #multi-agent #automation #community #iris-inspiration | 11k⭐ repo, 30 verified use cases. Key patterns: STATE.yaml subagent coordination, cron heartbeat as the real product, multi-agent team via Telegram, self-healing server, customer service 80% auto-handled. Security: TruffleHog pre-push + local Gitea staging (AI WILL hardcode secrets).
 - **2026-02-28** | [OpenClaw Cost Optimization Playbook](dev-tools/2026-02-28_openclaw-cost-optimization-playbook.md) | #openclaw #cost-optimization #model-tiering #iris #llm-ops #qmd #ollama #openrouter | 65-70% cost reduction. 7 tactics: model tiering, QMD local search, session memory fix (50kb→8kb), thinking token trap, Ollama for repetitive tasks, Exa free search, OpenRouter auto-routing. Session memory fix URGENT for Iris (990k token issue).
@@ -33,6 +35,7 @@ Auto-generated index of saved links, articles, and threads.
 ## By Topic
 
 ### AI Agents
+- **[Project AIRI — Self-Hosted AI Companion & VTuber](ai-agents/2026-02-28_project-airi.md)** — Open-source Neuro-sama (2k+ ⭐): realtime voice chat, Live2D/VRM avatars, Minecraft/Factorio gameplay, 30+ LLM providers via xsai. Web-first (WebGPU/WASM) + Tauri. Sub-projects: xsai (<1KB AI SDK), unspeech (universal ASR/TTS proxy). Reference for voice-enabled agents.
 - **[AI Town — Autonomous Agent Town Simulator](ai-agents/2026-02-27_github_a16z-ai-town.md)** — a16z starter kit (9.3k ⭐): generative agents with vector memory, perceive→reflect→plan→act loop, Convex real-time backend, agent-to-agent conversations. Reference architecture for Iris memory system and heartbeat evolution
 - [Arscontexta — Skill Graphs > SKILL.md](ai-agents/2026-02-21_twitter_arscontexta-skill-graphs.md) — Claude Code plugin: knowledge systems from conversation, Skill Graphs (wikilinked markdown networks), progressive disclosure navigation, 249 research claims, Three-Space architecture
 - [Docker Multi-Agent Architecture](ai-agents/2026-02-19_docker-multi-agent-architecture.md) — Supervisor/Worker pattern with Docker Compose, A2A protocol, isolation strategies (Docker/venv/process), cost comparison Kimi K2.5 vs Gemini Flash, Mac mini M4 resource planning, implementation roadmap for OpenClaw
@@ -49,6 +52,7 @@ Auto-generated index of saved links, articles, and threads.
 - **[OpenClaw Cost Optimization Playbook](dev-tools/2026-02-28_openclaw-cost-optimization-playbook.md)** — 65-70% cost cut. Model tiering (Opus→Sonnet→Flash), QMD local search (90% token reduction), session memory fix (50kb→8kb), Ollama for free repetitive tasks, heartbeats→Flash. Session fix URGENT for Iris.
 - **[Awesome OpenClaw Use Cases](dev-tools/2026-02-28_awesome-openclaw-usecases.md)** — 30 real use cases (11k⭐). Deep dives: Self-healing server (cron+SSH+kubectl), STATE.yaml subagent pattern, multi-agent Telegram team, multi-channel customer service (80% auto), Second Brain. **Security:** AI hardcodes secrets — use TruffleHog + local Gitea.
 - **[Clawbox — OpenClaw macOS VMs](dev-tools/2026-02-28_clawbox-macos-vm.md)** — 2-command macOS VM setup for OpenClaw (brew install + clawbox up). Standard/Developer modes, Mutagen bidirectional sync, Playwright/Tailscale/signal-cli optional. Max 2 VMs/Mac host. Low priority for Iris (on VPS).
+- **[OpenClaw Multi-Instance Mac Mini](dev-tools/2026-02-28_openclaw-multi-instance-mac-mini.md)** — Docker = recommended (official image, 512MB/container, 5-8 instances di 16GB M4). 2 macOS VM limit = Apple EULA hardware-enforced di Virtualization.framework. WA/Telegram: Docker works. iMessage/Keychain: butuh native macOS. Docker Compose template + cron health check included.
 - **[Qwen3.5-35B-A3B — Local Install Guide](dev-tools/2026-02-28_qwen35-35b-a3b-local-install.md)** — Released Feb 24 2026. 35B total/3B active MoE. Unsloth GGUFs (refreshed Feb 27). Fits 16GB: UD-Q2_K_XL (12.9GB) recommended. Vision+video+tool use. Thinking mode default ON.
 - **[Scrapling — Adaptive Web Scraping Framework](dev-tools/2026-02-27_scrapling.md)** — 784x faster than BeautifulSoup, adaptive element relocation (survive redesigns), StealthyFetcher (Cloudflare Turnstile + TLS bypass), concurrent crawling (1000s URLs), MCP-ready for AI agents, BSD-3, 14.1k stars
 - **[Public APIs — Curated for Zuma & Iris](dev-tools/2026-02-27_public-apis-zuma-relevant.md)** — 60+ APIs filtered for Zuma retail ops & Iris AI. Tier-1: Google Maps, Sendinblue, NewsAPI, NLP Cloud (Indonesian ✅), Xendit/Midtrans. ⚠️ Sendgrid free tier ended Jul 2025. ⚠️ MercadoPago no IDR.
@@ -82,6 +86,6 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-28 (Awesome OpenClaw Use Cases + Clawbox VM added)
+**Last updated:** 2026-02-28 (OpenClaw multi-instance research added — Docker viable untuk Mac Mini)
 
 - `dev-tools/2026-02-27_accurate-api-troubleshooting.md` — Accurate API 401/500 debug flow, token regenerate steps, VPS run guide
