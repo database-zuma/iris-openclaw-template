@@ -4,6 +4,9 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-02-28** | [Million Dollar Product — 12 Rules to Building Something Users Love](design/2026-02-28_million-dollar-product-12-rules.md) | #product-design #ux #retention #onboarding #design-system #brand #activation-event #codex-reference | 12 rules dari founder yang build 50+ MVPs. Core: stack bukan masalahnya — product decisions yang matter. Rule 2: engineer ke aha moment secepat mungkin. Rule 8: design ALL states (empty/loading/error/success) bukan cuma happy path. Rule 12: activation event = day 3 retention. Full checklist 12 items + relevance untuk Codex/dashboard Zuma.
+- **2026-02-28** | [Ladybird — Browser Engine Baru dari Nol](dev-tools/2026-02-28_ladybird-browser.md) | #browser #browser-engine #independent #rust #cpp #web-standards #non-profit #track | 60.6k⭐, 1,240 contributors, BSD-2-Clause. Satu-satunya truly independent browser engine from scratch (bukan fork Chromium/WebKit/Gecko). Non-profit 501(c)(3), co-founder Chris Wanstrath (GitHub), sponsor Shopify/Cloudflare/Vercel. SANGAT AKTIF — commit hari ini! Feb 2026: abandon Swift (1yr delay), adopt Rust dengan AI assistance. Pre-alpha, target Alpha 2026. Worth tracking.
+- **2026-02-28** | [Stable Diffusion Web UI (AUTOMATIC1111) — OG Local Image Gen Interface](dev-tools/2026-02-28_stable-diffusion-webui.md) | #stable-diffusion #image-generation #ai-art #webui #automatic1111 #comfyui #forge #reference | 161k⭐ (AGPL-3.0), THE original Stable Diffusion UI. Gradio-based, txt2img/img2img/inpainting/upscaling, extension ecosystem, REST API. ⚠️ Semi-abandoned (last commit Jul 2024). ComfyUI now industry standard, Forge = improved A1111 fork. Untuk Zuma: API services > local setup (no dedicated GPU). Reference only.
 - **2026-02-28** | [Agentic RAG for Dummies — Modular RAG dengan LangGraph](ai-agents/2026-02-28_agentic-rag-for-dummies.md) | #rag #agentic-rag #langgraph #vector-db #qdrant #hierarchical-indexing #conversation-memory #iris-reference | GiovanniPasq. 2.2k⭐, MIT. Modular RAG + LangGraph: hierarchical indexing (child chunks → search, parent chunks → context), conversation memory, query clarification, multi-agent map-reduce, self-correction. Qdrant + HuggingFace + BM25. LLM-agnostic. **Iris reference:** hierarchical indexing + query clarification + map-reduce patterns bisa diadopsi. Stack berbeda (kita pgvector + markitdown).
 - **2026-02-28** | [AI Agents 101 — Best Practices + Iris Gap Analysis](ai-agents/2026-02-28_ai-agents-101-best-practices.md) | #ai-agents #best-practices #agent-architecture #iris-audit #failure-handling #planning #guardrails #memory | Article by Varick Agents CEO (ex-Meta, $3M agent company). 3 mandatory components (Perception/Decision Logic/Action Interface), agent loop, tools design, memory, planning, failure handling, guardrails, 80/20 rule. **Iris audit: ~80% already implemented.** Gaps: formal retry with backoff, planning enforcement gate, reasoning annotations in logs.
 - **2026-02-28** | [MoneyPrinterV2 — Online Income Automation](misc/2026-02-28_moneyprinterv2.md) | #automation #youtube-shorts #twitter-bot #affiliate #cold-outreach #python #low-priority | Python tool: Twitter bot + YouTube Shorts automater + Amazon affiliate + cold outreach. 13k⭐, AGPL-3.0. Stack: Python 3.9 + CoquiTTS + gpt4free. Overlap dengan OpenFang Hands (Clip/Twitter). **LOW PRIORITY** — buat Zuma hanya YouTube Shorts yang potensial relevan. Fork lebih aktif: MoneyPrinterTurbo.
@@ -92,6 +95,7 @@ Auto-generated index of saved links, articles, and threads.
 - [Gateway Pairing Issue Fix — Scope Mismatch](dev-tools/2026-02-20_gateway-pairing-fix.md) — OpenClaw gateway device pairing troubleshooting, scope diagnosis, token rotation, device auth verification
 - [Voicebox — Open-Source Voice Synthesis Studio](dev-tools/2026-02-19_github_voicebox.md) — Local-first voice cloning studio (ElevenLabs alternative), powered by Qwen3-TTS, REST API, MLX-optimized for Apple Silicon
 - [Botasaurus — All-in-One Web Scraping Framework](dev-tools/2026-02-19_github_botasaurus.md) — Python scraping framework, bypass Cloudflare/Datadome/Fingerprint, Selenium-based with @browser + @request decorators, built-in Web UI, Kubernetes scaling
+- **[Stable Diffusion Web UI (AUTOMATIC1111)](dev-tools/2026-02-28_stable-diffusion-webui.md)** — 161k⭐, OG local image gen UI. Gradio, txt2img/img2img/inpainting/upscaling/LoRA, extension system, REST API (`--api`). Semi-abandoned (last commit Jul 2024). Superseded by ComfyUI (power users) dan Forge (improved fork). Mac Mini M2 bisa run via MPS tapi lambat. Untuk Zuma: API services (DALL-E/Flux) >> local setup.
 - [Exa API Setup](dev-tools/exa-api-setup.md)
 
 ### Miscellaneous
@@ -114,6 +118,6 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-28 (AI Agents 101 best practices + Iris gap analysis added)
+**Last updated:** 2026-02-28 (Stable Diffusion Web UI A1111 added)
 
 - `dev-tools/2026-02-27_accurate-api-troubleshooting.md` — Accurate API 401/500 debug flow, token regenerate steps, VPS run guide

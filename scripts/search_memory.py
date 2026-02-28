@@ -11,6 +11,9 @@ Usage:
     python3 search_memory.py "RO request Jatim" --since 2026-02-01
     python3 search_memory.py "database error" --source knowledge
     python3 search_memory.py --json "planogram toko baru"
+    python3 search_memory.py "agent config" --type decision
+    python3 search_memory.py "critical issue" --important
+    python3 search_memory.py "lesson learned" --min-importance 3
 
 Requires: psycopg2, requests
 ENV: GEMINI_API_KEY, DATABASE_URL (or PG* vars from .env)
@@ -81,7 +84,13 @@ def get_query_embedding(text: str, api_key: str) -> list:
 
 
 def search_memory(
-    conn, query_embedding: list, limit: int = 5, since: str = None, source: str = None
+    conn,
+    query_embedding: list,
+    limit: int = 5,
+    since: str = None,
+    source: str = None,
+    signal_type: str = None,
+    min_importance: int = None,
 ) -> list:
     """
     Search memory vectors by cosine similarity.
@@ -92,9 +101,11 @@ def search_memory(
         limit: Max results
         since: Filter by date (YYYY-MM-DD)
         source: Filter by source type ('memory', 'knowledge', or None for all)
+        signal_type: Filter by signal type (decision, preference, correction, etc.)
+        min_importance: Filter by minimum importance (1-5)
 
     Returns:
-        List of dicts with content, similarity score, date, source
+        List of dicts with content, similarity score, date, source, signal metadata
     """
     conditions = []
     params = [str(query_embedding), limit]
@@ -109,6 +120,14 @@ def search_memory(
         elif source == "knowledge":
             conditions.append("source_file LIKE 'knowledge/%%'")
 
+    if signal_type:
+        conditions.append("signal_type = %s")
+        params.insert(-1, signal_type)
+
+    if min_importance:
+        conditions.append("importance >= %s")
+        params.insert(-1, min_importance)
+
     where_clause = ""
     if conditions:
         where_clause = "WHERE " + " AND ".join(conditions)
@@ -119,6 +138,9 @@ def search_memory(
             content,
             date,
             source_file,
+            signal_type,
+            importance,
+            signal_summary,
             1 - (embedding <=> %s::vector) AS similarity
         FROM iris.memory_vectors
         {where_clause}
@@ -130,6 +152,10 @@ def search_memory(
     query_params = [str(query_embedding)]
     if since:
         query_params.append(since)
+    if signal_type:
+        query_params.append(signal_type)
+    if min_importance:
+        query_params.append(min_importance)
     query_params.append(str(query_embedding))
     query_params.append(limit)
 
@@ -146,7 +172,7 @@ def format_results(results: list, query: str) -> str:
         return f"No memories found matching: '{query}'"
 
     output = []
-    output.append(f'🔍 Semantic search: "{query}"')
+    output.append(f'\U0001f50d Semantic search: "{query}"')
     output.append(f"{'─' * 60}")
 
     for i, r in enumerate(results, 1):
@@ -156,9 +182,18 @@ def format_results(results: list, query: str) -> str:
         if len(r["content"]) > 300:
             content += "..."
 
+        # Signal metadata line
+        signal_info = ""
+        if r.get("signal_type"):
+            signal_info = f" | \U0001f3f7\ufe0f {r['signal_type']}"
+            if r.get("importance"):
+                signal_info += f" \u2b50{r['importance']}"
+
         output.append(
-            f"\n[{i}] 📅 {r['date']} | 📁 {r['source_file']} | 🎯 {sim_pct:.1f}% match"
+            f"\n[{i}] \U0001f4c5 {r['date']} | \U0001f4c1 {r['source_file']} | \U0001f3af {sim_pct:.1f}% match{signal_info}"
         )
+        if r.get("signal_summary"):
+            output.append(f"    \U0001f4a1 {r['signal_summary']}")
         output.append(content)
 
     output.append(f"\n{'─' * 60}")
@@ -177,6 +212,9 @@ def format_json(results: list, query: str) -> str:
                     "date": str(r["date"]),
                     "source_file": r["source_file"],
                     "similarity": round(float(r["similarity"]), 4),
+                    "signal_type": r.get("signal_type"),
+                    "importance": r.get("importance"),
+                    "signal_summary": r.get("signal_summary"),
                 }
                 for r in results
             ],
@@ -200,16 +238,48 @@ def main():
         choices=["memory", "knowledge"],
         help="Filter by source type",
     )
+    parser.add_argument(
+        "--type",
+        type=str,
+        dest="signal_type",
+        choices=[
+            "decision",
+            "preference",
+            "correction",
+            "lesson",
+            "pattern",
+            "error",
+            "fact",
+            "task",
+        ],
+        help="Filter by signal type",
+    )
+    parser.add_argument(
+        "--important",
+        action="store_true",
+        help="Show only important signals (importance >= 4)",
+    )
+    parser.add_argument(
+        "--min-importance",
+        type=int,
+        choices=[1, 2, 3, 4, 5],
+        help="Filter by minimum importance level (1-5)",
+    )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     args = parser.parse_args()
 
     env = load_env()
     api_key = env.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
     if not api_key:
-        print("❌ GEMINI_API_KEY not found")
+        print("\u274c GEMINI_API_KEY not found")
         sys.exit(1)
 
     conn = get_db_connection(env)
+
+    # Resolve importance filter
+    min_importance = args.min_importance
+    if args.important:
+        min_importance = 4
 
     # Generate query embedding
     query_embedding = get_query_embedding(args.query, api_key)
@@ -221,6 +291,8 @@ def main():
         limit=args.limit,
         since=args.since,
         source=args.source,
+        signal_type=args.signal_type,
+        min_importance=min_importance,
     )
 
     # Output

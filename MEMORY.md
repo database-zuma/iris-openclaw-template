@@ -5,6 +5,7 @@
 - Setup: 2026-02-11 | Lang: Bahasa Indonesia | Tone: chill, clear
 - DB Creds: ALWAYS hardcode in terminal (never .env when delegating) → See TOOLS.md § OpenCode
 - Image Gen: Gemini Imagen 4.0 (HD product photography, realistic)
+- OpenRouter Policy: Only for cheap Chinese AI models (DeepSeek, Qwen). Major models (Claude, Gemini, Kimi) MUST use direct API keys.
 
 ## Critical Data Rules
 
@@ -33,7 +34,14 @@ Epicentrum=Lombok, Level 21=Bali, City of Tomorrow=Surabaya.
 
 ## Output Rules
 - **RO/Reports:** Upload GDrive → `--anyone --role writer` → kirim link. JANGAN path lokal.
-- **RO Request:** Excel 5 sheets → GDrive upload → `--anyone --role writer` → deliver link.
+- **RO Request (MANDATORY RULE — 2026-02-27):** AFTER generating any RO Request XLSX via build_ro_request.py:
+  1. Upload to Google Drive (`gog drive upload ...`)
+  2. Share: `--anyone --role writer`
+  3. Send share link to the user who requested it via WhatsApp
+  4. If GDrive upload FAILS → escalate to Wayan (+628983539659) ONLY via WhatsApp with file attached
+  5. Task NOT complete until user gets the link
+  - **Source:** `portal.planogram_existing_q1_2026` (Q1 2026, 51 stores, 606 articles, 42 size columns + BOX)
+  - **Script:** build_ro_request.py (universal CLI)
 - **DN-to-PO:** 1 DN = 2 outputs. Standard scripts in `dn-to-po/`. Output: `~/Desktop/DN PO ENTITAS/`.
 - **PPT:** See AGENTS.md § PPT Workflow. Eos + Vercel ONLY.
 
@@ -51,7 +59,9 @@ Epicentrum=Lombok, Level 21=Bali, City of Tomorrow=Surabaya.
 **FATAL Team:** Mbak Kirana (Finance SPV), Mbak Dita (Accounting SPV), Mbak Shafira (Tax), Firman (Asset)
 **Warehouse:** Pak Ali (Jatim/Pusat SPV)
 **Branch:** Bu Kusdiyan (Jatim BM), Bu Novita (Jatim AS), Bu Ninik (Jatim AS, reference .env), Bu Arvina (Batam BM), Pak Yusuf (Sumatra BM), Bu Dian Rina (Manado AS), Pak Ariel (Lombok BM)
-**WA Group:** Anak Gaul SI — `120363421058001851@g.us`
+**WA Group:** 
+- Anak Gaul SI — `120363421058001851@g.us`
+- Duo D — `120363426622392503@g.us` (Mbak Dewi & Mbak Desyta R&D)
 
 ## Database Quick Reference
 - **Schemas:** raw (STRICT NO ACCESS) → portal → core → mart → public
@@ -62,7 +72,49 @@ Epicentrum=Lombok, Level 21=Bali, City of Tomorrow=Surabaya.
 - **STO:** `mart.sto_analysis` (rebuild: `SELECT mart.rebuild_sto_analysis()`)
 - **Targets:** `portal.store_monthly_target`
 
-## Active URLs
+## Daily Automation — Q1 2026 Update (2026-02-27 + 2026-02-28)
+
+### Planogram (ACTIVE)
+- **Main source (Q1 2026):** `portal.planogram_existing_q1_2026` — **51 toko, 606 artikel, 42 size columns + BOX**
+- **Replaces:** Old `portal.temp_portal_plannogram` (11 toko Jatim only)
+- **Used for:** RO requests, planogram analysis, all store-level planogram queries
+
+### FF/FA/FS Metrics (ACTIVE)
+- **NEW table (Q1 2026):** `mart.ff_fa_fs_daily_q1_2026` — **51 toko, calculated 2026-02-27**
+- **Replaces:** Old `mart.ff_fa_fs_daily` (11 toko Jatim only)
+- **Script:** `/opt/openclaw/scripts/calculate_ff_fa_fs_q12026.py` (runs 03:00+ WIB after stock pull)
+- **Status JSON:** `/opt/openclaw/logs/ff_fa_fs_q12026_latest_status.json` (for health checks — **USE THIS for daily morning report**)
+- **OLD status file (deprecated):** `/opt/openclaw/logs/ff_fa_fs_latest_status.json` ❌ DO NOT USE
+- **Cron schedule:** 03:00 WIB stock pull → 03:XX+ FF/FA/FS Q1 2026 calculation → 05:30 WIB Atlas health check
+- **Daily morning report:** Read from `/opt/openclaw/logs/ff_fa_fs_q12026_latest_status.json`
+- **Detail queries per toko:** Query `mart.ff_fa_fs_daily_q1_2026` directly
+- **Targets:** FF >= 70%, FA >= 90%, FS >= 80%
+- **Coverage:** 51 retail stores (all branches, not just Jatim)
+
+### MV Health Check — Morning Report (WAJIB, 2026-02-28)
+Tambahkan section ini ke morning report harian. Flag sebagai issue kalau log FAILED atau lag >1 hari.
+
+**1. mart.mv_accurate_summary** (Accurate Sales Dashboard) — refresh 05:30 WIB
+- Script VPS: `/opt/openclaw/accurate_mv_refresh.sh`
+- Log: `tail /var/log/openclaw/accurate_mv_refresh.log | grep -E 'SUCCESS|FAILED'`
+- Freshness DB: `SELECT MAX(sale_date) FROM mart.mv_accurate_summary;`
+- Flag: log FAILED **atau** MAX(sale_date) < hari ini (lag >1 hari)
+
+**2. core.dashboard_cache** (Zuma Stock Dashboard) — refresh 07:00 WIB
+- Script VPS: `/opt/openclaw/mv_refresh.sh`
+- Log: `tail /var/log/openclaw/mv_refresh.log | grep -E 'SUCCESS|FAILED'`
+- Freshness DB: ❌ tidak ada kolom tanggal — cek dari log saja
+- Flag: log FAILED saja
+
+**Morning report format:**
+```
+🗄️ MV Health Check
+├─ mv_accurate_summary: [SUCCESS/FAILED] [timestamp] | Data terbaru: [date] ([lag] hari)
+└─ dashboard_cache:     [SUCCESS/FAILED] [timestamp]
+🔴 Flag jika: FAILED di log ATAU accurate MV lag >1 hari
+```
+
+### Active URLs
 | Deck | URL |
 |------|-----|
 | Dept Scorecard Q1 2026 | https://docs.google.com/spreadsheets/d/1maHrARXJdBjEhYsmtZbOoe0U879eYnT8/edit |

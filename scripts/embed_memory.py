@@ -10,6 +10,7 @@ Usage:
     python3 embed_memory.py --full           # Re-embed everything
     python3 embed_memory.py --file 2026-02-27.md  # Embed specific file
     python3 embed_memory.py --stats          # Show embedding stats
+    python3 embed_memory.py --no-classify    # Embed without signal classification
 
 Requires: psycopg2, requests
 ENV: GEMINI_API_KEY, DATABASE_URL (or PG* vars from .env)
@@ -21,6 +22,7 @@ import sys
 import json
 import hashlib
 import time
+import subprocess
 import argparse
 import warnings
 from pathlib import Path
@@ -309,6 +311,10 @@ def main():
     parser.add_argument(
         "--include-knowledge", action="store_true", help="Also embed knowledge/ files"
     )
+    parser.add_argument(
+        "--no-classify", action="store_true",
+        help="Skip auto signal classification after embedding"
+    )
     args = parser.parse_args()
 
     env = load_env()
@@ -396,6 +402,20 @@ def main():
     show_stats(conn)
     conn.close()
 
+    # ── Post-embed hook: auto-classify new chunks ──
+    if success > 0 and not getattr(args, 'no_classify', False):
+        print("\n🔍 Auto-classifying new chunks with signal extraction...")
+        script_dir = Path(__file__).parent
+        classify_script = script_dir / "extract_signals.py"
+        if classify_script.exists():
+            result = subprocess.run(
+                [sys.executable, str(classify_script)],
+                capture_output=False
+            )
+            if result.returncode != 0:
+                print("⚠️  Signal classification had errors (see above). Run manually: python3 scripts/extract_signals.py")
+        else:
+            print(f"⚠️  extract_signals.py not found at {classify_script}")
 
 if __name__ == "__main__":
     main()

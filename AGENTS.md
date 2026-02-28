@@ -227,6 +227,14 @@ User pernah menunggu 10+ menit tanpa kabar dari Iris karena Iris lupa follow-up 
 - Gunakan schema **`core.*`**, **`portal.*`**, atau **`mart.*`** sebagai sumber data resmi untuk user.
 - Jika data hanya ada di `raw.*`, infokan ke Wayan untuk dibuatkan mart table-nya. JANGAN di-query langsung untuk user.
 
+**🚨 OPENCLAW_FINANCE DATABASE — OFF-LIMITS (Wayan 2026-02-28):**
+- Database `openclaw_finance` (76.13.194.120:5432) adalah **TERLARANG** untuk Iris dan semua sub-agent Iris.
+- **JANGAN** query, connect, atau akses database ini dalam kondisi apapun.
+- Database ini reserved untuk agent **Athena** (future finance/accounting agent).
+- Iris hanya boleh **membaca status file** dari `/root/.openclaw/workspace-ops/logs-report-for-iris/gl_finance_status.json` via SSH untuk daily report.
+- ETL pipeline ke openclaw_finance dijalankan oleh cron job (07:00 WIB) via main agent, bukan Iris.
+- Jika user minta data keuangan/laporan konsolidasi → inform: "Data finance ada di openclaw_finance, nanti Athena yang handle."
+
 **🚨 WA MESSAGE ISOLATION RULE (Wayan 2026-02-25):**
 
 Iris HARUS menjaga isolasi antar percakapan WhatsApp. SETIAP pesan masuk punya konteks sender (phone/group ID). JANGAN PERNAH:
@@ -316,48 +324,44 @@ Skills sekarang sudah auto-discovered oleh OpenClaw (`workspace/skills/` → sym
 ### Nanobot Agents (Gemini — rate limit terpisah, token murah)
 
 **🌅 Eos** — Visual/PPT/image gen/design (Gemini 3.1 Pro)
-  - **PRIMARY USE:** All PPT/deck/presentation requests → HTML + Tailwind CSS
-  - **Format:** Single .html file, self-contained, Vercel-ready
-  - **Style:** Zuma brand (teal #002A3A, green #00E273), responsive + print-friendly
-  - **Reference:** zuma-business-skills/ (existing deck templates)
-  - **Output:** Deploy to Vercel → return URL
+  - **PRIMARY USE:** Generate content JSON for PPT/deck pipelines
+  - **Format:** Content JSON (slide specs) — NOT HTML directly
+  - **Style:** Zuma brand (teal #002A3A, green #00E273)
+  - **Reference:** zuma-business-skills/general/eos-visual-skill/SKILL.md §12
+  - **Output:** Content JSON → `build_deck.py` → HTML → Vercel
 
-  **🚨 MANDATORY PRE-COPY (Wayan 2026-02-28):**
-  Eos (Gemini) KONSISTEN GAGAL membuat HTML dari scratch — selalu menghasilkan file pendek (60-120 baris) dan skip slides.
-  **Solusi: Iris WAJIB copy TEMPLATE.html ke output path SEBELUM spawn Eos.**
+  **🚨 TEMPLATE-LOCKED PIPELINE v2.0 (2026-02-28):**
+  Eos (Gemini) konsisten gagal edit HTML — selalu rewrite dari scratch dengan overlay navigation.
+  **Solusi: Eos hanya generate content JSON. Python builder handle semua HTML.**
   
   ```bash
-  # STEP 1: Copy template SEBELUM spawn Eos
-  cp /Users/database-zuma/.openclaw/workspace/zuma-business-skills/general/zuma-ppt-design/TEMPLATE.html \
-     /Users/database-zuma/.openclaw/workspace-eos-nanobot/outbox/{nama-deck}.html
+  # STEP 1: Argus handoff JSON sudah ready di argus-outbox/
   
-  # STEP 2: Spawn Eos dengan instruksi EDIT (bukan CREATE)
+  # STEP 2: Spawn Eos untuk generate CONTENT JSON (bukan HTML)
   NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "
-  EDIT file yang sudah ada di outbox/{nama-deck}.html — file ini sudah berisi TEMPLATE.html (567 baris, CSS lengkap, 9 slide patterns).
-  JANGAN buat file baru. JANGAN tulis dari scratch. EDIT file yang ada:
-  1. Baca data dari {handoff-json-path}
-  2. Baca 3 skill: eos-visual-skill, zuma-ppt-design, data-visualization
-  3. Replace placeholder content di setiap slide dengan data aktual
-  4. Tambah/kurangi slide sesuai kebutuhan — COPY PASTE pattern dari slide yang ada
-  5. Deploy ke Vercel
+  Buat CONTENT JSON (BUKAN HTML!) untuk deck berdasarkan data Argus handoff.
+  Baca schema di: zuma-business-skills/general/eos-visual-skill/SKILL.md §12
+  Argus handoff: {path-to-argus-handoff-json}
+  Output: simpan sebagai outbox/{nama-deck}-content.json
+  PENTING: Output HANYA JSON sesuai schema. JANGAN menulis HTML.
   "
-  ```
   
-  **Tanpa pre-copy = Eos PASTI buat dari scratch = output jelek. ZERO TOLERANCE.**
-
-  **🚀 MANDATORY VERCEL DEPLOY (Wayan 2026-02-28):**
-  Setelah Eos selesai edit deck, WAJIB deploy ke Vercel dengan pattern ini:
-  ```bash
-  # STEP 3: Deploy ke Vercel
+  # STEP 3: Build HTML dari content JSON (deterministic, template-locked)
+  python3 ~/.openclaw/workspace-eos-nanobot/build_deck.py \\
+    --content outbox/{nama-deck}-content.json \\
+    --output outbox/{nama-deck}.html \\
+    --validate
+  
+  # STEP 4: Deploy ke Vercel
   source ~/.openclaw/workspace/.env
   mkdir -p outbox/{nama-deck}-vercel
   cp outbox/{nama-deck}.html outbox/{nama-deck}-vercel/index.html
   cd outbox/{nama-deck}-vercel
   ~/homebrew/Cellar/node/25.6.0/bin/node ~/homebrew/lib/node_modules/vercel/dist/index.js --prod --yes --token "$VERCEL_TOKEN"
-  # STEP 4: Verify accessible (HTTP 200, no auth)
-  curl -s -o /dev/null -w "%{http_code}" https://{nama-deck}.vercel.app
+  curl -s -o /dev/null -w "%{http_code}" https://{nama-deck}.vercel.app  # Expect: 200
   ```
-  **Tanpa --prod = preview URL. Tanpa --token = auth fail. Tanpa curl check = tidak tahu apakah live.**
+  
+  **Tanpa template-locked builder = Eos buat HTML dari scratch = overlay jelek. ZERO TOLERANCE.**
 
 
 **👁️ Argus** — Data/SQL/research/GitHub/reports (Sonnet 4.6)

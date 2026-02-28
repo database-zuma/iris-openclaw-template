@@ -91,3 +91,12 @@
 | 2026-02-25 06:04 | Sulawesi | 63M | 76% | 0.0% FF | ✅ |
 | 2026-02-25 06:04 | Sumatera | 46M | 71% | 62.6% FF | ✅ |
 | 2026-02-25 06:05 | Batam | 34M | 69% | 0.0% FF | ✅ |
+| 2026-02-26 06:00 | — | — | — | — | SKIP (Atlas health check logs unavailable) |
+| 2026-02-27 06:00 | — | — | — | — | SKIP (Stock pull partial error 2026-02-27 03:00; Cannot verify Atlas health check from Mac Mini; VPS logs unavailable) |
+| 2026-02-28 06:01 | Jawa Timur | 718M | 87% | 65.8% FF | ✅ |
+| 2026-02-28 06:01 | Bali | 2.6B | 71% | 63.7% FF | ✅ |
+| 2026-02-28 06:01 | Jakarta | 151M | 74% | 19.7% FF | ✅ |
+| 2026-02-28 06:02 | Lombok | 387M | 107% | 37.8% FF | ✅ |
+| 2026-02-28 06:02 | Sulawesi | 63M | 76% | 0.0% FF | ✅ |
+| 2026-02-28 06:02 | Sumatera | 46M | 71% | 62.6% FF | ✅ |
+| 2026-02-28 06:03 | Batam | 34M | 69% | 0.0% FF | ✅ |

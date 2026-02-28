@@ -36,18 +36,41 @@ Load: `source .env` atau `python-dotenv`.
 - **Kesimpulan:** Iris = image generation ✅, image editing/face swap ❌ (butuh Adobe Firefly/InsightFace)
 - **SDK:** `google-genai` Python — `client.models.generate_images(model='imagen-4.0-generate-001', prompt='...', config=GenerateImagesConfig(number_of_images=1, aspect_ratio="1:1"))`
 
-## ⚡ Nanobot Fallback (Gemini rate-limited)
+## ⚡ Nanobot Fallback (Model Override)
 
-Semua nanobot punya OpenRouter API key. Kalau Gemini error/rate-limited, override model via env var:
+Nanobot TIDAK punya automatic fallback chain. Override model via env var kalau primary gagal:
+
+### Current Primary Models (Updated 2026-02-28)
+- **Eos:** `gemini/gemini-3.1-pro-preview` (visual/PPT/design)
+- **Argus:** `anthropic/claude-sonnet-4-6` (data/SQL/reports)
+- **Codex:** `anthropic/k2p5` (web apps/full-stack)
+
+### Fallback Commands (manual override)
 ```bash
-# Eos fallback → Sonnet 4.6
+# Eos fallback → Kimi K2.5 (cheapest capable)
+NANOBOT_AGENTS__DEFAULTS__MODEL="kimi-coding/k2p5" NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "[task]"
+# Eos fallback → Sonnet 4.6 (highest quality)
 NANOBOT_AGENTS__DEFAULTS__MODEL="anthropic/claude-sonnet-4-6" NANOBOT_CONFIG_PATH=~/.nanobot/config-eos.json nanobot agent -m "[task]"
-# Argus fallback → Gemini 2.5 Flash
-NANOBOT_AGENTS__DEFAULTS__MODEL="google/gemini-2.5-flash" NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task]"
+
+# Argus fallback → Kimi K2.5
+NANOBOT_AGENTS__DEFAULTS__MODEL="kimi-coding/k2p5" NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task]"
+# Argus fallback → Gemini 3 Flash
+NANOBOT_AGENTS__DEFAULTS__MODEL="gemini/gemini-3-flash-preview" NANOBOT_CONFIG_PATH=~/.nanobot/config-argus.json nanobot agent -m "[task]"
+
 # Codex fallback → Sonnet 4.6
 NANOBOT_AGENTS__DEFAULTS__MODEL="anthropic/claude-sonnet-4-6" NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[task]"
+# Codex fallback → Gemini 3 Flash
+NANOBOT_AGENTS__DEFAULTS__MODEL="gemini/gemini-3-flash-preview" NANOBOT_CONFIG_PATH=~/.nanobot/config-codex.json nanobot agent -m "[task]"
 ```
-Gunakan fallback HANYA kalau Gemini gagal. Balik ke Gemini begitu normal.
+
+### 🇨🇳 OpenRouter Cheap Chinese AI (PENDING — need API key)
+Kalau OpenRouter API key sudah dikonfigurasi, fallback ultra-murah:
+- Eos → `openrouter/qwen/qwen3-coder-30b-a3b-instruct` ($0.07/$0.27 per M tokens)
+- Argus → `openrouter/baidu/ernie-4.5-21b-a3b` ($0.07/$0.28 per M tokens)
+- Codex → `openrouter/deepseek/deepseek-v3.2` ($0.25/$0.40 per M tokens)
+- Budget: `openrouter/qwen/qwen3-coder:free` (rate-limited, $0)
+
+**TODO:** Tambahkan OpenRouter API key ke semua nanobot configs (providers.openrouter.apiKey).
 
 ## Browser & Screenshot
 
@@ -69,38 +92,47 @@ python3 -c "import json,base64; d=json.load(open('/tmp/resp.json')); open('/path
 
 ## Agent Browser (Vercel Labs)
 
-**Binary:** `/Users/database-zuma/homebrew/bin/agent-browser` (v0.15.1) ✅ INSTALLED & TESTED
-**Repo:** https://github.com/vercel-labs/agent-browser (15.9k stars, Apache 2.0)
-**Tech:** Rust CLI + Node.js daemon | **Chromium:** pre-installed
+**Binary:** `/Users/database-zuma/homebrew/bin/agent-browser` (v0.15.1 — LATEST) ✅ INSTALLED & TESTED
+**Repo:** https://github.com/vercel-labs/agent-browser (16.5k stars, Apache 2.0)
+**Tech:** Rust CLI + Node.js daemon | **Browser:** Chromium (also Firefox/WebKit)
 **Install date:** 2026-02-27 | **Status:** Production-ready
 
 ### Keunggulan vs Playwright MCP
 - **93% less context** — ~400 chars output vs 4000+ chars Playwright
 - **95% first-try success rate** — fewer retry loops needed
-- **Speed:** Rust-based CLI = faster startup
-- **Light output:** Perfect for token-constrained scenarios (nanobot, quick automation)
+- **Speed:** Rust-based CLI = sub-millisecond parsing overhead
+- **50+ commands** — full browser automation (not just basic 9)
+- **Security:** Auth vault (encrypted), domain allowlist, action policies (v0.15.0)
 
-### Commands
+### Quick Reference (Most Used)
 ```bash
-agent-browser open <url>           # Open URL in browser
-agent-browser snapshot -i          # Take & return snapshot
-agent-browser click @ref           # Click element by AI ref
-agent-browser fill @ref "text"     # Fill input field
-agent-browser screenshot           # Full page screenshot
-agent-browser exec <js>            # Execute JavaScript
-agent-browser type "text"          # Type text
-agent-browser press <key>          # Press keyboard key
-agent-browser wait <selector>      # Wait for element
+agent-browser open <url>              # Navigate
+agent-browser snapshot -i             # Interactive elements only (AI-optimal)
+agent-browser snapshot -i --json      # Machine-readable output
+agent-browser click @e2               # Click by ref from snapshot
+agent-browser fill @e3 "text"          # Clear + fill input
+agent-browser screenshot --annotate   # Numbered labels on elements
+agent-browser get text @e1            # Get element text content
+agent-browser find role button click --name "Submit"  # Semantic locator
+agent-browser wait --load networkidle # Wait for page load
+agent-browser eval <js>               # Run JavaScript
+agent-browser diff snapshot           # Compare current vs last snapshot
+agent-browser network requests        # View tracked network requests
+agent-browser --session agent1 open url  # Isolated session per agent
 ```
+
+### Full Command Categories
+50+ commands across: **Core Interaction** | **Observation** (snapshot, screenshot, get, is) | **Semantic Find** | **Wait** | **Mouse** | **Diff** (v0.13+) | **Tabs/Windows/Frames** | **Settings** | **Cookies/Storage** | **Network Interception** | **Debug/Profiling** | **State Management** | **Security/Auth** (v0.15+) | **Sessions/Profiles** | **CDP Connect** | **Cloud Providers** (Browserbase, Kernel, BrowserUse) | **iOS Simulator**
+
+**Full reference:** `knowledge/dev-tools/2026-02-27_agent-browser.md`
 
 ### Who Can Use?
 ✅ Iris (Mac Mini) | ✅ All sub-agents (Metis, Daedalus, Hermes, Oracle) | ✅ All nanobots (Eos, Argus, Codex) | ✅ All CLIs (opencode, claude-code, kimi-cli)
 
 ### When to Use
-- Prefer when: Light automation needed, token budget tight, 1st-try matters
+- Prefer when: Light automation, token budget tight, 1st-try matters, multi-agent sessions
 - Avoid when: Complex multi-step with heavy context (use Playwright MCP instead)
-- Best for: Quick snapshots, form fills, element clicks, lightweight scraping
-
+- Best for: Quick snapshots, form fills, element clicks, network inspection, visual diff
 ## Output File Locations
 
 **PO:** `~/Desktop/DN PO ENTITAS/` — Format: `PO-[ENTITY]-[YYMMDD]-[NNN].xlsx` (ALL PO outputs here)
@@ -126,6 +158,19 @@ agent-browser wait <selector>      # Wait for element
 **Decision:** National aggregate → `mart.sku_portfolio` | Store/area breakdown or custom dates → `core.sales_with_product`
 **Format:** WA-friendly. 1-5 articles: detailed blocks. 6+: compact list.
 **Auto-flags:** 🔥 Stockout (<0.5mo TO), 🐌 Overstock (>2.5mo), ⚠️ Negative WH, 📉 Big drop (>-70% YoY)
+
+## Daily Automation — Q1 2026 (Updated 2026-02-27)
+
+### Planogram
+- **Main source:** `portal.planogram_existing_q1_2026` (51 toko, 606 artikel, 42 size cols + BOX)
+- **For:** RO requests, planogram analysis, store-level queries
+
+### FF/FA/FS Metrics (Daily)
+- **Table:** `mart.ff_fa_fs_daily_q1_2026` (51 toko, refreshed daily at 03:XX+ WIB)
+- **Script:** `/opt/openclaw/scripts/calculate_ff_fa_fs_q12026.py` (runs after 03:00 stock pull)
+- **Status JSON:** `/opt/openclaw/logs/ff_fa_fs_q12026_latest_status.json` (→ use for daily morning report)
+- **OLD (deprecated):** `/opt/openclaw/logs/ff_fa_fs_latest_status.json` ❌ DO NOT USE
+- **Cron:** 03:00 stock pull → 03:XX+ FF/FA/FS calc → 05:30 Atlas health check reads status JSON
 
 ## Google Drive (gog CLI)
 
@@ -233,6 +278,7 @@ Status: `/opt/openclaw/logs/{stock,sales}_latest_status.json`
 | Group | JID |
 |-------|-----|
 | Anak Gaul SI | `120363421058001851@g.us` |
+| Duo D | `120363426622392503@g.us` |
 
 **Find group JID:** `grep -h "[0-9]*@g.us" ~/.openclaw/agents/main/sessions/*.jsonl | grep -i "keyword"`
 **Send to group:** `message action=send channel=whatsapp target=[JID] message="text"`
@@ -294,7 +340,7 @@ Installed (perlu config): `mcp-obsidian`, `figma-developer-mcp`, `shadcn-ui-mcp-
 |-----------|--------|
 | DB Table | `iris.memory_vectors` (PostgreSQL VPS) |
 | Embedding Model | Gemini `gemini-embedding-001` (3072 dims) |
-| Scripts | `scripts/embed_memory.py`, `scripts/search_memory.py` |
+| Scripts | `scripts/embed_memory.py`, `scripts/search_memory.py`, `scripts/extract_signals.py` |
 | Data | 438 chunks from 18 memory files + 18 knowledge files |
 | Cost | ~$0.0001/day (basically free) |
 
@@ -307,19 +353,70 @@ python3 scripts/search_memory.py --json "query"  # for programmatic use
 python3 scripts/search_memory.py "query" --source memory  # memory only
 python3 scripts/search_memory.py "query" --source knowledge  # knowledge only
 
+# Signal-aware search (NEW — 2026-02-28)
+python3 scripts/search_memory.py "query" --type decision     # filter by signal type
+python3 scripts/search_memory.py "query" --important          # importance >= 4 only
+python3 scripts/search_memory.py "query" --min-importance 3   # importance >= N
+python3 scripts/search_memory.py "query" --type lesson --important  # combine filters
+
 # Embed new/changed memories
-python3 scripts/embed_memory.py                  # incremental (new only)
-python3 scripts/embed_memory.py --include-knowledge  # + knowledge files
-python3 scripts/embed_memory.py --full             # re-embed everything
+python3 scripts/embed_memory.py                  # incremental (new only) + auto-classify
+python3 scripts/embed_memory.py --include-knowledge  # + knowledge files + auto-classify
+python3 scripts/embed_memory.py --full             # re-embed everything + auto-classify
+python3 scripts/embed_memory.py --no-classify       # embed only, skip signal classification
 python3 scripts/embed_memory.py --stats             # show stats
+
+# Signal extraction (classify existing chunks)
+python3 scripts/extract_signals.py                  # unclassified chunks only
+python3 scripts/extract_signals.py --full            # re-classify all
+python3 scripts/extract_signals.py --since 2026-02-20  # from date
+python3 scripts/extract_signals.py --stats           # show distribution
+python3 scripts/extract_signals.py --dry-run         # preview without writing
+python3 scripts/extract_signals.py --limit 20        # process N chunks max
 ```
 
 ### When to Use
 - **Semantic search**: context retrieval, "kapan terakhir bahas X?", finding related memories
+- **Signal-filtered search**: find decisions (`--type decision`), lessons (`--type lesson`), critical items (`--important`)
 - **Grep (fallback)**: exact keyword, error codes, phone numbers, file names
-- **After writing memory**: run `embed_memory.py` to index new entries
+- **After writing memory**: run `embed_memory.py` to index new entries (auto-classifies signals)
+- **Manual classify**: run `extract_signals.py` directly if needed (embed_memory.py now calls it automatically)
+
+### 🏷️ Signal Types
+| Type | Description | Example |
+|------|------------|---------|
+| `decision` | Choice or decision made | "Switched Iris to Sonnet 4.6" |
+| `preference` | User preference expressed | "Wayan prefers HTML+Tailwind for PPT" |
+| `correction` | Mistake corrected | "Fixed fallback chain — only tries 2 models" |
+| `lesson` | Something learned | "Nanobot doesn't support auto fallback" |
+| `pattern` | Recurring behavior/issue | "User asks about planogram every Monday" |
+| `error` | Technical failure/bug | "Gemini API 429 rate limit during embed" |
+| `fact` | Factual information | "VPS IP: 76.13.194.120" |
+| `task` | Task done/requested/pending | "Compiled ARCHITECTURE.md" |
+
+Importance: 1 (trivial) → 5 (critical). `--important` = importance ≥ 4.
 
 ### 🪞 Daily Reflection
 - Triggered at **22:00 WIB** (last heartbeat before quiet hours)
 - Output: `memory/reflections/YYYY-MM-DD.md`
 - See `AGENTS.md § Daily Reflection Protocol` for format
+---
+
+## MarkItDown (File → Markdown Converter)
+
+Convert file apapun ke Markdown — biar kamu bisa baca isinya.
+
+```bash
+# Basic usage
+markitdown /path/to/file.pdf
+markitdown /path/to/file.pptx
+markitdown /path/to/file.xlsx
+markitdown /path/to/file.docx
+
+# Save ke file
+markitdown /path/to/file.pdf -o /tmp/output.md
+```
+
+**Supported:** PDF, PPTX, DOCX, XLSX, XLS, HTML, CSV, JSON, XML, ZIP, images (OCR), audio, YouTube URLs, EPub.
+
+**Kapan pakai:** User kirim file via WA → convert dulu pakai markitdown → baru baca & proses isinya. Exec via `exec` tool.

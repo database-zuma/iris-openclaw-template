@@ -245,6 +245,18 @@
 
 ---
 
+## 🔵 Future Projects (Low Priority)
+
+### OpenClaw Studio — Web Dashboard GUI
+**Priority:** Low | **Added:** 2026-02-28
+- [ ] Install & setup OpenClaw Studio — web dashboard GUI untuk manage agents dari browser
+- **Features:** Chat, approvals, cron management, edit SOUL.md/AGENTS.md
+- **Install:** `npx -y openclaw-studio@latest`
+- **Repo:** https://github.com/grp06/openclaw-studio
+- **Knowledge:** `knowledge/dev-tools/2026-02-28_openclaw-studio.md`
+
+---
+
 ## 📝 Notes
 
 - **HEARTBEAT.md:** For urgent/same-day tasks requiring active monitoring
