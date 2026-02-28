@@ -108,11 +108,12 @@ User bilang "bikin RO request" →
 | Skill Name | Trigger Keywords | Delegate To | Skill File Path |
 |-----------|------------------|-------------|-----------------|
 | `eos-visual-skill` | "PPT", "deck", "slide", "presentasi" | Argus → Eos | `zuma-business-skills/general/eos-visual-skill/SKILL.md` |
-| `zuma-ppt-design` | "PPT design", "template deck" | Argus → Eos | `zuma-business-skills/general/zuma-ppt-design/SKILL.md` |
+| `zuma-ppt-design` | "PPT design", "template deck", "style preset", "visual deck" | Argus → Eos | `zuma-business-skills/general/zuma-ppt-design/SKILL.md` |
 | `zuma-image-gen-skill` | "generate image", "bikin gambar", "visual asset" | Daedalus (Gemini) | `zuma-business-skills/general/zuma-image-gen-skill/SKILL.md` |
 | `data-storytelling-skill` | "storytelling", "narrative", "insight report", "BCG style" | Argus | `zuma-business-skills/general/data-storytelling-skill/SKILL.md` |
 | `zuma-company-context` | "brand", "Zuma identity", "brand guidelines" | (dependency — load bersama visual skills) | `zuma-business-skills/general/zuma-company-context/SKILL.md` |
 | `xlsx-skill` | "output excel", "file xlsx", "bikin excel", "laporan excel", "template excel", "download xlsx" | Argus / Daedalus | `zuma-business-skills/general/xlsx-skill/SKILL.md` |
+| `markitdown` | User kirim/upload file (PDF, Word, Excel, PPT, gambar, URL YouTube) untuk dibaca/dianalisis → convert dulu ke markdown | Argus / Daedalus / Iris | `zuma-business-skills/general/markitdown/SKILL.md` |
 | `iris-openclaw-product-photo` | "foto produk", "product photo", "brief fotografer", "shopee foto", "listing photo", "prompt foto" | Daedalus / Eos | `zuma-business-skills/general/iris-openclaw-product-photo/SKILL.md` |
 
 ---
@@ -166,6 +167,7 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 | `statistical-analysis` | `zuma-data-analyst-skill` (untuk DB query) |
 | `data-visualization` | `statistical-analysis` (opsional, kalau butuh stats dulu) |
 | `xlsx-skill` | (none — standalone output tool) |
+| `markitdown` | (none — standalone pre-processing tool) |
 
 ---
 
@@ -189,6 +191,7 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 │   ├── iris-openclaw-strategic-decisions/SKILL.md  ← NEW
 │   ├── iris-openclaw-product-photo/SKILL.md  ← NEW
 │   ├── coding-reference-hub/SKILL.md          ← NEW
+│   ├── markitdown/SKILL.md                    ← NEW
 │   └── zuma-ppt-design/SKILL.md
 ├── ops/
 │   ├── dn-to-po/SKILL.md
@@ -219,4 +222,4 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 ---
 
 _Catatan: File ini harus di-update setiap ada skill baru ditambahkan ke `zuma-business-skills/`._
-_Last updated: 2026-02-28 — tambah xlsx-skill, statistical-analysis, data-visualization, iris-openclaw-anti-hallucination, iris-openclaw-communication-humanizer, iris-openclaw-data-analyst-guided, iris-openclaw-strategic-decisions, iris-openclaw-product-photo_
+_Last updated: 2026-02-28 — tambah markitdown skill (doc→LLM converter, Microsoft). Update xlsx-skill, statistical-analysis, zuma-data-analyst-skill, iris-openclaw-data-analyst-guided untuk referensiin markitdown sebagai file input pre-processor._
