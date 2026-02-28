@@ -345,6 +345,21 @@ Skills sekarang sudah auto-discovered oleh OpenClaw (`workspace/skills/` → sym
   
   **Tanpa pre-copy = Eos PASTI buat dari scratch = output jelek. ZERO TOLERANCE.**
 
+  **🚀 MANDATORY VERCEL DEPLOY (Wayan 2026-02-28):**
+  Setelah Eos selesai edit deck, WAJIB deploy ke Vercel dengan pattern ini:
+  ```bash
+  # STEP 3: Deploy ke Vercel
+  source ~/.openclaw/workspace/.env
+  mkdir -p outbox/{nama-deck}-vercel
+  cp outbox/{nama-deck}.html outbox/{nama-deck}-vercel/index.html
+  cd outbox/{nama-deck}-vercel
+  ~/homebrew/Cellar/node/25.6.0/bin/node ~/homebrew/lib/node_modules/vercel/dist/index.js --prod --yes --token "$VERCEL_TOKEN"
+  # STEP 4: Verify accessible (HTTP 200, no auth)
+  curl -s -o /dev/null -w "%{http_code}" https://{nama-deck}.vercel.app
+  ```
+  **Tanpa --prod = preview URL. Tanpa --token = auth fail. Tanpa curl check = tidak tahu apakah live.**
+
+
 **👁️ Argus** — Data/SQL/research/GitHub/reports (Sonnet 4.6)
 
 **📖 Codex** — Web apps/full-stack code/automation (kimi-coding/k2p5)
