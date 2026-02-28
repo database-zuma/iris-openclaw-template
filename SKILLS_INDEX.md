@@ -113,9 +113,21 @@ User bilang "bikin RO request" →
 | `data-storytelling-skill` | "storytelling", "narrative", "insight report", "BCG style" | Argus | `zuma-business-skills/general/data-storytelling-skill/SKILL.md` |
 | `zuma-company-context` | "brand", "Zuma identity", "brand guidelines" | (dependency — load bersama visual skills) | `zuma-business-skills/general/zuma-company-context/SKILL.md` |
 | `xlsx-skill` | "output excel", "file xlsx", "bikin excel", "laporan excel", "template excel", "download xlsx" | Argus / Daedalus | `zuma-business-skills/general/xlsx-skill/SKILL.md` |
-| `zuma-company-context` | "brand", "Zuma identity", "brand guidelines" | (dependency — load bersama visual skills) | `zuma-business-skills/general/zuma-company-context/SKILL.md` |
+| `iris-openclaw-product-photo` | "foto produk", "product photo", "brief fotografer", "shopee foto", "listing photo", "prompt foto" | Daedalus / Eos | `zuma-business-skills/general/iris-openclaw-product-photo/SKILL.md` |
 
 ---
+
+## 🧠 Iris Meta-Skills (Quality + Intelligence Layer)
+
+Load bersama skill lain untuk upgrade output quality. Bukan standalone — dipakai sebagai layer atas skill operasional.
+
+| Skill Name | Trigger / When to Load | Skill File Path |
+|-----------|------------------------|------------------|
+| `iris-openclaw-anti-hallucination` | SELALU load kalau output mengandung angka/data | `zuma-business-skills/general/iris-openclaw-anti-hallucination/SKILL.md` |
+| `iris-openclaw-communication-humanizer` | SELALU load kalau output dikirim ke user via WA | `zuma-business-skills/general/iris-openclaw-communication-humanizer/SKILL.md` |
+| `iris-openclaw-data-analyst-guided` | User minta "analisis", "cek performa", pertanyaan data open-ended | `zuma-business-skills/general/iris-openclaw-data-analyst-guided/SKILL.md` |
+| `iris-openclaw-strategic-decisions` | "worth it gak", "lebih baik mana", "should we", keputusan strategis | `zuma-business-skills/general/iris-openclaw-strategic-decisions/SKILL.md` |
+| `iris-openclaw-product-photo` | "foto produk", "product photo brief", "prompt foto", "listing image" | `zuma-business-skills/general/iris-openclaw-product-photo/SKILL.md` |
 
 ## 🔧 Operations & Finance Skills
 
@@ -164,6 +176,11 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 │   ├── data-visualization/SKILL.md       ← NEW
 │   ├── statistical-analysis/SKILL.md      ← NEW
 │   ├── xlsx-skill/SKILL.md                ← NEW
+│   ├── iris-openclaw-anti-hallucination/SKILL.md  ← NEW
+│   ├── iris-openclaw-communication-humanizer/SKILL.md  ← NEW
+│   ├── iris-openclaw-data-analyst-guided/SKILL.md  ← NEW
+│   ├── iris-openclaw-strategic-decisions/SKILL.md  ← NEW
+│   ├── iris-openclaw-product-photo/SKILL.md  ← NEW
 │   └── zuma-ppt-design/SKILL.md
 ├── ops/
 │   ├── dn-to-po/SKILL.md
@@ -194,4 +211,4 @@ Beberapa skill punya dependency ke skill lain. Saat load skill utama, JUGA load 
 ---
 
 _Catatan: File ini harus di-update setiap ada skill baru ditambahkan ke `zuma-business-skills/`._
-_Last updated: 2026-02-28 — tambah xlsx-skill, statistical-analysis, data-visualization_
+_Last updated: 2026-02-28 — tambah xlsx-skill, statistical-analysis, data-visualization, iris-openclaw-anti-hallucination, iris-openclaw-communication-humanizer, iris-openclaw-data-analyst-guided, iris-openclaw-strategic-decisions, iris-openclaw-product-photo_
