@@ -20,8 +20,8 @@
 8. [Verification](#verification)
 9. [Troubleshooting](#troubleshooting)
 10. [Resource Usage](#resource-usage)
-11. [Extending the Virtual Computer](#extending-the-virtual-computer)
-12. [Key Lessons Learned](#key-lessons-learned)
+12. [Connecting an AI Agent to the Virtual Computer](#connecting-an-ai-agent-to-the-virtual-computer)
+13. [Key Lessons Learned](#key-lessons-learned)
 
 ---
 
@@ -609,7 +609,9 @@ Hidden=false
 X-GNOME-Autostart-enabled=true
 ```
 
-### Connecting an AI Agent via CDP
+### Connecting an AI Agent via CDP (Raw)
+
+If your agent framework doesn't have built-in browser profiles, you can connect directly using any CDP library.
 
 Example using Playwright (Node.js):
 
@@ -646,6 +648,187 @@ const puppeteer = require('puppeteer-core');
 })();
 ```
 
+Example using Python websockets (raw CDP):
+
+```python
+import websockets, json, asyncio
+
+async def navigate(url):
+    # First, get the page target
+    # curl http://VPS_IP:9222/json/list → get webSocketDebuggerUrl
+    ws_url = "ws://VPS_IP:9222/devtools/page/PAGE_ID"
+    async with websockets.connect(ws_url) as ws:
+        await ws.send(json.dumps({
+            "id": 1,
+            "method": "Page.navigate",
+            "params": {"url": url}
+        }))
+        result = await ws.recv()
+        print("Navigated:", result)
+
+asyncio.run(navigate("https://www.google.com"))
+```
+
+---
+
+## Connecting an AI Agent to the Virtual Computer
+
+This is the **most important section** for other AI agents. The Docker setup gives you a virtual computer — but the agent needs to actually *use* it. This section covers the full integration: browser automation, shell access, and making the virtual computer the agent's **primary tool**.
+
+### The Big Picture
+
+The virtual computer is **not just a browser**. It's a full Linux OS that the AI agent can use like a human uses their computer:
+
+```
+AI Agent (any location)
+  │
+  ├── 🌐 Browser Control (CDP WebSocket)
+  │   └── ws://VPS_IP:9222
+  │       → Navigate, click, type, screenshot, read DOM
+  │       → Persistent login sessions (Gmail, etc.)
+  │       → Human can spectate simultaneously
+  │
+  ├── 💻 Shell Access (SSH → docker exec)
+  │   └── ssh user@VPS_IP "docker exec iris-desktop [command]"
+  │       → Run any Linux command
+  │       → Install tools, run scripts, manage files
+  │       → Full root access inside container
+  │
+  └── 👁️ Human Spectating (Web Desktop)
+      └── https://VPS_IP:3001/
+          → Real-time view of everything the agent does
+          → Human can intervene (click, type) if needed
+```
+
+### Step 1: Browser Profile (OpenClaw-Specific)
+
+OpenClaw has built-in support for remote CDP browser profiles. This is the cleanest integration:
+
+```bash
+# Create a browser profile pointing to the virtual computer's CDP
+openclaw browser create-profile \
+  --name iris-desktop \
+  --cdp-url http://VPS_IP:9222 \
+  --color "#00E273"
+```
+
+After this, the agent can use `--browser-profile iris-desktop` for any browser command, and it will control Chrome on the virtual computer instead of a local browser.
+
+**Verification:**
+```bash
+openclaw browser profiles
+# Should show:
+# iris-desktop: running (N tabs) [remote]
+#   cdpUrl: http://VPS_IP:9222, color: #00E273
+```
+
+**For non-OpenClaw agents:** Use any CDP client library (Playwright, Puppeteer, raw WebSocket) pointed at `http://VPS_IP:9222`. See the "Connecting an AI Agent via CDP (Raw)" section above.
+
+### Step 2: Shell Access
+
+The agent needs shell access for anything beyond browser automation — installing tools, running scripts, managing files on the virtual computer.
+
+**Pattern: SSH → docker exec**
+```bash
+# Run a command inside the virtual computer
+ssh user@VPS_IP "docker exec iris-desktop [command]"
+
+# Examples:
+ssh user@VPS_IP "docker exec iris-desktop uname -a"
+ssh user@VPS_IP "docker exec iris-desktop free -h"
+ssh user@VPS_IP "docker exec iris-desktop apt-get install -y python3"
+ssh user@VPS_IP "docker exec iris-desktop python3 -c 'print(1+1)'"
+```
+
+**For interactive sessions:**
+```bash
+ssh user@VPS_IP "docker exec -it iris-desktop bash"
+```
+
+**Important:** The agent needs SSH access to the VPS. Set up SSH keys so the agent can connect without password prompts.
+
+### Step 3: Configure Agent Knowledge
+
+The agent needs to **know** about the virtual computer and **when to use it**. This is the most critical step — without explicit routing rules, the agent will default to whatever browser tool it had before.
+
+**What to add to the agent's configuration/knowledge:**
+
+1. **Virtual computer exists** — endpoint URLs, login credentials, capabilities
+2. **When to use it** — routing rules (virtual computer vs lightweight tools)
+3. **How to access it** — browser profile name, SSH command patterns
+
+**Example routing decision tree (add to agent config):**
+
+```
+Web task received
+  │
+  ├─ Needs login / session persistence / anti-bot bypass?
+  │   └─ YES → Virtual Computer (CDP)
+  │        Examples: Gmail, e-commerce seller panels, Google services
+  │
+  ├─ Simple public page fetch / scrape?
+  │   └─ YES → Lightweight tool (Firecrawl, Exa, curl)
+  │        Examples: Public articles, API docs, price checks
+  │
+  └─ Complex multi-step browser automation?
+      └─ YES → Virtual Computer (CDP)
+           Examples: Fill forms, navigate SPAs, download reports
+```
+
+### Step 4: Verification — Test All Three Channels
+
+After setup, verify the agent can use all three access channels:
+
+**Test 1: Browser (CDP)**
+```bash
+# Ask the agent to navigate to a page
+openclaw agent -m "Use browser profile iris-desktop, navigate to https://www.wikipedia.org, tell me the page title"
+# Expected: Agent reports Wikipedia page title
+```
+
+**Test 2: Persistent Login**
+```bash
+# After human logs into Gmail via web desktop, ask agent to check
+openclaw agent -m "Use browser profile iris-desktop, go to https://mail.google.com, tell me if you're logged in"
+# Expected: Agent sees inbox (not login page)
+```
+
+**Test 3: Shell Access**
+```bash
+# Ask the agent to run a command on the virtual computer
+openclaw agent -m "SSH to VPS and run: docker exec iris-desktop uname -a && whoami && free -h"
+# Expected: Agent returns Linux kernel info, user, and memory stats
+```
+
+**Test 4: Human Spectating**
+```
+1. Human opens https://VPS_IP:3001/ in their browser
+2. Ask the agent to navigate to a visible page (e.g., Google Maps)
+3. Human should see Chrome navigating in real-time on the web desktop
+4. Both channels (agent CDP + human spectating) work simultaneously
+```
+
+### What the Agent Can Now Do
+
+With browser + shell + persistent sessions, the agent has capabilities that were previously impossible:
+
+| Capability | How | Example |
+|---|---|---|
+| **Browse as human** | CDP (headed Chrome, not headless) | Google doesn't block, CAPTCHA-free |
+| **Persistent logins** | Chrome profile in Docker volume | Login to Gmail once, stays logged in for weeks |
+| **Run any Linux command** | SSH → docker exec | Install Python, run scripts, process files |
+| **Install tools** | apt-get / pip / npm inside container | Add ffmpeg, imagemagick, pandoc, whatever needed |
+| **Manage files** | Shell + persistent /config volume | Download, process, upload files |
+| **Human oversight** | Web desktop at :3001 | Human watches agent in real-time, can intervene |
+| **Multi-tool automation** | Combine browser + shell | Scrape a page → process data with Python → email results |
+
+### Security Considerations
+
+- **CDP is unencrypted** — the WebSocket connection between agent and Chrome is plaintext. For production, consider SSH tunneling or a VPN.
+- **Container has root access** — the agent can install/delete anything inside the container. The Docker volume boundary prevents escape to the host, but be mindful of what you expose.
+- **Web desktop credentials** — the HTTPS web desktop uses basic auth (user/password in docker-compose.yml). Change the default password for production.
+- **Port exposure** — ports 3000, 3001, 9222 are open to the internet. Consider firewall rules (ufw/iptables) to restrict access to known IPs.
+
 ---
 
 ## Key Lessons Learned
@@ -677,6 +860,53 @@ Chrome uses `/dev/shm` for shared memory. Docker defaults to 64MB, which causes 
 ### 9. seccomp:unconfined for Chrome Sandbox
 Chrome's built-in sandbox requires system calls that Docker's default seccomp profile blocks. `seccomp:unconfined` is the simplest fix. For production, you could create a custom seccomp profile that allows only what Chrome needs.
 
+### 10. AI Agent Session Context ≠ File System State
+
+After deploying the virtual computer, the AI agent (Iris) was still referencing **old URLs and container names** from a previous failed approach (port 6080, noVNC, `iris-chrome`) — even though all config files (`AGENTS.md`, `TOOLS.md`, memory files) had already been updated with the correct information.
+
+**Root cause:** AI agents running on frameworks like OpenClaw maintain a **session context** in memory. When the agent's session started, it loaded the old config. Updating files on disk doesn't automatically propagate into the agent's active session — the agent needs to either:
+
+1. **Restart the gateway** (`openclaw gateway stop && openclaw gateway start`) — forces a fresh session that reads updated files
+2. **Compact the session** (`/compact`) — summarizes existing context and re-reads files
+3. **Explicitly tell the agent** to re-read specific files — works but fragile
+
+**The lesson:** When you change an AI agent's configuration (endpoints, credentials, tool descriptions), the agent won't pick it up until its session reloads. This is analogous to editing a config file but forgetting to restart the service. Always restart/compact after significant config changes.
+
+### 11. HTTPS Required for Modern Web Desktop Streaming
+
+The webtop image serves its web desktop on both HTTP (:3000) and HTTPS (:3001). Some browsers and network configurations will reject the HTTP endpoint with "This application requires a secure connection (HTTPS)." **Always use the HTTPS endpoint (:3001) as the primary URL** for human access. The browser will show a self-signed certificate warning — click through it (Advanced → Proceed).
+
+### 12. Remote CDP Control Works Cross-Network
+
+CDP WebSocket connections work across networks without issues. In our setup, the Mac Mini (local machine) successfully controlled Chrome on the VPS via:
+
+```python
+# From Mac Mini → VPS CDP → Chrome
+import websockets, json, asyncio
+
+async def navigate():
+    ws_url = "ws://VPS_IP:9222/devtools/page/PAGE_ID"
+    async with websockets.connect(ws_url) as ws:
+        await ws.send(json.dumps({
+            "id": 1,
+            "method": "Page.navigate",
+            "params": {"url": "https://en.wikipedia.org"}
+        }))
+        result = await ws.recv()
+        print("Navigated:", result)
+
+asyncio.run(navigate())
+```
+
+This confirms the full chain works: **AI agent (any location) → CDP WebSocket → socat bridge → Chrome on VPS**. The human can simultaneously watch via the web desktop. Both channels (CDP automation + human spectating) work concurrently without interference.
+
+### 13. OpenClaw Remote Browser Profiles for CDP
+
+OpenClaw's `openclaw browser create-profile --cdp-url http://VPS_IP:9222` creates a browser profile that points to a remote Chrome instance instead of launching a local one. This is the cleanest way to give an OpenClaw agent access to the virtual computer's browser — the agent uses its normal browser tools, but they control Chrome on the VPS instead of locally. The profile shows as `[remote]` in `openclaw browser profiles` and reports the correct tab count from the remote Chrome.
+
+### 14. Virtual Computer = Full OS, Not Just Chrome
+
+The biggest insight: the value of the virtual computer is **not just browser automation**. It's a full Linux OS the agent can SSH into and run arbitrary commands. This transforms the agent from "chatbot that can browse" to "AI with its own computer." Shell access (SSH → docker exec) enables: installing tools (apt-get/pip/npm), running scripts (Python, Node, bash), managing files, and combining browser automation with server-side processing. The browser is the most visible use case, but shell access is what makes this a true virtual computer.
 ---
 
 ## Complete File Listing
