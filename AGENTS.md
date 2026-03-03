@@ -699,6 +699,30 @@ User minta web task
 - Web automation → connect ke CDP endpoint
 - Install tools → add to /config/custom-cont-init.d/01-install-chrome.sh
 - **DILARANG** pakai headless browser untuk Google services — SELALU pakai virtual computer
+
+### 🎯 DELEGATION RULES (Wayan directive 2026-03-03)
+**Virtual Computer adalah SHARED RESOURCE (77GB, 4 workspaces). Iris = ORCHESTRATOR, bukan executor.**
+
+| Agent | Role | Browser Tasks |
+|-------|------|---------------|
+| **Hermes** 🪄 | PRIMARY — Web automation, research, scraping | Shopee Seller, Tokopedia Seller, X/Twitter, web research |
+| **Atlas** 🏔️ | SECONDARY — GSheet sync, Accurate API, routine ops | Accurate Online, GSheet uploads, routine scraping |
+| **Metis** 🔮 | Data/SQL — JANGAN browser tasks | - |
+| **Daedalus** 🪶 | Code/Build — JANGAN browser tasks | - |
+| **Iris** 🌸 | Orchestrator — delegate browser tasks | ONLY jika Wayan explicitly minta |
+
+**Yang Iris LAKUKAN:**
+- Receive user request
+- Determine appropriate agent (Hermes/Atlas)
+- Delegate dengan lengkap (skill + context)
+- Monitor & report results
+
+**Yang Iris TIDAK LAKUKAN:**
+- Eksekusi browser tasks sendiri (kecuali Wayan directly minta)
+- Install tools di VPS (delegate ke Atlas/Hermes)
+- Restart container (session akan hilang!)
+
+**Storage Note:** 77GB shared — be wise. Clean up temp files setelah tasks complete.
 ---
 
 ## 📚 Knowledge Dump
