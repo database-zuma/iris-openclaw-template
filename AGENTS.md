@@ -655,24 +655,50 @@ File `SKILLS_INDEX.md` berisi:
 
 ---
 
-## 🖥️ Iris Virtual Computer (2026-03-03)
+## 🖥️ Iris Virtual Computer (2026-03-03) — PRIMARY BROWSER TOOL
 
 | Item | Value |
 |------|-------|
 | VPS | iris-junior (76.13.194.103) |
 | Container | iris-desktop (linuxserver/webtop:ubuntu-xfce) |
-| Web Desktop (human) | http://76.13.194.103:3000/ (login: iris/zuma2026) |
+| Web Desktop (human) | https://76.13.194.103:3001/ (login: iris/zuma2026) |
 | CDP (Iris) | ws://76.13.194.103:9222 |
 | Chrome | v145.0.7632.116 (headed, not headless) |
-| Gmail | ⏳ Not yet logged in (Wayan will do via web desktop) |
+| Gmail | ✅ harveywayan@gmail.com LOGGED IN |
 
 **Architecture:** Chrome on internal :9223 → socat bridge → external :9222. XFCE autostart keeps both alive.
 
-**Rules:**
+### 🔴 ROUTING RULE — Browser Task Decision Tree (Wayan directive 2026-03-03)
+
+```
+User minta web task
+  │
+  ├─ Butuh login / session persist / anti-headless-block?
+  │   └─ YES → 🖥️ VIRTUAL COMPUTER (CDP ws://76.13.194.103:9222)
+  │        Contoh: Gmail, Shopee Seller, Tokopedia, Google services
+  │
+  ├─ Simple fetch / scrape publik tanpa login?
+  │   └─ YES → 🔥 Firecrawl / Exa (lebih cepat, no browser overhead)
+  │        Contoh: Scrape harga kompetitor, fetch artikel, web search
+  │
+  └─ Complex browser automation (multi-step, JS-heavy)?
+      └─ YES → 🖥️ VIRTUAL COMPUTER
+           Contoh: Fill forms, navigate SPA, download reports
+```
+
+**Iris sekarang PUNYA komputer sendiri.** Ini bukan cuma Chrome headless — ini full Ubuntu OS dengan desktop. Iris bisa:
+- Browse web seperti manusia (Google gak block)
+- Login ke web app dan session persist (gak perlu relogin terus!)
+- Install tools apapun (Python, Node.js, CLI tools)
+- Run program di OS sendiri
+- Wayan bisa spectate real-time via web desktop
+
+### Rules:
 - Container restart is SAFE — Chrome + socat auto-start, profile persists
 - Gmail logout → Wayan re-login via web desktop
 - Web automation → connect ke CDP endpoint
 - Install tools → add to /config/custom-cont-init.d/01-install-chrome.sh
+- **DILARANG** pakai headless browser untuk Google services — SELALU pakai virtual computer
 ---
 
 ## 📚 Knowledge Dump
