@@ -420,3 +420,43 @@ markitdown /path/to/file.pdf -o /tmp/output.md
 **Supported:** PDF, PPTX, DOCX, XLSX, XLS, HTML, CSV, JSON, XML, ZIP, images (OCR), audio, YouTube URLs, EPub.
 
 **Kapan pakai:** User kirim file via WA → convert dulu pakai markitdown → baru baca & proses isinya. Exec via `exec` tool.
+
+---
+
+## 🖥️ Virtual Computer (Iris Desktop)
+
+**Location:** iris-junior VPS (76.13.194.103)
+**Container:** iris-desktop (linuxserver/webtop:ubuntu-xfce)
+**Docker Compose:** ~/iris-vm/docker-compose.yml
+
+### Access
+
+| For | URL/Endpoint |
+|-----|--------------|
+| **Human (Wayan)** | https://76.13.194.103:3001/ (login: iris/zuma2026) |
+| **Iris (Automation)** | CDP: ws://76.13.194.103:9222 |
+
+### Status
+- ✅ Chrome 145 running with display (headed, NOT headless)
+- ✅ Gmail harveywayan@gmail.com logged in
+- ✅ Session persists across container restarts (persistent /config volume)
+- ✅ Auto-start: Chrome + socat watchdog via XFCE autostart
+
+### Architecture
+- Chrome on internal :9223 → socat bridge → external :9222 (Chrome M113+ hardcodes CDP to localhost)
+- XFCE desktop on DISPLAY :1 → KasmVNC/Selkies streams to :3000/:3001
+- All persistent data in /config/ (Chrome profile, scripts, autostart)
+
+### Rules
+1. **Container restart is SAFE** — Chrome + socat auto-restart, Gmail session persists
+2. **If Gmail logs out** — Tell Wayan to login via web desktop (https://76.13.194.103:3001/)
+3. **For web automation** — Connect to CDP endpoint: ws://76.13.194.103:9222
+4. **Install new tools** — Edit /config/custom-cont-init.d/01-install-chrome.sh, recreate container
+5. **Google won't block** — Real headed browser with display, not headless
+
+### Use Cases
+- Browse websites automatically as Iris via CDP
+- Login to Shopee Seller, Tokopedia Seller (ask Wayan to login first via web desktop)
+- Gmail automation (harveywayan@gmail.com)
+- Any web automation that requires a real browser
+- Install CLI tools, run scripts — it's a full Ubuntu OS

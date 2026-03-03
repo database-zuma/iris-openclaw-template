@@ -100,3 +100,30 @@
 | 2026-02-28 06:02 | Sulawesi | 63M | 76% | 0.0% FF | ✅ |
 | 2026-02-28 06:02 | Sumatera | 46M | 71% | 62.6% FF | ✅ |
 | 2026-02-28 06:03 | Batam | 34M | 69% | 0.0% FF | ✅ |
+| 2026-03-01 06:01 | Jawa Timur | 718M | 87% | 65.4% FF | ✅ |
+| 2026-03-01 06:01 | Bali | 2.6B | 71% | 63.7% FF | ✅ |
+| 2026-03-01 06:01 | Jakarta | 151M | 74% | 19.7% FF | ✅ |
+| 2026-03-01 06:02 | Lombok | 387M | 107% | 37.8% FF | ✅ |
+| 2026-03-01 06:02 | Sulawesi | 63M | 76% | 0.0% FF | ✅ |
+| 2026-03-01 06:02 | Sumatera | 46M | 71% | 62.6% FF | ✅ |
+| 2026-03-01 06:03 | Batam | 34M | 69% | 0.0% FF | ✅ |
+
+## 2026-03-02 06:00 WIB — SKIPPED
+- **Reason:** Atlas health check DEGRADED
+  - Backup ❌ GAGAL (file missing)
+  - SO L2, Kodemix, DB health tidak dilaporkan (laporan terpotong/minimal)
+- **Action:** BM Deck & STO update di-skip. Akan dicoba ulang besok 06:00 WIB atau setelah Atlas stabil.
+| 2026-03-03 06:02 | Jawa Timur | 718M | 87% | 65.0% FF | ✅ |
+| 2026-03-03 06:02 | Bali | 2.6B | 71% | 63.7% FF | ✅ |
+| 2026-03-03 06:02 | Jakarta | 151M | 74% | 19.7% FF | ✅ |
+| 2026-03-03 06:02 | Lombok | 387M | 107% | 37.8% FF | ✅ |
+| 2026-03-03 06:03 | Sulawesi | 63M | 76% | 0.0% FF | ✅ |
+| 2026-03-03 06:03 | Sumatera | 46M | 71% | 62.6% FF | ✅ |
+| 2026-03-03 06:03 | Batam | 34M | 69% | 0.0% FF | ✅ |
+| 2026-03-03 06:01 | Jawa Timur | 718M | 87% | 65.0% FF | ✅ |
+| 2026-03-03 06:01 | Bali | 2.6B | 71% | 63.7% FF | ✅ |
+| 2026-03-03 06:01 | Jakarta | 151M | 74% | 19.7% FF | ✅ |
+| 2026-03-03 06:02 | Lombok | 387M | 107% | 37.8% FF | ✅ |
+| 2026-03-03 06:02 | Sulawesi | 63M | 76% | 0.0% FF | ✅ |
+| 2026-03-03 06:02 | Sumatera | 46M | 71% | 62.6% FF | ✅ |
+| 2026-03-03 06:03 | Batam | 34M | 69% | 0.0% FF | ✅ |

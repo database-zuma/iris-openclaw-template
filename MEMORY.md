@@ -91,6 +91,25 @@ Epicentrum=Lombok, Level 21=Bali, City of Tomorrow=Surabaya.
 - **Targets:** FF >= 70%, FA >= 90%, FS >= 80%
 - **Coverage:** 51 retail stores (all branches, not just Jatim)
 
+### VPS Cron Schedule (Updated 2026-03-01)
+| Time (WIB) | Job | Script/Notes |
+|---|---|---|
+| 03:00 | Stock pull | existing |
+| 04:50 | item_transfer pull (outbound transfers) | existing |
+| 05:00 | Sales pull | existing |
+| **05:10** | **receive_item pull — DDD, MBB, LJBB (NEW!)** | `/opt/openclaw/scripts/cron_receive_item_pull.sh` |
+| 05:30 | Materialized view refresh | existing |
+| 07:00 | Dashboard cache refresh | existing |
+
+**receive_item pull (05:10 WIB):**
+- Pulls dari Accurate API: DDD, MBB, LJBB → `raw.accurate_receive_item_[entity]`
+- Union view: `core.receive_item`
+- Morning report: flag jika FAILED atau `MAX(received_date)` di `core.receive_item` lag >1 hari
+
+**core.outbound_whs_attributed (NEW — 2026-03-01):**
+- View: outbound transfers with LJBB entity attribution
+- Refreshed saat 05:30 view refresh (bersamaan dengan MV lain)
+
 ### MV Health Check — Morning Report (WAJIB, 2026-02-28)
 Tambahkan section ini ke morning report harian. Flag sebagai issue kalau log FAILED atau lag >1 hari.
 
@@ -110,11 +129,32 @@ Tambahkan section ini ke morning report harian. Flag sebagai issue kalau log FAI
 ```
 🗄️ MV Health Check
 ├─ mv_accurate_summary: [SUCCESS/FAILED] [timestamp] | Data terbaru: [date] ([lag] hari)
-└─ dashboard_cache:     [SUCCESS/FAILED] [timestamp]
-🔴 Flag jika: FAILED di log ATAU accurate MV lag >1 hari
+├─ dashboard_cache:     [SUCCESS/FAILED] [timestamp]
+└─ receive_item pull:   [SUCCESS/FAILED] [timestamp] | Data terbaru: [date] ([lag] hari)
+🔴 Flag jika: FAILED di log ATAU lag >1 hari
 ```
 
-### Active URLs
+### Branch Super App (zuma-branch-superapp.vercel.app) — Updated 2026-03-02
+
+**GitHub:** github.com/database-zuma/zuma-branch-superapp
+**Deploy:** Vercel (zuma-branch-superapp.vercel.app)
+**DB:** VPS PostgreSQL (openclaw_ops, 76.13.194.120:5432) — migrated from Supabase
+**Auth:** NextAuth.js (credentials, JWT) — migrated from Supabase Auth
+
+**5 Tabs:**
+1. **HOME** — iSeller SKU Charts, Jatim only, default last 60 days. Source: `mart.mv_iseller_summary`
+2. **WH STOCK** — Warehouse stock dashboard (KPI cards, 5 charts, top articles). Source: `core.dashboard_cache`. Hardcoded: Warehouse Pusat + Pusat Protol + Pusat Reject. No date filter (snapshot).
+3. **ACTION** — placeholder (future)
+4. **RO** — 3 sub-tabs: Dashboard (stats), RO Process (8-stage timeline, DNPB per entity DDD/LJBB/MBB/UBB), SOPB Generator (auto-lists DNPB_PROCESS ROs, download XLSX per entity)
+5. **SETTINGS** — system info
+
+**RO Flow:** QUEUE → APPROVED → PICKING → PICK_VERIFIED → DNPB_PROCESS → READY_TO_SHIP → IN_DELIVERY → ARRIVED → COMPLETED
+- Stage progression: manual (user clicks Next Stage one at a time)
+- SOPB number = user input | DNPB number = from Accurate after upload
+
+**Pending:** Role-based access (Phase 2) belum diimplementasi.
+
+## Active URLs
 | Deck | URL |
 |------|-----|
 | Dept Scorecard Q1 2026 | https://docs.google.com/spreadsheets/d/1maHrARXJdBjEhYsmtZbOoe0U879eYnT8/edit |

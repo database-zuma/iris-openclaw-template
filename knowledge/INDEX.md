@@ -4,6 +4,10 @@ Auto-generated index of saved links, articles, and threads.
 
 ## Recent Additions
 
+- **2026-03-03** | [AI Virtual Computer in Docker — Full Technical Guide](dev-tools/2026-03-03_virtual-computer-docker-setup.md) | #docker #virtual-computer #chrome-cdp #webtop #linuxserver #socat #ai-agent #browser-automation #headed-chrome | Full desktop environment (linuxserver/webtop:ubuntu-xfce) in Docker on VPS. Headed Chrome + CDP via socat bridge (Chrome M113+ hardcodes CDP to localhost — critical gotcha). Web desktop for human spectating (:3000), CDP for AI automation (:9222). Persistent Gmail sessions survive restarts. Failed approaches documented (browserless/chrome, linuxserver/chromium, custom Ubuntu). Step-by-step reproduction guide for any AI agent needing a real computer.
+
+- **2026-03-02** | [MiniMax M2.5 — Provider Setup & Troubleshooting Guide](dev-tools/2026-03-02_minimax-m25-provider-setup.md) | #minimax #model-provider #openclaw #iris #coding-plan #api #troubleshooting | MiniMax M2.5 as primary model for ALL OpenClaw agents (10 agents: 7 local + 3 VPS). Coding Plan pricing. Config: models.json + auth-profiles.json + openclaw.json per agent. Key gotcha: session-level model caching di sessions.json overrides global config — harus clear manual saat switch provider. `<think>` tags: strip before render, jangan suppress di system prompt. Includes full troubleshooting guide for billing errors, rate limits, stuck models.
+
 - **2026-02-28** | [Iris Deck Pipeline — Troubleshooting Log (6 Root Causes)](ai-agents/2026-02-28_iris-deck-pipeline-troubleshooting.md) | #iris #pipeline #troubleshooting #argus #eos #nanobot #soul-md #deck #vercel #psycopg2 #stock-query | 6 root causes found & fixed saat build autonomous deck pipeline (Argus→Eos→build_deck.py→Vercel). RC1: Eos SOUL.md outdated (no content JSON schema). RC2: Argus-Eos schema mismatch. RC3: Gemini quota exhausted → switch to Sonnet 4.6. RC4: DB query timeout → batch Python script. RC5: query_deck_data.py hardcoded scope → add CLI params. RC6: Eos missing stock data docs. Key lesson: SOUL.md = single source of truth, agent hanya bisa output format yang didokumentasiin.
 - **2026-02-28** | [Million Dollar Product — 12 Rules to Building Something Users Love](design/2026-02-28_million-dollar-product-12-rules.md) | #product-design #ux #retention #onboarding #design-system #brand #activation-event #codex-reference | 12 rules dari founder yang build 50+ MVPs. Core: stack bukan masalahnya — product decisions yang matter. Rule 2: engineer ke aha moment secepat mungkin. Rule 8: design ALL states (empty/loading/error/success) bukan cuma happy path. Rule 12: activation event = day 3 retention. Full checklist 12 items + relevance untuk Codex/dashboard Zuma.
 - **2026-02-28** | [Ladybird — Browser Engine Baru dari Nol](dev-tools/2026-02-28_ladybird-browser.md) | #browser #browser-engine #independent #rust #cpp #web-standards #non-profit #track | 60.6k⭐, 1,240 contributors, BSD-2-Clause. Satu-satunya truly independent browser engine from scratch (bukan fork Chromium/WebKit/Gecko). Non-profit 501(c)(3), co-founder Chris Wanstrath (GitHub), sponsor Shopify/Cloudflare/Vercel. SANGAT AKTIF — commit hari ini! Feb 2026: abandon Swift (1yr delay), adopt Rust dengan AI assistance. Pre-alpha, target Alpha 2026. Worth tracking.
@@ -77,6 +81,8 @@ Auto-generated index of saved links, articles, and threads.
 - [Dieter Rams — Braun Design & Apple Influence](design/2026-02-14_research_dieter-rams-braun.md) — Industrial design philosophy, 10 Principles of Good Design, influence on Apple/Jonathan Ive
 
 ### Dev Tools
+- **[AI Virtual Computer in Docker — Full Technical Guide](dev-tools/2026-03-03_virtual-computer-docker-setup.md)** — 🟢 **HIGH RELEVANCE**. Give AI agents a real computer: headed Chrome + CDP + web desktop + persistent sessions in Docker. linuxserver/webtop:ubuntu-xfce + socat CDP bridge (workaround for Chrome M113+ localhost hardcode). XFCE autostart watchdog. Step-by-step reproduction, 3 failed approaches documented, troubleshooting guide. ~600MB RAM idle.
+
 - **[Build-Your-Own-X — Coding Reference Hub](dev-tools/2026-02-28_build-your-own-x.md)** — 470K⭐ curated list, 300+ tutorials, 30 kategori (DB, Git, Docker, Shell, OS, NN, Interpreter, dll), 25+ bahasa. Semua external links. Skill: `coding-reference-hub`. Top picks: Crafting Interpreters, Writing an OS in Rust, Karpathy Zero to Hero, browser.engineering, Beej's Network Guide, ugit (Python Git).
 - **[Free Programming Books — Largest Free Learning Collection](dev-tools/2026-02-28_free-programming-books.md)** — 383K⭐ (most-starred GitHub repo). Curated list: books, courses, podcasts, cheat sheets, interactive tutorials, playgrounds. 45+ languages (incl. Bahasa Indonesia). Searchable: ebookfoundation.github.io/free-programming-books-search/. Complementary to build-your-own-x.
 - [Financial Datasets MCP Server — Stock Market API](dev-tools/2026-02-28_financial-datasets-mcp.md) — 915⭐. MCP server for US stock market data (30K+ tickers, 30yr history). 10 tools: financials, prices, news, crypto. US only — no IDX. $200/mo or pay-as-you-go. Low priority; useful as MCP server template.
@@ -120,6 +126,6 @@ find knowledge/ -name "*.md" -mtime -7
 
 ---
 
-**Last updated:** 2026-02-28 (Iris Deck Pipeline Troubleshooting Log added)
+**Last updated:** 2026-03-03 (AI Virtual Computer in Docker — Full Technical Guide added)
 
 - `dev-tools/2026-02-27_accurate-api-troubleshooting.md` — Accurate API 401/500 debug flow, token regenerate steps, VPS run guide

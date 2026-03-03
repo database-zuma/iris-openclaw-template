@@ -177,6 +177,72 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 
 - **Voice:** If you have `sag` (ElevenLabs TTS), use voice for stories and storytime! More engaging than walls of text.
 - **Discord/WhatsApp:** No markdown tables — use bullet lists. No headers in WhatsApp.
+#NM|
+## 🎨 Pencil Design (NEW — 2026-03-03)
+
+Pencil = AI design tool yang bisa generate UI直接从 prompt. Terintegrasi via MCP.
+
+**Setup:** Pencil MCP sudah aktif di Claude Code. Untuk Iris pakai:
+
+```bash
+# Generate design via Pencil MCP
+claude mcp pencil "Create a login page with dark theme and green button"
+```
+
+**Workflow:**
+1. User minta design (e.g., "bikin UI login page")
+2. Iris generate via Pencil MCP → dapat `.pen` file
+3. Simpan ke workspace: `outbox/{nama-design}.pen`
+4. Export ke React/Tailwind atau HTML via VS Code
+5. Kirim hasil ke user via WhatsApp
+
+**Alternatif (tanpa MCP):**
+- Delegate ke **Eos** untuk generate content JSON
+- Content JSON → `build_deck.py` → HTML (existing PPT pipeline)
+
+**Kapan pakai Pencil vs Eos/PPT:**
+- **Pencil** = UI/UX design (login, dashboard, form)
+- **Eos/PPT** = Business presentation deck (sales report, RO request, planogram)
+#NM|
+## 🕷️ Scrapling Web Scraping (NEW — 2026-03-03)
+
+Scrapling = Adaptive web scraping library dengan MCP server.
+
+**Fitur:**
+- HTTP scraping dengan browser fingerprint
+- Dynamic content (Chromium)
+- **Stealth mode** — bypass Cloudflare, anti-bot
+- CSS selector support
+- Proxy rotation
+- Bulk operations
+
+**Setup:** MCP server sudah aktif di Claude Code & OpenCode.
+
+**Tools available:**
+- `get` — Fast HTTP requests
+- `bulk_get` — Async multiple URLs
+- `fetch` — Dynamic content (browser)
+- `bulk_fetch` — Multiple URLs with browser
+- `stealthy_fetch` — Anti-bot bypass (Cloudflare)
+- `bulk_stealthy_fetch` — Multiple URLs stealth
+
+**Usage:**
+```bash
+# Contoh: scrape website dengan Cloudflare
+stealthy_fetch url="https://contoh.com" main_content_only=true
+```
+
+**Kapan pakai:**
+- Website dengan anti-bot (Cloudflare)
+- Dynamic content (JS-rendered)
+- Data extraction dari e-commerce/listing
+
+**Alternatif (existing):**
+- **FireCrawl MCP** — untuk simple scraping
+- **Playwright MCP** — untuk complex automation
+
+
+
 - **Discord links:** Wrap in `<>` to suppress embeds: `<https://example.com>`
 
 ## 💓 Heartbeats
@@ -586,6 +652,30 @@ File `SKILLS_INDEX.md` berisi:
 - Decision tree untuk RO Request (planogram ada/belum)
 
 **JANGAN delegate task berbasis skill tanpa baca SKILLS_INDEX.md dulu.**
+
+---
+
+## 🖥️ Iris Virtual Computer (2026-03-03)
+
+| Item | Value |
+|------|-------|
+| VPS | iris-junior (76.13.194.103) |
+| Container | iris-desktop (linuxserver/webtop:ubuntu-xfce) |
+| Web Desktop (human) | http://76.13.194.103:3000/ (login: iris/zuma2026) |
+| CDP (Iris) | ws://76.13.194.103:9222 |
+| Chrome | v145.0.7632.116 (headed, not headless) |
+| Gmail | ⏳ Not yet logged in (Wayan will do via web desktop) |
+
+**Architecture:** Chrome on internal :9223 → socat bridge → external :9222. XFCE autostart keeps both alive.
+
+**Rules:**
+- Container restart is SAFE — Chrome + socat auto-start, profile persists
+- Gmail logout → Wayan re-login via web desktop
+- Web automation → connect ke CDP endpoint
+- Install tools → add to /config/custom-cont-init.d/01-install-chrome.sh
+---
+
+## 📚 Knowledge Dump
 ## 📚 Knowledge Dump
 
 Link from Wayan → scrape → summarize (Style B: title, key points, takeaways, tags) → `knowledge/{topic}/YYYY-MM-DD_{slug}.md` → update `knowledge/INDEX.md`
