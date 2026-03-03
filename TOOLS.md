@@ -460,6 +460,25 @@ ssh iris-vm "cat /etc/os-release"                 # cek distro
 # ✅ ssh iris-vm "[cmd]"
 ```
 
+#### 3. Claude Code (Visible on Desktop) — tmux + XFCE
+```bash
+# Run Claude Code VISIBLE on web desktop (Wayan bisa nonton)
+ssh iris-vm 'claude-visible'                              # interactive, visible
+ssh iris-vm 'claude-visible -p "analyze this code"'      # one-shot, visible
+ssh iris-vm 'NO_ATTACH=1 claude-run "query prompt"'      # fire-and-forget, visible
+ssh iris-vm 'claude-visible --attach'                     # attach ke session yg sudah jalan
+ssh iris-vm 'claude-visible --kill'                       # stop session
+
+# Cara kerja:
+# 1. tmux session 'claude-code' dibuat dengan Claude Code di dalamnya
+# 2. XFCE terminal window otomatis terbuka di desktop (visible via web desktop)
+# 3. Iris kontrol via SSH, Wayan spectate via https://76.13.194.103:3001/
+
+# TANPA visible (lebih cepat, tapi gak keliatan di web desktop):
+ssh iris-vm 'claude -p "prompt"'                         # one-shot, invisible
+ssh iris-vm 'claude'                                      # interactive, invisible
+```
+
 ### 🔑 ADMIN ACCESS — Iris Punya Full Control
 
 Iris = **root** di virtual computer. Bisa:
@@ -489,6 +508,8 @@ Iris = **root** di virtual computer. Bisa:
 | **File transfer** | `scp iris-vm:/path/file ./` | depends on size |
 | **Human spectating** | https://76.13.194.103:3001/ (iris/zuma2026) | real-time |
 | **CDP direct** | ws://76.13.194.103:9222 | WebSocket |
+| **Claude Code (visible)** | `ssh iris-vm 'claude-visible'` or `claude-run "prompt"` | ~2s startup |
+| **Claude Code (fast)** | `ssh iris-vm 'claude -p "prompt"'` | ~1s |
 
 ### Status
 - ✅ Chrome 145 headed (not headless) — Google won't block
@@ -497,6 +518,9 @@ Iris = **root** di virtual computer. Bisa:
 - ✅ SSH direct access (port 2222, root, key auth, ~50ms)
 - ✅ Browser profile `iris-desktop` = DEFAULT
 - ✅ Auto-start: Chrome + socat watchdog via XFCE autostart
+- ✅ Claude Code v2.1.63 installed (Node.js 22)
+- ✅ `claude-visible` / `claude-run` — visible mode via tmux + XFCE terminal
+- ✅ Desktop shortcut 🤖 Claude Code on XFCE desktop
 
 ### Architecture
 ```

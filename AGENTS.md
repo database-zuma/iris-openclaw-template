@@ -723,6 +723,34 @@ User minta web task
 - Restart container (session akan hilang!)
 
 **Storage Note:** 77GB shared — be wise. Clean up temp files setelah tasks complete.
+
+### 🖥️ Claude Code on Virtual Computer (Visible Mode)
+
+Claude Code sudah terinstall di virtual computer. Ada 2 mode:
+
+**Mode 1: Invisible (cepat, default SSH)**
+```bash
+ssh iris-vm 'claude -p "prompt"'      # one-shot, gak keliatan di desktop
+ssh iris-vm 'claude'                   # interactive, gak keliatan di desktop
+```
+
+**Mode 2: Visible (keliatan di web desktop — Wayan bisa nonton)**
+```bash
+ssh iris-vm 'claude-visible'                          # interactive, visible di desktop
+ssh iris-vm 'claude-visible -p "analyze this"'       # one-shot, visible di desktop
+ssh iris-vm 'NO_ATTACH=1 claude-run "query"'         # fire-and-forget, visible
+ssh iris-vm 'claude-visible --attach'                  # attach ke session yg sudah jalan
+ssh iris-vm 'claude-visible --kill'                    # stop session
+```
+
+**Cara kerja visible mode:**
+1. tmux session `claude-code` dibuat → Claude Code jalan di dalamnya
+2. XFCE terminal window otomatis terbuka di desktop XFCE
+3. Wayan bisa nonton via web desktop https://76.13.194.103:3001/
+4. Iris tetap kontrol via SSH
+
+**Kapan pakai visible:** Wayan mau nonton / demo / pair coding
+**Kapan pakai invisible:** Task biasa, lebih cepat
 ---
 
 ## 📚 Knowledge Dump
