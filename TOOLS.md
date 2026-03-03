@@ -423,40 +423,84 @@ markitdown /path/to/file.pdf -o /tmp/output.md
 
 ---
 
-## 🖥️ Virtual Computer (Iris Desktop)
+## 🖥️ Virtual Computer (Iris Desktop) — DEFAULT BROWSER (session persists)
 
 **Location:** iris-junior VPS (76.13.194.103)
 **Container:** iris-desktop (linuxserver/webtop:ubuntu-xfce)
 **Docker Compose:** ~/iris-vm/docker-compose.yml
 
-### Access
+### 🔴 HOW TO USE (MANDATORY — read this first!)
 
-| For | URL/Endpoint |
-|-----|--------------|
-| **Human (Wayan)** | https://76.13.194.103:3001/ (login: iris/zuma2026) |
-| **Iris (Automation)** | CDP: ws://76.13.194.103:9222 |
+**Browser profile `iris-desktop` is now the DEFAULT browser.** All `browser()` tool calls automatically use the virtual computer.
+
+```
+# Iris's browser commands now control Chrome on the virtual computer
+# NOT the local Mac Mini Chrome
+browser(action=open, url="https://mail.google.com")     → opens on virtual computer
+browser(action=snapshot)                                 → reads virtual computer screen
+browser(action=act, ref=5, text="search query")         → types on virtual computer
+browser(action=screenshot)                               → captures virtual computer
+```
+
+**Shell access (for non-browser tasks):**
+```bash
+# Run commands inside the virtual computer
+ssh iris-junior "docker exec iris-desktop [command]"
+
+# Examples:
+ssh iris-junior "docker exec iris-desktop apt-get install -y python3"
+ssh iris-junior "docker exec iris-desktop python3 -c 'print(1+1)'"
+ssh iris-junior "docker exec iris-desktop free -h"
+```
+
+**Switch profiles if needed:**
+```bash
+# Use virtual computer (default)
+browser(action=open, url="...", profile="iris-desktop")
+# Use local Mac Mini Chrome (only if needed)
+browser(action=open, url="...", profile="openclaw")
+```
+
+### Access Points
+
+| For | URL/Endpoint | Method |
+|-----|--------------|--------|
+| **Iris (browser automation)** | Profile: `iris-desktop` (DEFAULT) | `browser()` tool calls |
+| **Iris (shell/OS)** | `ssh iris-junior "docker exec iris-desktop [cmd]"` | `exec` tool |
+| **Human spectating** | https://76.13.194.103:3001/ (login: iris/zuma2026) | Open in browser |
+| **CDP direct (raw)** | ws://76.13.194.103:9222 | Playwright/Puppeteer |
 
 ### Status
 - ✅ Chrome 145 running with display (headed, NOT headless)
 - ✅ Gmail harveywayan@gmail.com logged in
 - ✅ Session persists across container restarts (persistent /config volume)
 - ✅ Auto-start: Chrome + socat watchdog via XFCE autostart
+- ✅ Browser profile `iris-desktop` = DEFAULT (config: `browser.defaultProfile`)
 
 ### Architecture
 - Chrome on internal :9223 → socat bridge → external :9222 (Chrome M113+ hardcodes CDP to localhost)
 - XFCE desktop on DISPLAY :1 → KasmVNC/Selkies streams to :3000/:3001
 - All persistent data in /config/ (Chrome profile, scripts, autostart)
+- OpenClaw browser profile `iris-desktop` → remote CDP http://76.13.194.103:9222
 
 ### Rules
-1. **Container restart is SAFE** — Chrome + socat auto-restart, Gmail session persists
-2. **If Gmail logs out** — Tell Wayan to login via web desktop (https://76.13.194.103:3001/)
-3. **For web automation** — Connect to CDP endpoint: ws://76.13.194.103:9222
-4. **Install new tools** — Edit /config/custom-cont-init.d/01-install-chrome.sh, recreate container
+1. **All browser() calls → virtual computer** — default profile is iris-desktop, not local Chrome
+2. **Container restart is SAFE** — Chrome + socat auto-restart, Gmail session persists
+3. **If Gmail logs out** — Tell Wayan to login via web desktop (https://76.13.194.103:3001/)
+4. **Install new tools** — `ssh iris-junior "docker exec iris-desktop apt-get install -y [package]"`
 5. **Google won't block** — Real headed browser with display, not headless
+6. **Human can watch** — Wayan opens https://76.13.194.103:3001/ to spectate in real-time
 
 ### Use Cases
-- Browse websites automatically as Iris via CDP
-- Login to Shopee Seller, Tokopedia Seller (ask Wayan to login first via web desktop)
-- Gmail automation (harveywayan@gmail.com)
-- Any web automation that requires a real browser
-- Install CLI tools, run scripts — it's a full Ubuntu OS
+- Browse websites automatically — `browser()` tool controls virtual computer Chrome
+- Persistent logins — Gmail, Shopee Seller, Tokopedia Seller (session survives restarts)
+- Run Linux commands — `ssh iris-junior "docker exec iris-desktop [cmd]"`
+- Install any tool — apt-get, pip, npm inside the container
+- Process files — download, convert, upload from the virtual computer
+- **Combine browser + shell** — scrape a page, then process data with Python on the same machine
+
+### ⚠️ Troubleshooting
+- **"No connected nodes"** — WRONG approach. Don't use nodes. Use `browser()` tool (profile=iris-desktop)
+- **CDP timeout** — Check: `ssh iris-junior "docker exec iris-desktop pgrep -a chrome"` and `pgrep -a socat`
+- **Chrome not running** — Restart: `ssh iris-junior "docker exec iris-desktop bash /config/scripts/chrome-cdp-service.sh &"`
+- **Want local browser** — Override: `browser(action=open, url="...", profile="openclaw")`

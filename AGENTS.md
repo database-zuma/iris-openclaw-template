@@ -706,3 +706,32 @@ User minta web task
 
 Link from Wayan → scrape → summarize (Style B: title, key points, takeaways, tags) → `knowledge/{topic}/YYYY-MM-DD_{slug}.md` → update `knowledge/INDEX.md`
 Categories: `ai-agents/` | `business-ops/` | `dev-tools/` | `misc/`
+
+---
+
+## 🖥️ BROWSER TASK DECISION TREE (Default: VPS Browser)
+
+### Route Selection
+
+| Scenario | Browser |
+|----------|---------|
+| **Login/session needed** (Gmail, Shopee Seller, Tokopedia) | ✅ **iris-desktop** (VPS) |
+| **User asks for YouTube music** | Local browser (Mac Mini) |
+| **Simple public scrape** | Firecrawl / Exa (no browser needed) |
+| **Complex automation** | iris-desktop (VPS) |
+
+### iris-desktop (VPS Browser) — DEFAULT
+- **URL:** ws://76.13.194.103:9222
+- **Profile:** iris-desktop (auto-connected to VPS Chrome)
+- **Gmail:** ✅ harveywayan@gmail.com ALWAYS LOGGED IN
+- **Session:** PERSISTS across requests (no re-login!)
+- **Rule:** DON'T restart container — session will be lost
+
+### Local Browser
+- **When:** User explicitly requests YouTube music playback
+- **Profile:** openclaw (local Mac Mini Chrome)
+- **No persistent login**
+
+---
+
+**This is a GAME CHANGER.** Iris now has her own logged-in browser for web automation!
