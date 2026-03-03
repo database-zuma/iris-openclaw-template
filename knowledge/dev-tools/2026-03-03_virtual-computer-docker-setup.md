@@ -688,8 +688,8 @@ AI Agent (any location)
   │       → Persistent login sessions (Gmail, etc.)
   │       → Human can spectate simultaneously
   │
-  ├── 💻 Shell Access (SSH → docker exec)
-  │   └── ssh user@VPS_IP "docker exec iris-desktop [command]"
+  ├── 💻 Shell Access (Direct SSH into container)
+  │   └── ssh iris-vm "[command]"    ← port 2222, ~50ms with ControlMaster
   │       → Run any Linux command
   │       → Install tools, run scripts, manage files
   │       → Full root access inside container
@@ -710,44 +710,109 @@ openclaw browser create-profile \
   --name iris-desktop \
   --cdp-url http://VPS_IP:9222 \
   --color "#00E273"
+
+# Set as default (all browser commands auto-route to virtual computer)
+openclaw config set browser.defaultProfile iris-desktop
+
+# Restart gateway to apply
+openclaw gateway stop && openclaw gateway start
 ```
 
-After this, the agent can use `--browser-profile iris-desktop` for any browser command, and it will control Chrome on the virtual computer instead of a local browser.
+After this, the agent's browser tool automatically controls Chrome on the virtual computer. No need to specify profile on every call.
 
 **Verification:**
 ```bash
 openclaw browser profiles
 # Should show:
-# iris-desktop: running (N tabs) [remote]
+# iris-desktop: running (N tabs) [default] [remote]
 #   cdpUrl: http://VPS_IP:9222, color: #00E273
 ```
 
 **For non-OpenClaw agents:** Use any CDP client library (Playwright, Puppeteer, raw WebSocket) pointed at `http://VPS_IP:9222`. See the "Connecting an AI Agent via CDP (Raw)" section above.
 
-### Step 2: Shell Access
+### Step 2: Direct SSH into Container (FAST PATH)
 
-The agent needs shell access for anything beyond browser automation — installing tools, running scripts, managing files on the virtual computer.
+**Problem with `ssh VPS → docker exec`:** Double hop adds ~2-3 seconds latency. Quoting is painful with nested commands. Can't use SSH multiplexing.
 
-**Pattern: SSH → docker exec**
+**Solution:** Install SSH server inside the container with its own port.
+
+#### Install SSH Server in Container
+
+Create `/config/custom-cont-init.d/02-install-ssh.sh`:
 ```bash
-# Run a command inside the virtual computer
-ssh user@VPS_IP "docker exec iris-desktop [command]"
+#!/bin/bash
+set -e
+echo "=== Setting up SSH server ==="
 
-# Examples:
-ssh user@VPS_IP "docker exec iris-desktop uname -a"
-ssh user@VPS_IP "docker exec iris-desktop free -h"
-ssh user@VPS_IP "docker exec iris-desktop apt-get install -y python3"
-ssh user@VPS_IP "docker exec iris-desktop python3 -c 'print(1+1)'"
+if ! command -v sshd &>/dev/null; then
+    apt-get update -qq
+    apt-get install -y -qq openssh-server
+fi
+
+mkdir -p /root/.ssh /run/sshd
+chmod 700 /root/.ssh
+
+# Add your agent's SSH public key
+echo "ssh-ed25519 AAAA...your-key-here... agent-name" > /root/.ssh/authorized_keys
+chmod 600 /root/.ssh/authorized_keys
+
+# Key auth only, no password
+sed -i "s/#*PermitRootLogin.*/PermitRootLogin prohibit-password/" /etc/ssh/sshd_config
+sed -i "s/#*PubkeyAuthentication.*/PubkeyAuthentication yes/" /etc/ssh/sshd_config
+sed -i "s/#*PasswordAuthentication.*/PasswordAuthentication no/" /etc/ssh/sshd_config
+
+/usr/sbin/sshd 2>/dev/null || true
+echo "=== SSH server ready ==="
 ```
 
-**For interactive sessions:**
+#### Expose SSH Port in docker-compose.yml
+```yaml
+ports:
+  - "3000:3000"   # Web desktop (HTTP)
+  - "3001:3001"   # Web desktop (HTTPS)
+  - "9222:9222"   # Chrome CDP
+  - "2222:22"     # SSH direct into container
+```
+
+#### Configure SSH Client (on agent's machine)
+```
+# ~/.ssh/config
+Host iris-vm
+    HostName VPS_IP
+    User root
+    Port 2222
+    IdentityFile ~/.ssh/id_ed25519
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 10m
+    LogLevel QUIET
+```
+
+**Key features:**
+- `Port 2222` — goes directly into the container (not the VPS host)
+- `ControlMaster auto` + `ControlPersist 10m` — first connection ~300ms, subsequent commands ~50ms (reuses TCP connection)
+- `StrictHostKeyChecking no` — container host key changes on recreate, don't prompt
+
+#### Result
 ```bash
-ssh user@VPS_IP "docker exec -it iris-desktop bash"
+# Before (slow, ~2-3 seconds):
+ssh vps-host "docker exec iris-desktop uname -a"
+
+# After (fast, ~50ms):
+ssh iris-vm "uname -a"
+```
+
+**File transfer also works:**
+```bash
+scp local-file.txt iris-vm:/config/
+scp iris-vm:/config/output.csv ./
 ```
 
 **Important:** The agent needs SSH access to the VPS. Set up SSH keys so the agent can connect without password prompts.
 
-### Step 3: Configure Agent Knowledge
+### Step 3: Configure Agent Knowledge + Admin Access
 
 The agent needs to **know** about the virtual computer and **when to use it**. This is the most critical step — without explicit routing rules, the agent will default to whatever browser tool it had before.
 
