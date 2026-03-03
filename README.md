@@ -17,6 +17,7 @@ Iris is a lead AI agent designed to orchestrate tasks, manage data, coordinate o
 - **📝 Notion Integration**: Built-in support for Notion API workspace access
 - **🛡️ Security-First**: Anti-prompt-injection, credential management via .env
 - **🌐 WhatsApp/Telegram/Discord Ready**: Works with OpenClaw messaging channels
+- **🖥️ Virtual Computer**: Full Ubuntu desktop in Docker — headed Chrome, CDP automation, web desktop for spectating
 
 ---
 
@@ -37,6 +38,101 @@ Iris is **orchestrator-only** — all actual work is delegated to specialized su
 - Oracle has zero execution tools (advisory/strategy memos only)
 - Each agent has its own workspace with `.env` symlinked from main
 
+---
+
+## 🖥️ Virtual Computer — Iris Has Her Own Desktop
+
+Iris doesn't just run in a terminal — she has a **full virtual computer** running on a VPS. A complete Ubuntu XFCE desktop inside Docker, with a real headed Chrome browser, persistent sessions, and remote access for both AI automation and human spectating.
+
+### Why This Exists
+
+Most AI browser automation uses **headless Chrome** — Chrome running without a visible window. The problem? **Google blocks it.** Try logging into Gmail with headless Chrome and you'll hit CAPTCHA walls, security challenges, and account lockouts. Google's bot detection has gotten extremely sophisticated.
+
+The solution: give Iris a **real computer with a real display**. Chrome runs in headed mode on a virtual XFCE desktop, making it indistinguishable from a human browsing. No CAPTCHAs, no blocks, persistent Gmail sessions that survive for weeks.
+
+### Architecture
+
+```
+VPS (iris-junior)
+│
+├── 🌐 Port 3000/3001 → Web Desktop (human spectating)
+│   └── Open in any browser → see Iris's desktop live
+│   └── Click, type, interact — or just watch
+│
+├── 🔌 Port 9222 → Chrome DevTools Protocol (AI automation)
+│   └── Iris connects via CDP → full browser control
+│   └── Navigate, click, read DOM, fill forms, screenshot
+│
+└── 🖥️ Docker: iris-desktop (linuxserver/webtop:ubuntu-xfce)
+    ├── Full Ubuntu OS (not just a browser)
+    ├── XFCE desktop environment
+    ├── Google Chrome 145+ (headed, with display)
+    ├── Persistent volume (/config) — survives restarts
+    └── Extensible — install any Linux tool
+```
+
+### The Chrome CDP Localhost Bug (Critical Discovery)
+
+**Chrome M113+ (2023) silently hardcodes the CDP debug listener to `127.0.0.1`.** The `--remote-debugging-address=0.0.0.0` flag is ignored — Chrome's source code (`headless_browser_main_parts.cc`) explicitly overrides it. This means Docker's port mapping can't reach Chrome's CDP.
+
+Hundreds of guides online recommend the `0.0.0.0` flag. **They're all outdated.**
+
+**The fix: a `socat` TCP bridge.**
+
+```
+External :9222 (0.0.0.0) ──socat──▶ Internal :9223 (127.0.0.1/Chrome CDP)
+```
+
+socat listens on `0.0.0.0:9222`, forwards to Chrome's `127.0.0.1:9223`. Simple, reliable, zero Chrome patching needed.
+
+### What Makes This Special
+
+| Feature | Detail |
+|---------|--------|
+| **Headed Chrome** | Real browser with display — Google can't distinguish from human |
+| **Web Desktop** | Human opens a URL → sees Iris's desktop live, can interact |
+| **CDP Automation** | AI connects via WebSocket → full programmatic browser control |
+| **Persistent Sessions** | Gmail login survives container restarts (persistent Chrome profile) |
+| **Full OS** | Not just Chrome — install Python, Node.js, htop, anything |
+| **Auto-Recovery** | Watchdog script + XFCE autostart → Chrome & socat restart if they die |
+| **Lightweight** | ~600MB RAM idle, ~1.2GB active browsing |
+
+### Human Spectating
+
+Open `https://YOUR_VPS_IP:3001/` in any browser — you see Iris's desktop in real time. You can:
+
+- Watch Iris navigate websites, fill forms, click buttons
+- Take over and interact (login to Gmail, Shopee Seller, etc.)
+- Debug when automation goes wrong — see exactly what Iris sees
+- It's like screen-sharing, but for your AI agent
+
+### AI Automation via CDP
+
+Connect with Playwright, Puppeteer, or any CDP client:
+
+```javascript
+// Playwright
+const browser = await chromium.connectOverCDP('http://VPS_IP:9222');
+const page = browser.contexts()[0].pages()[0];
+await page.goto('https://mail.google.com');
+
+// Puppeteer
+const browser = await puppeteer.connect({ browserURL: 'http://VPS_IP:9222' });
+```
+
+### Failed Approaches (So You Don't Repeat Them)
+
+| Approach | Why It Failed |
+|----------|---------------|
+| **browserless/chrome** | Headless only → Google blocks with CAPTCHA |
+| **linuxserver/chromium** | Web UI but no CDP, port 6080 unreachable |
+| **Custom Ubuntu + apt-get** | Chrome crashes (missing dbus), zombie processes (no init system) |
+
+The winning combo: **linuxserver/webtop** (proper s6-overlay init, persistent volumes, built-in web desktop) + **socat bridge** (bypasses Chrome's CDP localhost hardcode).
+
+### Full Technical Guide
+
+See [`knowledge/dev-tools/2026-03-03_virtual-computer-docker-setup.md`](knowledge/dev-tools/2026-03-03_virtual-computer-docker-setup.md) for the complete step-by-step reproduction guide — including `docker-compose.yml`, init scripts, watchdog setup, troubleshooting, and all the gotchas we discovered.
 ---
 
 ## 🚀 Quick Start
