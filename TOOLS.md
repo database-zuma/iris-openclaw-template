@@ -423,84 +423,106 @@ markitdown /path/to/file.pdf -o /tmp/output.md
 
 ---
 
-## 🖥️ Virtual Computer (Iris Desktop) — DEFAULT BROWSER (session persists)
+## 🖥️ Virtual Computer (Iris Desktop) — PRIMARY TOOL
+
+**Ini komputer Iris.** Full Ubuntu OS dengan browser, shell, root access. Iris punya ADMIN ACCESS penuh.
 
 **Location:** iris-junior VPS (76.13.194.103)
 **Container:** iris-desktop (linuxserver/webtop:ubuntu-xfce)
 **Docker Compose:** ~/iris-vm/docker-compose.yml
 
-### 🔴 HOW TO USE (MANDATORY — read this first!)
+### 🔴 ACCESS — Dua Jalur (Keduanya FAST)
 
-**Browser profile `iris-desktop` is now the DEFAULT browser.** All `browser()` tool calls automatically use the virtual computer.
-
+#### 1. Browser (CDP) — DEFAULT, otomatis
 ```
-# Iris's browser commands now control Chrome on the virtual computer
-# NOT the local Mac Mini Chrome
-browser(action=open, url="https://mail.google.com")     → opens on virtual computer
-browser(action=snapshot)                                 → reads virtual computer screen
-browser(action=act, ref=5, text="search query")         → types on virtual computer
-browser(action=screenshot)                               → captures virtual computer
+# Semua browser() calls OTOMATIS pakai virtual computer
+browser(action=open, url="https://mail.google.com")     → virtual computer Chrome
+browser(action=snapshot)                                 → baca layar virtual computer
+browser(action=act, ref=5, text="search query")         → ketik di virtual computer
+browser(action=screenshot)                               → screenshot virtual computer
 ```
 
-**Shell access (for non-browser tasks):**
+#### 2. Shell (SSH) — Direct, ~50ms
 ```bash
-# Run commands inside the virtual computer
-ssh iris-junior "docker exec iris-desktop [command]"
+# FAST PATH — SSH langsung ke dalam container (1 hop, ~50ms)
+ssh iris-vm "[command]"
 
-# Examples:
-ssh iris-junior "docker exec iris-desktop apt-get install -y python3"
-ssh iris-junior "docker exec iris-desktop python3 -c 'print(1+1)'"
-ssh iris-junior "docker exec iris-desktop free -h"
+# Contoh:
+ssh iris-vm "uname -a"                           # cek OS
+ssh iris-vm "free -h"                             # cek RAM
+ssh iris-vm "apt-get install -y python3-pip"      # install tools
+ssh iris-vm "python3 -c 'print(1+1)'"            # jalanin Python
+ssh iris-vm "ls -la /config/"                     # lihat files
+ssh iris-vm "cat /etc/os-release"                 # cek distro
+
+# JANGAN pakai cara lama (lambat, double hop):
+# ❌ ssh iris-junior "docker exec iris-desktop [cmd]"
+# ✅ ssh iris-vm "[cmd]"
 ```
 
-**Switch profiles if needed:**
-```bash
-# Use virtual computer (default)
-browser(action=open, url="...", profile="iris-desktop")
-# Use local Mac Mini Chrome (only if needed)
-browser(action=open, url="...", profile="openclaw")
-```
+### 🔑 ADMIN ACCESS — Iris Punya Full Control
+
+Iris = **root** di virtual computer. Bisa:
+
+| Power | Contoh |
+|-------|--------|
+| **Install software** | `ssh iris-vm "apt-get install -y ffmpeg imagemagick nodejs npm"` |
+| **Edit configs** | `ssh iris-vm "nano /config/scripts/chrome-cdp-service.sh"` |
+| **Manage services** | `ssh iris-vm "pkill chrome && /config/scripts/chrome-cdp-service.sh &"` |
+| **Run scripts** | `ssh iris-vm "python3 /config/scripts/my_task.py"` |
+| **Download files** | `ssh iris-vm "wget -O /config/file.pdf https://example.com/file.pdf"` |
+| **Transfer files** | `scp file.txt iris-vm:/config/` atau `scp iris-vm:/config/file.txt ./` |
+| **Manage container** | `ssh iris-junior "cd ~/iris-vm && docker-compose restart"` (host-level) |
+| **Edit docker-compose** | `ssh iris-junior "vim ~/iris-vm/docker-compose.yml"` (host-level) |
+
+**Dua level akses:**
+- `ssh iris-vm` → **di dalam container** (install tools, run scripts, edit files)
+- `ssh iris-junior` → **di VPS host** (manage Docker, restart container, edit compose)
 
 ### Access Points
 
-| For | URL/Endpoint | Method |
-|-----|--------------|--------|
-| **Iris (browser automation)** | Profile: `iris-desktop` (DEFAULT) | `browser()` tool calls |
-| **Iris (shell/OS)** | `ssh iris-junior "docker exec iris-desktop [cmd]"` | `exec` tool |
-| **Human spectating** | https://76.13.194.103:3001/ (login: iris/zuma2026) | Open in browser |
-| **CDP direct (raw)** | ws://76.13.194.103:9222 | Playwright/Puppeteer |
+| For | Access | Speed |
+|-----|--------|-------|
+| **Browser automation** | `browser()` tool (profile iris-desktop, DEFAULT) | ~1s |
+| **Shell (inside container)** | `ssh iris-vm "[cmd]"` | ~50ms |
+| **Shell (VPS host)** | `ssh iris-junior "[cmd]"` | ~300ms |
+| **File transfer** | `scp iris-vm:/path/file ./` | depends on size |
+| **Human spectating** | https://76.13.194.103:3001/ (iris/zuma2026) | real-time |
+| **CDP direct** | ws://76.13.194.103:9222 | WebSocket |
 
 ### Status
-- ✅ Chrome 145 running with display (headed, NOT headless)
+- ✅ Chrome 145 headed (not headless) — Google won't block
 - ✅ Gmail harveywayan@gmail.com logged in
-- ✅ Session persists across container restarts (persistent /config volume)
+- ✅ Session persists across restarts (persistent /config volume)
+- ✅ SSH direct access (port 2222, root, key auth, ~50ms)
+- ✅ Browser profile `iris-desktop` = DEFAULT
 - ✅ Auto-start: Chrome + socat watchdog via XFCE autostart
-- ✅ Browser profile `iris-desktop` = DEFAULT (config: `browser.defaultProfile`)
 
 ### Architecture
-- Chrome on internal :9223 → socat bridge → external :9222 (Chrome M113+ hardcodes CDP to localhost)
-- XFCE desktop on DISPLAY :1 → KasmVNC/Selkies streams to :3000/:3001
-- All persistent data in /config/ (Chrome profile, scripts, autostart)
-- OpenClaw browser profile `iris-desktop` → remote CDP http://76.13.194.103:9222
+```
+Mac Mini (Iris)
+  ├── browser() → CDP profile iris-desktop → ws://76.13.194.103:9222 → Chrome
+  ├── ssh iris-vm → port 2222 → container root shell (ControlMaster: ~50ms)
+  └── ssh iris-junior → port 22 → VPS host root shell
+
+Container (iris-desktop)
+  ├── Chrome :9223 → socat :9222 → external CDP
+  ├── XFCE on DISPLAY :1 → KasmVNC :3000/:3001
+  ├── SSH :22 (mapped to host :2222)
+  └── /config/ (persistent volume — semua data survive restart)
+```
 
 ### Rules
-1. **All browser() calls → virtual computer** — default profile is iris-desktop, not local Chrome
-2. **Container restart is SAFE** — Chrome + socat auto-restart, Gmail session persists
-3. **If Gmail logs out** — Tell Wayan to login via web desktop (https://76.13.194.103:3001/)
-4. **Install new tools** — `ssh iris-junior "docker exec iris-desktop apt-get install -y [package]"`
-5. **Google won't block** — Real headed browser with display, not headless
-6. **Human can watch** — Wayan opens https://76.13.194.103:3001/ to spectate in real-time
-
-### Use Cases
-- Browse websites automatically — `browser()` tool controls virtual computer Chrome
-- Persistent logins — Gmail, Shopee Seller, Tokopedia Seller (session survives restarts)
-- Run Linux commands — `ssh iris-junior "docker exec iris-desktop [cmd]"`
-- Install any tool — apt-get, pip, npm inside the container
-- Process files — download, convert, upload from the virtual computer
-- **Combine browser + shell** — scrape a page, then process data with Python on the same machine
+1. **Browser = otomatis virtual computer** — default profile iris-desktop
+2. **Shell = pakai `ssh iris-vm`** — BUKAN `ssh iris-junior docker exec`
+3. **Admin = bebas** — install, edit, manage, apapun
+4. **Container restart = safe** — Chrome + socat + SSH auto-restart, data persist
+5. **Gmail logout = Wayan re-login** via web desktop https://76.13.194.103:3001/
+6. **Files persist di /config/** — simpan apapun di situ
 
 ### ⚠️ Troubleshooting
-- **"No connected nodes"** — WRONG approach. Don't use nodes. Use `browser()` tool (profile=iris-desktop)
-- **CDP timeout** — Check: `ssh iris-junior "docker exec iris-desktop pgrep -a chrome"` and `pgrep -a socat`
-- **Chrome not running** — Restart: `ssh iris-junior "docker exec iris-desktop bash /config/scripts/chrome-cdp-service.sh &"`
-- **Want local browser** — Override: `browser(action=open, url="...", profile="openclaw")`
+- **"No connected nodes"** — SALAH. Pakai `browser()` tool, bukan nodes
+- **CDP timeout** — `ssh iris-vm "pgrep -a chrome && pgrep -a socat"`
+- **Chrome mati** — `ssh iris-vm "rm -f /config/.chrome-profile/SingletonLock && DISPLAY=:1 nohup /config/scripts/chrome-cdp-service.sh &"`
+- **SSH timeout** — `ssh iris-junior "docker exec iris-desktop pgrep sshd"` → kalau mati: `ssh iris-junior "docker exec iris-desktop /usr/sbin/sshd"`
+- **Mau local browser** — `browser(action=open, url="...", profile="openclaw")`
