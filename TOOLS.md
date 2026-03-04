@@ -510,6 +510,7 @@ Iris = **root** di virtual computer. Bisa:
 | **CDP direct** | ws://76.13.194.103:9222 | WebSocket |
 | **Claude Code (visible)** | `ssh iris-vm 'claude-visible'` or `claude-run "prompt"` | ~2s startup |
 | **Claude Code (fast)** | `ssh iris-vm 'claude -p "prompt"'` | ~1s |
+| **Computer Use GUI** | `ssh iris-vm 'claude-gui "prompt"'` | API Call |
 
 ### Status
 - ✅ Chrome 145 headed (not headless) — Google won't block
@@ -521,6 +522,7 @@ Iris = **root** di virtual computer. Bisa:
 - ✅ Claude Code v2.1.63 installed (Node.js 22)
 - ✅ `claude-visible` / `claude-run` — visible mode via tmux + XFCE terminal
 - ✅ Desktop shortcut 🤖 Claude Code on XFCE desktop
+- ✅ **Computer Use GUI API** installed (Python `anthropic`, `xdotool`, `scrot`) — requires `ANTHROPIC_API_KEY` in `/config/.env`
 
 ### Architecture
 ```

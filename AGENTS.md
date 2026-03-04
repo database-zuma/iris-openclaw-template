@@ -751,6 +751,19 @@ ssh iris-vm 'claude-visible --kill'                    # stop session
 
 **Kapan pakai visible:** Wayan mau nonton / demo / pair coding
 **Kapan pakai invisible:** Task biasa, lebih cepat
+
+### 🤖 Computer Use (Native GUI Automation)
+
+Virtual Computer ini dilengkapi dengan **Anthropic Computer Use API**. Ini memungkinkan Claude/Iris untuk "melihat" layar XFCE dan "menggerakkan" kursor mouse/keyboard (native GUI, bukan browser automation).
+
+**Syarat:** Harus ada `ANTHROPIC_API_KEY` di dalam `/config/.env` pada VM.
+
+**Cara pakai:**
+```bash
+ssh iris-vm 'claude-gui "Open the application menu, type terminal, open it, and type hello"'
+```
+
+**Backend:** Menggunakan Python controller (`/config/scripts/computer_use_controller.py`), `xdotool` (mouse/keyboard), dan `scrot` (screenshot).
 ---
 
 ## 📚 Knowledge Dump
