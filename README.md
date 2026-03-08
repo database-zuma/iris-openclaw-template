@@ -133,6 +133,92 @@ The winning combo: **linuxserver/webtop** (proper s6-overlay init, persistent vo
 ### Full Technical Guide
 
 See [`knowledge/dev-tools/2026-03-03_virtual-computer-docker-setup.md`](knowledge/dev-tools/2026-03-03_virtual-computer-docker-setup.md) for the complete step-by-step reproduction guide — including `docker-compose.yml`, init scripts, watchdog setup, troubleshooting, and all the gotchas we discovered.
+
+---
+
+## 🧭 Tool Routing & Decision Trees
+
+Iris has multiple execution environments. She picks the right one automatically based on the task — not randomly.
+
+### 🌐 Browser Task Decision Tree
+
+Iris has four browser options, each with a specific use case:
+
+```
+User requests a web task
+  │
+  ├─ Needs login / persistent session?
+  │   (Gmail, Shopee Seller, Tokopedia, any Google service)
+  │   └─ YES → 🖥️  Virtual Computer (CDP ws://VPS_IP:9222)
+  │               Full Ubuntu desktop, headed Chrome, persists login
+  │
+  ├─ Simple public scrape, no login needed?
+  │   (competitor prices, articles, web search)
+  │   └─ YES → 🔥 Firecrawl / Exa
+  │               Fastest option, no browser overhead
+  │
+  ├─ Anti-bot site + needs clicking/filling, but no login?
+  │   (Cloudflare-protected forms, JS-heavy sites)
+  │   └─ YES → 🦊 Camofox (Firefox anti-detection, localhost:9377)
+  │               Firefox fingerprint, C++ anti-detection layer
+  │
+  └─ Complex multi-step browser automation?
+      └─ YES → 🖥️  Virtual Computer
+```
+
+**Rule of thumb:** If it needs a real login — virtual computer. If it's just fetching data — Firecrawl.
+
+### 🧱 Code Execution Decision Tree (OpenSandbox)
+
+OpenSandbox (Alibaba open-source, running at `http://127.0.0.1:8080`) creates isolated Docker containers for safe code execution. Daedalus is required to use it for untrusted code.
+
+```
+Sub-agent needs to execute a script
+  │
+  ├─ Short script, already known safe, one-liner?
+  │   └─ OK → 💻 Mac Mini directly (fast, no overhead)
+  │
+  ├─ Script from user / external source / not yet reviewed?
+  │   └─ MUST → 🧱 OpenSandbox (isolated Docker container)
+  │
+  ├─ Needs pip install / clean Python environment?
+  │   └─ MUST → 🧱 OpenSandbox (fresh container per task)
+  │
+  ├─ Multiple scripts running in parallel?
+  │   └─ MUST → 🧱 OpenSandbox (spin up N containers simultaneously)
+  │
+  └─ Long-running daemon / background process?
+      └─ OK → 💻 Mac Mini directly (sandbox has 24h max timeout)
+```
+
+**Why this matters:** Without sandboxing, malicious code from an external source runs directly on the host machine. OpenSandbox ensures that even if untrusted code misbehaves, it’s contained.
+
+**After every sandbox task:** Daedalus MUST delete the sandbox (`DELETE /v1/sandboxes/{id}`) to prevent resource leaks.
+
+### 🤖 Agent Routing Table
+
+Iris is orchestrator-only. Every task type is routed to the right specialist:
+
+| Task Type | Primary Agent | Fallback | Notes |
+|-----------|--------------|----------|-------|
+| **PPT / deck / report** | Argus → Eos | — | Argus queries data → Eos renders. Zero exceptions. |
+| **Code / web app / script** | Codex (nanobot) | Daedalus | Daedalus only if Mac Mini file system / git access needed |
+| **Data / SQL / analysis** | Argus (nanobot) | Metis | Metis only if Argus context window insufficient |
+| **Web research / scraping** | Argus (nanobot) | Hermes | Hermes only if login session required |
+| **Browser automation w/ login** | Hermes | — | Shopee Seller, Tokopedia, X/Twitter |
+| **Architecture / strategy** | Oracle | — | Advisory only — zero execution tools |
+
+**Nanobots = Primary.** Sub-agents (Hermes, Daedalus, Metis) are fallbacks when nanobots can't handle the specific constraint (login session, Mac Mini file system, etc.).
+
+### 📊 Execution Environment Summary
+
+| Environment | Location | Best For |
+|-------------|----------|----------|
+| **Mac Mini direct** | Local bash/python | Internal scripts, git ops, file I/O |
+| **OpenSandbox** | Isolated Docker (localhost:8080) | External code, clean env, parallel execution |
+| **Virtual Computer (iris-desktop)** | VPS Ubuntu XFCE | Browser automation, login sessions |
+| **Firecrawl / Exa** | API service | Public web scraping, no browser needed |
+| **Camofox** | Local Firefox (localhost:9377) | Anti-bot sites without login |
 ---
 
 ## 🚀 Quick Start
